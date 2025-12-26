@@ -1,0 +1,123 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="end" style="margin-right: 10px;">
+      <div style="text-align: right; color: white;">
+        <div style="font-weight: bold; font-size: 1em;">
+          Bed {{ patient.selectedBedId || '?' }}
+        </div>
+        <div *ngIf="patient.current.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
+          {{ patient.current.naam }}
+        </div>
+      </div>
+    </ion-buttons>
+
+    <ion-title>O2 Balans</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <ion-card class="data-card">
+    <ion-card-header>
+      <ion-card-title>Bloedgas Analyse</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="FiO₂ (%)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="fio2"></ion-input>
+          </ion-col>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="PaCO₂ (kPa)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="paco2"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="PaO₂ (kPa)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="pao2"></ion-input>
+          </ion-col>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="Leeftijd (jaren)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="patient.current.leeftijd" (ionInput)="patient.opslaan()"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="4">
+            <ion-input class="custom-green-input" label="Hb" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="hb"></ion-input>
+          </ion-col>
+          <ion-col size="4">
+            <ion-input class="custom-green-input" label="SaO₂ (%)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="sao2"></ion-input>
+          </ion-col>
+           <ion-col size="4">
+            <ion-input class="custom-green-input" label="SvO₂ (%)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="svo2"></ion-input>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" (click)="bereken()">Bereken Analyse</ion-button>
+          </ion-col>
+          <ion-col size="4">
+             <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="resPAO2 !== null" class="result-card">
+    <ion-card-header>
+      <ion-card-title>Resultaten</ion-card-title>
+    </ion-card-header>
+    <ion-list lines="full">
+
+      <ion-item>
+        <ion-label>
+          <h2>Alveolaire O₂ (PAO₂)</h2>
+          <p>Beschikbare zuurstof in longblaasjes</p>
+        </ion-label>
+        <ion-note slot="end" color="primary"><strong>{{ resPAO2 | number:'1.1-1' }} kPa</strong></ion-note>
+      </ion-item>
+
+      <ion-item *ngIf="resAaGrad !== null">
+        <ion-label>
+          <h2>A-a Gradiënt</h2>
+          <p>Verschil longblaasje vs bloed</p>
+        </ion-label>
+        <ion-note slot="end" [color]="resAaGrad > 2.5 ? 'danger' : 'success'">
+          <strong>{{ resAaGrad | number:'1.1-1' }} kPa</strong>
+        </ion-note>
+      </ion-item>
+
+      <ion-item *ngIf="resAaRatio !== null">
+        <ion-label>
+          <h2>a/A Ratio</h2>
+          <p>Mate van gaswisseling</p>
+        </ion-label>
+        <ion-note slot="end" color="primary"><strong>{{ resAaRatio | number:'1.2-2' }}</strong></ion-note>
+      </ion-item>
+
+      <ion-item *ngIf="resCaO2 !== null">
+        <ion-label>
+          <h2>O₂ Content (CaO₂)</h2>
+          <p>Totale O₂ inhoud arterieel</p>
+        </ion-label>
+        <ion-note slot="end" color="primary"><strong>{{ resCaO2 | number:'1.1-1' }} ml/dL</strong></ion-note>
+      </ion-item>
+
+    </ion-list>
+  </ion-card>
+
+</ion-content>

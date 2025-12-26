@@ -1,0 +1,18 @@
+/* De styling voor de bed-kiezer rechtsboven */
+.bed-selector-box {
+  background: rgb(110, 224, 158);        /* Witte achtergrond */
+  border-radius: 20px;      /* Mooie ronde hoeken (pil-vorm) */
+  padding: 0 10px;          /* Beetje ruimte aan de zijkanten */
+  margin-right: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Klein schaduwtje voor diepte */
+
+  /* Zorg dat de inhoud (tekst en icoon) donker is */
+  ion-icon, ion-select {
+    color: #000 !important; /* Zwart, lekker leesbaar */
+    font-weight: bold;
+  }
+
+  /* Zorg dat alles netjes op één lijn staat */
+  display: flex;
+  align-items: center;
+}

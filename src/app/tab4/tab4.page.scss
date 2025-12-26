@@ -1,0 +1,63 @@
+/* ---------------------------------------------------------
+   1. STYLING VOOR DE INVULVELDEN (De groene outline)
+   --------------------------------------------------------- */
+.custom-green-input {
+  /* --- BASIS INSTELLINGEN --- */
+  --background: transparent;
+  --color: white;             /* Witte tekst */
+  --placeholder-color: #888;
+  color: white;
+
+  /* Zorgt voor mooie afgeronde hoekjes (nodig voor de box-shadow fix) */
+  border-radius: 4px;
+
+  /* --- DE IOS FIX (RUST STAND) --- */
+  /* We stellen de Ionic variabele in... */
+  --border-color: #555;
+
+  /* ...MAAR we voegen ook een harde shadow toe voor als iOS de rand weigert */
+  box-shadow: 0 0 0 1px #555 !important;
+
+  /* --- HET LABEL (RUST STAND) --- */
+  .label-text-wrapper {
+    color: #888;
+  }
+
+  /* --- FOCUS STAND (Als je erop klikt) --- */
+  &.ion-focused, &.item-has-focus {
+    /* Ionic variabelen naar groen */
+    --border-color: #28a745 !important;
+    --label-color: #28a745 !important;
+
+    /* De iOS Fix naar groen (en iets dikker: 2px) */
+    box-shadow: 0 0 0 2px #28a745;
+  }
+
+  /* --- EXTRA ZEKERHEID VOOR LABEL KLEUR (Ionic 7+) --- */
+  &.ion-focused::part(label) {
+    color: #28a745 !important;
+  }
+
+  /* --- READONLY VELDEN (Zoals BSA) --- */
+  &.ion-readonly {
+    --background: rgba(255, 255, 255, 0.05); /* Iets donkerder achtergrondje */
+    opacity: 0.9;
+    /* Zorg dat de rand bij readonly ook zichtbaar blijft */
+    box-shadow: 0 0 0 1px #555;
+    pointer-events: none;
+  }
+}
+
+/* =========================================
+   2. STYLING VOOR DE ADVIES TEKST
+   ========================================= */
+.advies-box {
+  --min-height: 0;
+  margin-top: -5px;
+  margin-bottom: 10px;
+
+  ion-text {
+    font-size: 0.9em;
+    color: #aaa;
+  }
+}

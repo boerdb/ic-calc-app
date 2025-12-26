@@ -1,0 +1,93 @@
+/* ---------------------------------------------------------
+   1. STYLING VOOR DE INVULVELDEN (De groene outline)
+   --------------------------------------------------------- */
+.custom-green-input {
+  /* --- BASIS INSTELLINGEN --- */
+  --background: transparent;
+  --color: white;             /* Witte tekst */
+  --placeholder-color: #888;
+  color: white;
+
+  /* Zorgt voor mooie afgeronde hoekjes (nodig voor de box-shadow fix) */
+  border-radius: 4px;
+
+  /* --- DE IOS FIX (RUST STAND) --- */
+  /* We stellen de Ionic variabele in... */
+  --border-color: #555;
+
+  /* ...MAAR we voegen ook een harde shadow toe voor als iOS de rand weigert */
+  box-shadow: 0 0 0 1px #555 !important;
+
+  /* --- HET LABEL (RUST STAND) --- */
+  .label-text-wrapper {
+    color: #888;
+  }
+
+  /* --- FOCUS STAND (Als je erop klikt) --- */
+  &.ion-focused, &.item-has-focus {
+    /* Ionic variabelen naar groen */
+    --border-color: #28a745 !important;
+    --label-color: #28a745 !important;
+
+    /* De iOS Fix naar groen (en iets dikker: 2px) */
+    box-shadow: 0 0 0 2px #28a745;
+  }
+
+  /* --- EXTRA ZEKERHEID VOOR LABEL KLEUR (Ionic 7+) --- */
+  &.ion-focused::part(label) {
+    color: #28a745 !important;
+  }
+
+  /* --- READONLY VELDEN (Zoals BSA) --- */
+  &.ion-readonly {
+    --background: rgba(255, 255, 255, 0.05); /* Iets donkerder achtergrondje */
+    opacity: 0.9;
+    /* Zorg dat de rand bij readonly ook zichtbaar blijft */
+    box-shadow: 0 0 0 1px #555;
+  }
+}
+
+/* ---------------------------------------------------------
+   2. STYLING VOOR MAN/VROUW SCHAKELAAR (Met iconen)
+   --------------------------------------------------------- */
+.gender-segment {
+  /* Achtergrond van de balk */
+  --background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+
+  /* Zorgt dat de hoogte mooi past bij het inputveld ernaast */
+  height: 56px;
+  align-items: center;
+
+  ion-segment-button {
+    --color: #888;            /* Grijs als niet geselecteerd */
+    --color-checked: #fff;    /* Wit als geselecteerd */
+    --indicator-color: #28a745; /* HET GROENE BLOKJE */
+
+    /* Styling van het icoontje */
+    ion-icon {
+      font-size: 1.4em;
+      margin-bottom: 2px;
+    }
+
+    /* Zorg dat tekst en icoon netjes onder elkaar staan */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* ---------------------------------------------------------
+   3. STYLING VOOR DE BOVENSTE BALK (Controlled/Spontaneous)
+   --------------------------------------------------------- */
+.custom-toolbar-segment {
+  width: 90%;
+  margin: 0 auto;
+  --background: rgba(0, 0, 0, 0.2); /* Donkerblauw tintje */
+
+  --indicator-color: #000;          /* Zwart blokje */
+  --color: rgba(255, 255, 255, 0.7);
+  --color-checked: #3880ff;         /* Blauwe tekst in het blokje */
+
+  border-radius: 8px;
+}
