@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-title>
       Bed {{ patient.selectedBedId }}
       <span *ngIf="patient.current.naam" style="font-size: 0.8em; opacity: 0.9;">
@@ -94,14 +94,14 @@
       <div *ngIf="patient.current.ibw || patient.current.bsa" style="margin-top: 20px;">
         <ion-item lines="none" class="result-item">
           <ion-label>Ideaal Gewicht (IBW)</ion-label>
-          <ion-note slot="end" color="primary" style="font-size: 1.1em; font-weight: bold;">
+          <ion-note slot="end" style="font-size: 1.1em; font-weight: bold;">
             {{ patient.current.ibw | number:'1.0-0' }} kg
           </ion-note>
         </ion-item>
 
         <ion-item lines="none" class="result-item">
           <ion-label>Lichaamsoppervlak (BSA)</ion-label>
-          <ion-note slot="end" color="primary" style="font-size: 1.1em; font-weight: bold;">
+          <ion-note slot="end" style="font-size: 1.1em; font-weight: bold;">
             {{ patient.current.bsa | number:'1.2-2' }} m²
           </ion-note>
         </ion-item>

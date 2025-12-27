@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
@@ -10,11 +10,10 @@
         </div>
       </div>
     </ion-buttons>
-
     <ion-title>Ventilatie</ion-title>
   </ion-toolbar>
 
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-segment mode="ios" [(ngModel)]="mode" (ionChange)="segmentChanged($event)" class="custom-toolbar-segment">
       <ion-segment-button value="controlled">
         <ion-label>Controlled</ion-label>
@@ -52,9 +51,16 @@
 
   <div *ngIf="mode === 'controlled'">
     <ion-card>
+
       <ion-card-header>
-        <ion-card-title>Instellingen & Mechanica</ion-card-title>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <ion-card-title>Instellingen & Mechanica</ion-card-title>
+          <ion-button fill="clear" size="small" (click)="toonInfo()">
+            <ion-icon name="information-circle-outline" slot="icon-only" style="font-size: 1.5em;"></ion-icon>
+          </ion-button>
+        </div>
       </ion-card-header>
+
       <ion-card-content>
         <ion-grid>
           <ion-row>
@@ -102,14 +108,13 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <ion-button expand="block" (click)="berekenControlled()">Analyseer</ion-button>
+              <ion-button expand="block" class="teal-btn" (click)="berekenControlled()">Analyseer</ion-button>
             </ion-col>
             <ion-col size="4">
               <ion-button expand="block" color="medium" fill="outline" (click)="resetVelden()">Reset</ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>
-
       </ion-card-content>
     </ion-card>
 
@@ -141,7 +146,7 @@
              <h2>C-Statisch</h2>
              <p>ml / cmH₂O</p>
            </ion-label>
-           <ion-note slot="end" color="primary" style="font-weight:bold;">
+           <ion-note slot="end" style="font-weight:bold;">
              {{ resCstat | number:'1.0-0' }}
            </ion-note>
          </ion-item>
@@ -151,7 +156,7 @@
              <h2>C-Dynamisch</h2>
              <p>ml / cmH₂O</p>
            </ion-label>
-           <ion-note slot="end" color="primary" style="font-weight:bold;">
+           <ion-note slot="end" style="font-weight:bold;">
              {{ resCdyn | number:'1.0-0' }}
            </ion-note>
          </ion-item>
@@ -186,7 +191,6 @@
               {{ resMechPower | number:'1.1-1' }} J
             </ion-badge>
          </ion-item>
-
        </ion-list>
     </ion-card>
   </div>
@@ -194,9 +198,16 @@
 
   <div *ngIf="mode === 'spontaneous'">
     <ion-card>
+
       <ion-card-header>
-        <ion-card-title>Pressure Support / Weaning</ion-card-title>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <ion-card-title>Pressure Support / Weaning</ion-card-title>
+          <ion-button fill="clear" size="small" (click)="toonInfo()">
+            <ion-icon name="information-circle-outline" slot="icon-only" style="font-size: 1.5em;"></ion-icon>
+          </ion-button>
+        </div>
       </ion-card-header>
+
       <ion-card-content>
         <ion-grid>
           <ion-row>
@@ -215,7 +226,6 @@
                 [(ngModel)]="inputSponPnadir" placeholder="-4.0"></ion-input>
             </ion-col>
           </ion-row>
-
           <ion-row>
              <ion-col size="6">
                <ion-input class="custom-green-input" label="PaCO₂" label-placement="floating" fill="outline" type="number"
@@ -238,7 +248,6 @@
             </ion-col>
           </ion-row>
         </ion-grid>
-
       </ion-card-content>
     </ion-card>
 
@@ -290,5 +299,4 @@
       </ion-card-content>
     </ion-card>
   </div>
-
 </ion-content>

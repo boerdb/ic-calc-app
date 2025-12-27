@@ -36,3 +36,196 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
 
+/* * ICU DARK MODE THEME
+ * Stijl: Professioneel, High Contrast, Monitor-look
+ */
+
+ion-content {
+  /* Gebruik de afbeelding als achtergrond voor alle pagina's */
+  --background: url('/assets/image_2.jpg') no-repeat center center / cover;
+  /* Een fallback kleur voor als de afbeelding even niet laadt */
+  background-color: #121212;
+  --color: #f5f5f5; /* Off-white tekst leest prettiger dan fel wit */
+}
+
+body {
+  background: url('/assets/image_2.jpg') no-repeat center center / cover;
+  background-color: #121212;
+}
+
+/* 2. De Header (Met Safari Fix!) */
+ion-toolbar {
+  /* Iets transparanter (0.85) zodat je de achtergrond erdoorheen ziet */
+  --background: #00695c !important;
+  --color: #ffffff;
+  --border-style: none;
+
+
+
+  /* !!! DE SAFARI FIX !!! */
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+/* De standaard blur */
+  backdrop-filter: blur(10px);
+
+}
+
+ion-title {
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: #f5f5f5; /* Zacht monitor-blauw */
+}
+
+/* 3. De Kaarten (Cards) */
+ion-card {
+  --background: #1e1e1e; /* Donkergrijs vlak */
+  --color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  border-radius: 8px; /* Iets strakker, minder rond */
+  border: 1px solid #333; /* Subtiel randje voor definitie */
+  margin-top: 20px;
+}
+
+ion-card-title {
+  color: #90caf9; /* Monitor blauw */
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+ion-card-header {
+  border-bottom: 1px solid #333; /* Lijntje onder de titel */
+  padding-bottom: 10px;
+}
+
+/* 4. De Input Velden (Het probleemgebied) */
+/* We maken ze donker met lichte tekst */
+ion-input, .custom-green-input {
+  --background: #2c2c2c; /* Duidelijk ander vlakje dan de kaart */
+  --color: #ffffff;
+  --placeholder-color: #888;
+  --padding-start: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  border: 1px solid #444; /* Randje zodat je het vakje ziet */
+}
+
+/* De labels (zoals 'Naam', 'Leeftijd') */
+ion-input::part(label) {
+  color: #aaaaaa !important; /* Lichtgrijs, altijd zichtbaar */
+  font-size: 0.85em;
+  transform: translateY(-2px); /* Ietsje omhoog */
+}
+
+/* Als je in het vakje klikt */
+ion-input.has-focus {
+  border-color: #90caf9; /* Blauw randje bij focus */
+}
+
+/* 5. Knoppen */
+ion-button {
+  --border-radius: 6px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Primaire knoppen (Analyseer) */
+on-button[fill="solid"] {
+  /* We gebruiken !important om de standaardkleur te overschrijven */
+  --background: #00796B !important; /* Dark Teal */
+  --background-hover: #004d40 !important; /* Nog iets donkerder bij hover */
+  --background-activated: #004d40 !important; /* Bij klikken */
+
+  --color: #ffffff !important;
+  --box-shadow: 0 4px 10px rgba(0, 121, 107, 0.4); /* Groene gloed ipv blauw */
+}
+
+/* Reset knoppen */
+ion-button[fill="outline"] {
+  --color: #aaaaaa;
+  --border-color: #555;
+  --background-hover: #333;
+}
+
+/* 6. Resultaat Kaarten (Extra opvallend) */
+.result-card {
+  border-left: 5px solid #2dd36f; /* Monitor groen accent */
+  background: #222;
+}
+
+/* 7. Footer / Tabs balk */
+ion-tab-bar {
+  --background: #1e1e1e;
+  --border-top: 1px solid #333;
+}
+
+ion-tab-button {
+  --color: #00695c;
+  --color-selected: #204461; /* Blauw als actief */
+}
+
+/* 8. Badges (Uitslagen) */
+ion-badge {
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  font-size: 0.9em;
+  font-weight: 700;
+}
+/* Monitor kleuren voor badges */
+.ion-color-success { --ion-color-base: #00e676; --ion-color-contrast: #000; }
+.ion-color-warning { --ion-color-base: #ffea00; --ion-color-contrast: #000; }
+.ion-color-danger  { --ion-color-base: #ff1744; --ion-color-contrast: #fff; }
+
+/* 9. Lijsten in kaarten */
+ion-list {
+  background: transparent !important;
+}
+ion-item {
+  --background: transparent;
+  --color: #fff;
+  --border-color: #333;
+}
+ion-note {
+  color: #90caf9 !important; /* Monitor Blauw (of #ffffff voor wit) */
+  font-size: 1em; /* Iets groter dan standaard */
+  opacity: 1; /* Zorg dat ze niet half doorzichtig zijn */
+}
+ion-segment-button {
+  /* ONGESELECTEERD: */
+  --color: #aaaaaa; /* Lichtgrijze tekst */
+  font-weight: 500;
+
+  /* GESELECTEERD (ACTIVE STATE): */
+  --color-checked: #ffffff !important; /* Witte tekst */
+  --background-checked: #00796B !important; /* Teal achtergrond! */
+  --indicator-color: #00796B !important; /* Het schuifbalkje ook Teal */
+}
+/* De Reset Knop (Outline) - Strak Zilver/Grijs */
+ion-button[fill="outline"] {
+  --color: #cccccc !important;                /* Tekst normaal: lichtgrijs */
+  --border-color: #666 !important;            /* Randje: donkergrijs */
+  --background: transparent !important;       /* Achtergrond: doorzichtig */
+
+  /* DE FIX VOOR HET KLIKKEN (Weg met dat blauw!) */
+  --background-activated: rgba(255, 255, 255, 0.1) !important; /* Klik = heel zacht wit/grijs */
+  --color-activated: #ffffff !important;      /* Tekst bij klik = wit */
+
+  /* Voor als je met de muis eroverheen gaat (hover) */
+  --background-hover: rgba(255, 255, 255, 0.05) !important;
+}
+.teal-btn {
+  --background: #00796B !important;           /* De kleur die je wilt */
+  --background-hover: #004d40 !important;     /* Iets donkerder als je erover muist */
+  --background-activated: #004d40 !important; /* Als je klikt */
+  --color: #ffffff !important;                /* Witte tekst */
+  --border-radius: 6px;
+  --box-shadow: 0 4px 10px rgba(0, 121, 107, 0.4); /* Groene gloed */
+
+  /* Zekerheidje: */
+  background: #00796B !important;
+  color: white !important;
+}

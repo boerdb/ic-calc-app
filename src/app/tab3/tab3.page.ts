@@ -2,28 +2,35 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonBadge, IonButton,  IonCard,
+  IonBadge, IonButton, IonCard,
   IonCardContent, IonCardHeader, IonCardTitle,
   IonCol, IonContent, IonGrid, IonHeader,
   IonInput, IonItem, IonLabel, IonRow,
   IonSegment, IonSegmentButton, IonText,
-  IonTitle, IonToolbar,IonList,IonNote, IonButtons } from '@ionic/angular/standalone';
+  IonTitle, IonToolbar, IonList, IonNote, IonButtons,
+  IonIcon, AlertController // <--- AlertController & IonIcon toegevoegd
+} from '@ionic/angular/standalone';
 
 import { PatientService } from '../services/patient';
 import { CalculatorService } from '../services/calculator';
+
+// Icoon registreren
+import { addIcons } from 'ionicons';
+import { informationCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
   standalone: true,
-  imports: [IonButtons,
+  imports: [
     CommonModule, FormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonItem, IonInput, IonLabel, IonButton,
     IonText, IonBadge, IonGrid, IonRow, IonCol,
-    IonSegment, IonSegmentButton,IonList,IonNote
+    IonSegment, IonSegmentButton, IonList, IonNote, IonButtons,
+    IonIcon // <--- Vergeet deze niet
   ]
 })
 export class Tab3Page {
@@ -35,28 +42,23 @@ export class Tab3Page {
   public inputPeep: number | null = null;
   public inputPplat: number | null = null;
   public inputPpiek: number | null = null;
-
-  // Nieuw voor Tijdconstante & Dode ruimte
   public inputResistance: number | null = null;
   public inputPaCO2: number | null = null;
   public inputPeCO2: number | null = null;
 
-  // --- CONTROLLED RESULTATEN ---
+  // --- RESULTATEN ---
   public resDrivingPressure: number | null = null;
-  public resCstat: number | null = null;       // Static Compliance
-  public resCdyn: number | null = null;        // Dynamic Compliance
+  public resCstat: number | null = null;
+  public resCdyn: number | null = null;
   public resMechPower: number | null = null;
-  public resVtPerKg: number | null = null;     // ml/kg
-
-  public resTimeConstant: number | null = null; // Tijdconstante
-  public resVdVt: number | null = null;         // Dode Ruimte Ratio
+  public resVtPerKg: number | null = null;
+  public resTimeConstant: number | null = null;
+  public resVdVt: number | null = null;
 
   // --- SPONTANEOUS INPUTS ---
   public inputSponPpeak: number | null = null;
   public inputSponPeepTot: number | null = null;
   public inputSponPnadir: number | null = null;
-
-  // --- SPONTANEOUS RESULTATEN ---
   public resPocc: number | null = null;
   public resPmus: number | null = null;
   public resPtp: number | null = null;
@@ -69,70 +71,89 @@ export class Tab3Page {
 
   constructor(
     public patient: PatientService,
-    private calc: CalculatorService
-  ) {}
+    private calc: CalculatorService,
+    private alertCtrl: AlertController // <--- Injecteren
+  ) {
+    // Icoon registreren
+    addIcons({ informationCircleOutline });
+  }
 
   public segmentChanged(ev: any) {
     this.mode = ev.detail.value;
   }
 
-  // --- BEREKENING CONTROLLED ---
+  // --- NIEUW: Info Pop-up die meeschakelt ---
+  async toonInfo() {
+    let header = 'Ventilatie Info';
+    let message = '';
+
+    if (this.mode === 'controlled') {
+      header = 'Controlled Parameters';
+      message =
+        'Driving Pressure: De "drive" die de long belast (Pplat - PEEP). Doel < 15.\n\n' +
+        'C-Stat: Statische compliantie (rekbaarheid) van de long.\n\n' +
+        'Mech. Power: De hoeveelheid energie die per minuut in de longen wordt gepompt. Doel < 17 J/min.\n\n' +
+        'Tijdconstante (RC): Hoe snel de long vult/leegt (RxC). 3x RC is tijd voor 95% uitademing.\n\n' +
+        'Vd/Vt: Dode ruimte ratio. Het deel van de ademteug dat niet deelneemt aan gaswisseling.';
+    } else {
+      header = 'Spontaneous (VentICalc)';
+      message =
+        'P-nadir: De diepste negatieve druk tijdens een occlusie-manoeuvre (inspiratoire hold).\n\n' +
+        'Pmus: Geschatte spierkracht van het diafragma. Doel < 10-15.\n\n' +
+        'Ptp: Transpulmonale druk (stress op de longblaasjes). Doel < 25.\n\n' +
+        'Doel: Beoordelen of de ademarbeid te hoog is (lung injury) of te laag (atrofie).';
+    }
+
+    const alert = await this.alertCtrl.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
   public berekenControlled(): void {
     if (!this.inputVt || !this.inputPeep) return;
 
-    // 1. Vt per kg
     if (this.patient.current.ibw) {
       this.resVtPerKg = this.inputVt / this.patient.current.ibw;
     }
 
-    // 2. Driving Pressure & C-Stat
     if (this.inputPplat) {
       this.resDrivingPressure = this.inputPplat - this.inputPeep;
       this.dpKleur = this.resDrivingPressure > 15 ? 'danger' : 'success';
-
       if (this.resDrivingPressure > 0) {
         this.resCstat = this.calc.calcStaticCompliance(this.inputVt, this.inputPplat, this.inputPeep);
       }
     }
 
-    // 3. C-Dyn
     if (this.inputPpiek) {
       this.resCdyn = this.calc.calcDynamicCompliance(this.inputVt, this.inputPpiek, this.inputPeep);
     }
 
-    // 4. Mechanical Power
     if (this.inputRR && this.inputPpiek && this.inputPplat) {
-      this.resMechPower = this.calc.calcMechanicalPower(
-        this.inputVt, this.inputRR, this.inputPpiek, this.inputPplat, this.inputPeep
-      );
+      this.resMechPower = this.calc.calcMechanicalPower(this.inputVt, this.inputRR, this.inputPpiek, this.inputPplat, this.inputPeep);
       this.mpKleur = this.resMechPower > 17 ? 'warning' : 'success';
     }
 
-    // 5. Tijdconstante (Compliance * Resistance)
-    // We gebruiken bij voorkeur Cstat, anders Cdyn
     const compliance = this.resCstat || this.resCdyn;
     if (compliance && this.inputResistance) {
       this.resTimeConstant = this.calc.calcTimeConstant(compliance, this.inputResistance);
     }
 
-    // 6. Dode Ruimte (Vd/Vt)
     if (this.inputPaCO2 && this.inputPeCO2) {
       this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
     }
   }
 
-  // --- BEREKENING SPONTANEOUS ---
   public berekenSpontaneous(): void {
     if (this.inputSponPpeak !== null && this.inputSponPeepTot !== null && this.inputSponPnadir !== null) {
       this.resPocc = this.inputSponPnadir - this.inputSponPeepTot;
       this.resPmus = this.calc.calcPmus(this.inputSponPnadir, this.inputSponPeepTot);
       this.resPtp = this.calc.calcPtp(this.inputSponPpeak, this.inputSponPeepTot, this.inputSponPnadir);
-
       this.pmusKleur = (this.resPmus > 15) ? 'danger' : (this.resPmus > 10) ? 'warning' : 'success';
       this.ptpKleur = (this.resPtp > 25) ? 'danger' : 'success';
     }
-
-    // NIEUW: Dode Ruimte berekening ook hier toestaan!
     if (this.inputPaCO2 && this.inputPeCO2) {
       this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
     }
@@ -144,13 +165,9 @@ export class Tab3Page {
     this.inputResistance = null; this.inputPaCO2 = null; this.inputPeCO2 = null;
     this.inputSponPpeak = null; this.inputSponPeepTot = null; this.inputSponPnadir = null;
 
-    this.resDrivingPressure = null;
-    this.resCstat = null; this.resCdyn = null;
-    this.resVtPerKg = null; this.resMechPower = null;
-    this.resTimeConstant = null; this.resVdVt = null;
-    this.resPocc = null; this.resPmus = null; this.resPtp = null;
-
-    this.dpKleur = 'medium'; this.mpKleur = 'medium';
-    this.pmusKleur = 'medium'; this.ptpKleur = 'medium';
+    this.resDrivingPressure = null; this.resCstat = null; this.resCdyn = null;
+    this.resVtPerKg = null; this.resMechPower = null; this.resTimeConstant = null;
+    this.resVdVt = null; this.resPocc = null; this.resPmus = null; this.resPtp = null;
+    this.dpKleur = 'medium'; this.mpKleur = 'medium'; this.pmusKleur = 'medium'; this.ptpKleur = 'medium';
   }
 }

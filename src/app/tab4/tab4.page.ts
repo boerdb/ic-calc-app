@@ -4,116 +4,118 @@ import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonToolbar, IonTitle,
   IonCard, IonCardHeader, IonCardTitle, IonCardContent,
-  IonGrid, IonRow, IonCol, IonInput, IonButton,
-  IonList, IonItem, IonLabel, IonNote, IonIcon, IonButtons } from '@ionic/angular/standalone';
-
-// --- DEZE REGELS WAREN NODIG ---
-import { addIcons } from 'ionicons';
-import { informationCircleOutline } from 'ionicons/icons';
+  IonList, IonItem, IonInput, IonLabel, IonNote, IonGrid, IonRow, IonCol,
+  IonButton, IonButtons, IonIcon, IonToggle
+} from '@ionic/angular/standalone';
 
 import { PatientService } from '../services/patient';
-import { CalculatorService } from '../services/calculator';
 
 @Component({
   selector: 'app-tab4',
   templateUrl: './tab4.page.html',
   styleUrls: ['./tab4.page.scss'],
   standalone: true,
-  imports: [IonButtons,
+  imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonToolbar, IonTitle,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
-    IonGrid, IonRow, IonCol, IonInput, IonButton,
-    IonList, IonItem, IonLabel, IonNote, IonIcon
-
+    IonList, IonItem, IonInput, IonLabel,  IonGrid, IonRow, IonCol,
+    IonButton, IonButtons, IonToggle
   ]
 })
 export class Tab4Page {
 
-  // --- INVOER VARIABELEN ---
-  map: number | null = null;    // mmHg
-  cvp: number | null = null;    // mmHg
-  co: number | null = null;     // L/min
+  // Inputs: PiCCO Waarden
+  public ci: number | null = null;    // Cardiac Index (N: 3.0-5.0, Target > 2.5)
+  public gedi: number | null = null;  // Preload (N: 640-800)
+  public elwi: number | null = null;  // Lung Water (N: < 10)
+  public map: number | null = null;   // Mean Arterial Pressure (Target > 65)
 
-  // --- RESULTAAT VARIABELEN ---
-  resSvr: number | null = null;
-  resCi: number | null = null;
-  resSvri: number | null = null;
+  // Inputs: Huidige Therapie (Context!)
+  public hasVaso: boolean = false;    // Loopt er Noradrenaline?
+  public hasIno: boolean = false;     // Loopt er Dobuta/Milrinone?
 
-  // --- UI STATUS ---
-  toonResultaten: boolean = false;
+  // Resultaten
+  public diagnose: string = '';
+  public advies: string = '';
+  public elwiWarning: string = '';
+  public resultColor: string = 'medium';
 
-  svrStatus: string = '';
-  svrKleur: string = 'medium';
-  svrAdvies: string = '';
+  constructor(public patient: PatientService) {}
 
-  ciStatus: string = '';
-  ciKleur: string = 'medium';
+  public analyseer() {
+    if (!this.ci || !this.gedi || !this.map) return;
 
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService
-  ) {
-    // --- HIER REGISTREREN WE HET ICOON ---
-    // Zonder dit weet de HTML niet welk plaatje 'information-circle-outline' is
-    addIcons({ informationCircleOutline });
-  }
-
-  analyseer() {
-    // Check of we genoeg data hebben (MAP, CVP, CO zijn verplicht)
-    if (this.map == null || this.cvp == null || this.co == null) {
-      return;
-    }
-
-    // 1. SVR Berekenen
-    this.resSvr = this.calc.calcSVR(this.map, this.cvp, this.co);
-
-    // --- INTERPRETATIE SVR ---
-    if (this.resSvr < 800) {
-      this.svrStatus = 'Laag (Vasodilatatie)';
-      this.svrKleur = 'danger';
-      this.svrAdvies = 'Denk aan: Distributieve shock (Sepsis, Anafylaxie).';
-    } else if (this.resSvr > 1200) {
-      this.svrStatus = 'Hoog (Vasoconstrictie)';
-      this.svrKleur = 'warning';
-      this.svrAdvies = 'Compensatie voor lage flow of hypovolemie.';
+    // 1. Check Longwater (Veiligheidsgrens)
+    if (this.elwi && this.elwi > 10) {
+      this.elwiWarning = '⚠️ Let op: Hoog ELWI (>10). Wees voorzichtig met vullen!';
     } else {
-      this.svrStatus = 'Normaal';
-      this.svrKleur = 'success';
-      this.svrAdvies = 'Vaattonus is adequaat.';
+      this.elwiWarning = '';
     }
 
-    // 2. Cardiac Index (CI) & SVRI Berekenen
-    const bsa = this.patient.current.bsa;
+    // 2. De Beslisboom
+    // SCENARIO A: Laag Flow (CI < 2.5)
+    if (this.ci < 2.5) {
+      if (this.gedi < 640) {
+        // Laag CI + Laag GEDI = Hypovolemie (Te leeg)
+        this.diagnose = 'Hypovolemie';
+        this.resultColor = 'warning'; // Geel: Vullen
 
-    if (bsa) {
-      this.resCi = this.calc.calcCI(this.co, bsa);
-      this.resSvri = this.calc.calcSVRI(this.resSvr, bsa);
+        if (this.elwi && this.elwi > 10) {
+           this.advies = 'Conflict: Patiënt is leeg, maar longen zijn nat. Overweeg vullen met uiterste voorzichtigheid of start inotropie.';
+        } else {
+           this.advies = 'Volume toediening (Vullen).';
+        }
 
-      // --- INTERPRETATIE CI ---
-      if (this.resCi < 2.2) {
-        this.ciStatus = 'Laag (Low Flow)';
-        this.ciKleur = 'danger';
-      } else if (this.resCi > 4.5) {
-        this.ciStatus = 'Hyperdynamisch';
-        this.ciKleur = 'warning';
       } else {
-        this.ciStatus = 'Normaal';
-        this.ciKleur = 'success';
+        // Laag CI + Normaal/Hoog GEDI = Cardiaal Falen (Pompfunctie)
+        this.diagnose = 'Cardiaal Falen';
+        this.resultColor = 'danger'; // Rood: Pomp
+
+        if (this.hasIno) {
+          this.advies = 'Huidige inotropie lijkt onvoldoende. Overweeg ophogen of switch van middel. Check Afterload.';
+        } else {
+          this.advies = 'Start Inotropie (bijv. Dobutamine, Milrinone).';
+        }
       }
     }
 
-    this.toonResultaten = true;
+    // SCENARIO B: Normaal/Hoog Flow (CI >= 2.5)
+    else {
+      if (this.map < 65) {
+        // Goede Flow + Lage Druk = Vasoplegie (Open vaten)
+        this.diagnose = 'Vasoplegie';
+        this.resultColor = 'secondary'; // Blauw: Vaten
+
+        if (this.hasVaso) {
+          this.advies = 'Vasoplegie houdt aan ondanks pomp. Overweeg ophogen Noradrenaline, toevoegen Vasopressine of Hydrocortison?';
+        } else {
+          this.advies = 'Start Vasopressie (Noradrenaline).';
+        }
+
+      } else {
+        // Goede Flow + Goede Druk = Stabiel
+        this.diagnose = 'Hemodynamisch Stabiel';
+        this.resultColor = 'success';
+        this.advies = 'Huidige support continueren en monitoren.';
+
+        // Nuance: Als stabiel is, maar wel met veel medicatie?
+        if (this.hasVaso || this.hasIno) {
+           this.advies += ' Probeer medicatie af te bouwen indien mogelijk.';
+        }
+      }
+    }
   }
 
-  reset() {
+  public reset() {
+    this.ci = null;
+    this.gedi = null;
+    this.elwi = null;
     this.map = null;
-    this.cvp = null;
-    this.co = null;
-
-    this.resSvr = null;
-    this.resCi = null;
-    this.resSvri = null;
-    this.toonResultaten = false;
+    this.hasVaso = false;
+    this.hasIno = false;
+    this.diagnose = '';
+    this.advies = '';
+    this.elwiWarning = '';
   }
 }

@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
@@ -72,7 +72,7 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" (click)="bereken()">Bereken Analyse</ion-button>
+            <ion-button expand="block" class="teal-btn" (click)="bereken()">Bereken Analyse</ion-button>
           </ion-col>
           <ion-col size="4">
              <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
@@ -93,7 +93,7 @@
           <h2>Alveolaire O₂ (PAO₂)</h2>
           <p>Beschikbare zuurstof in longblaasjes</p>
         </ion-label>
-        <ion-note slot="end" color="primary"><strong>{{ resPAO2 | number:'1.1-1' }} kPa</strong></ion-note>
+        <ion-note slot="end"><strong>{{ resPAO2 | number:'1.1-1' }} kPa</strong></ion-note>
       </ion-item>
 
       <ion-item *ngIf="resAaGrad !== null">
@@ -124,7 +124,7 @@
           <h2>O₂ Content (CaO₂)</h2>
           <p>Totale O₂ inhoud arterieel</p>
         </ion-label>
-        <ion-note slot="end" color="primary"><strong>{{ resCaO2 | number:'1.1-1' }} ml/dL</strong></ion-note>
+        <ion-note slot="end"><strong>{{ resCaO2 | number:'1.1-1' }} ml/dL</strong></ion-note>
       </ion-item>
 
       <ion-item *ngIf="resSvO2Message">

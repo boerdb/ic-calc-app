@@ -1,7 +1,6 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-
-<ion-buttons slot="end" style="margin-right: 10px;">
+  <ion-toolbar>
+    <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
           Bed {{ patient.selectedBedId || '?' }}
@@ -11,7 +10,6 @@
         </div>
       </div>
     </ion-buttons>
-
     <ion-title>Hemodynamiek</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -20,60 +18,52 @@
 
   <ion-card class="data-card">
     <ion-card-header>
-      <ion-card-title>Swan-Ganz / PiCCO</ion-card-title>
+      <ion-card-title>PiCCO Parameters</ion-card-title>
     </ion-card-header>
-
     <ion-card-content>
 
       <ion-grid>
         <ion-row>
-          <ion-col size="4">
-            <ion-input class="custom-green-input ion-readonly" label="Lengte" label-placement="floating" fill="outline"
-              [value]="patient.current.lengte" readonly="true"></ion-input>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="CI (L/min/m²)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="ci" placeholder="Target > 2.5"></ion-input>
           </ion-col>
-          <ion-col size="4">
-            <ion-input class="custom-green-input ion-readonly" label="Gewicht" label-placement="floating" fill="outline"
-              [value]="patient.current.gewicht" readonly="true"></ion-input>
-          </ion-col>
-          <ion-col size="4">
-            <ion-input class="custom-green-input ion-readonly" label="BSA (m²)" label-placement="floating" fill="outline"
-              [value]="patient.current.bsa | number:'1.2-2'" readonly="true"></ion-input>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="GEDI (ml/m²)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="gedi" placeholder="640 - 800"></ion-input>
           </ion-col>
         </ion-row>
-      </ion-grid>
 
-      <ion-note color="medium" style="font-size: 0.8em; padding-left: 5px;">
-        * Gegevens uit Patiënt Profiel (Tab 1)
-      </ion-note>
-
-      <div style="height: 20px;"></div>
-
-      <ion-grid>
         <ion-row>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="ELWI (ml/kg)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="elwi" placeholder="Max 10"></ion-input>
+          </ion-col>
           <ion-col size="6">
             <ion-input class="custom-green-input" label="MAP (mmHg)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="map"></ion-input>
-          </ion-col>
-          <ion-col size="6">
-            <ion-input class="custom-green-input" label="CVP (mmHg)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="cvp"></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="12">
-            <ion-input class="custom-green-input" label="Cardiac Output (CO) L/min" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="co"></ion-input>
+              [(ngModel)]="map" placeholder="Target > 65"></ion-input>
           </ion-col>
         </ion-row>
       </ion-grid>
+
+      <ion-list lines="none" style="margin-top: 10px; border-top: 1px solid #444; padding-top:10px;">
+        <ion-item>
+          <ion-label>Loopt Vasopressie? (Nora)</ion-label>
+          <ion-toggle slot="end" [(ngModel)]="hasVaso" color="secondary"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>Loopt Inotropie? (Dobuta)</ion-label>
+          <ion-toggle slot="end" [(ngModel)]="hasIno" color="danger"></ion-toggle>
+        </ion-item>
+      </ion-list>
 
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" (click)="analyseer()">Analyseer</ion-button>
+            <ion-button expand="block" class="teal-btn" (click)="analyseer()">Interpreteer</ion-button>
           </ion-col>
           <ion-col size="4">
-             <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
+            <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -81,56 +71,24 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="toonResultaten" class="result-card">
+  <ion-card *ngIf="diagnose" [color]="resultColor" class="result-card">
     <ion-card-header>
-      <ion-card-title>Resultaten</ion-card-title>
+      <ion-card-title style="color: white; font-weight: bold;">
+        {{ diagnose }}
+      </ion-card-title>
     </ion-card-header>
-    <ion-list lines="full">
+    <ion-card-content style="color: white;">
 
-      <ion-item *ngIf="resCi !== null">
-        <ion-label>
-          <h2>Cardiac Index (CI)</h2>
-          <p>Normaal: 2.5 - 4.0</p>
-        </ion-label>
-        <ion-note slot="end" [color]="ciKleur" style="font-weight: bold; font-size: 1.1em;">
-          {{ resCi | number:'1.2-2' }}
-        </ion-note>
-      </ion-item>
-      <ion-item *ngIf="resCi !== null" lines="none" style="--min-height: 20px;">
-         <ion-note [color]="ciKleur" style="font-size: 0.8em; margin-top: -10px;">{{ ciStatus }}</ion-note>
-      </ion-item>
+      <div *ngIf="elwiWarning" style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 10px; font-weight: bold; border-left: 5px solid yellow;">
+        {{ elwiWarning }}
+      </div>
 
-      <ion-item *ngIf="resSvr !== null">
-        <ion-label>
-          <h2>SVR (Weerstand)</h2>
-          <p>Normaal: 800 - 1200</p>
-        </ion-label>
-        <ion-note slot="end" [color]="svrKleur" style="font-weight: bold; font-size: 1.1em;">
-          {{ resSvr | number:'1.0-0' }}
-        </ion-note>
-      </ion-item>
-       <ion-item *ngIf="resSvr !== null" lines="none" style="--min-height: 20px;">
-        <ion-note [color]="svrKleur" style="font-size: 0.8em; margin-top: -10px;">{{ svrStatus }}</ion-note>
-     </ion-item>
+      <p style="font-size: 1.1em; line-height: 1.4;">
+        <strong>Advies:</strong><br>
+        {{ advies }}
+      </p>
 
-      <ion-item *ngIf="resSvri !== null">
-        <ion-label>
-          <h2>SVRI (Index)</h2>
-          <p>Normaal: 1970 - 2390</p>
-        </ion-label>
-        <ion-note slot="end" color="primary" style="font-weight: bold; font-size: 1.1em;">
-          {{ resSvri | number:'1.0-0' }}
-        </ion-note>
-      </ion-item>
-
-      <ion-item *ngIf="svrAdvies" lines="none" class="advies-box">
-        <ion-icon name="information-circle-outline" slot="start" color="medium"></ion-icon>
-        <ion-label class="ion-text-wrap" style="font-size: 0.9em; color: #888;">
-          {{ svrAdvies }}
-        </ion-label>
-      </ion-item>
-
-    </ion-list>
+    </ion-card-content>
   </ion-card>
 
 </ion-content>
