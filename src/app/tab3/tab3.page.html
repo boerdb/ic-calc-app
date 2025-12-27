@@ -1,7 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-
-<ion-buttons slot="end" style="margin-right: 10px;">
+    <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
           Bed {{ patient.selectedBedId || '?' }}
@@ -100,8 +99,17 @@
           </ion-row>
         </ion-grid>
 
-        <ion-button expand="block" (click)="berekenControlled()" class="ion-margin-top">Analyseer</ion-button>
-        <ion-button expand="block" color="medium" (click)="resetVelden()">Reset</ion-button>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-button expand="block" (click)="berekenControlled()">Analyseer</ion-button>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button expand="block" color="medium" fill="outline" (click)="resetVelden()">Reset</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
       </ion-card-content>
     </ion-card>
 
@@ -218,11 +226,19 @@
                  [(ngModel)]="inputPeCO2"></ion-input>
              </ion-col>
           </ion-row>
-
         </ion-grid>
 
-        <ion-button expand="block" (click)="berekenSpontaneous()" class="ion-margin-top">Bereken Effort</ion-button>
-        <ion-button expand="block" color="medium" (click)="resetVelden()">Reset</ion-button>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-button expand="block" (click)="berekenSpontaneous()">Bereken Effort</ion-button>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button expand="block" color="medium" fill="outline" (click)="resetVelden()">Reset</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
       </ion-card-content>
     </ion-card>
 
