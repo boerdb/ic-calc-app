@@ -217,15 +217,21 @@ ion-button[fill="outline"] {
   /* Voor als je met de muis eroverheen gaat (hover) */
   --background-hover: rgba(255, 255, 255, 0.05) !important;
 }
+/* De Kuifje-Fix 2.0: Nu met échte ronde hoeken */
 .teal-btn {
-  --background: #00796B !important;           /* De kleur die je wilt */
-  --background-hover: #004d40 !important;     /* Iets donkerder als je erover muist */
-  --background-activated: #004d40 !important; /* Als je klikt */
-  --color: #ffffff !important;                /* Witte tekst */
-  --border-radius: 6px;
-  --box-shadow: 0 4px 10px rgba(0, 121, 107, 0.4); /* Groene gloed */
+  /* 1. De Kleuren */
+  --background: #00796B !important;
+  --background-hover: #004d40 !important;
+  --background-activated: #004d40 !important;
+  --color: #ffffff !important;
 
-  /* Zekerheidje: */
-  background: #00796B !important;
-  color: white !important;
+  /* 2. De Ronde Hoeken (Het dubbele slot) */
+  --border-radius: 8px !important;  /* Vertelt het Ionic component wat te doen */
+  border-radius: 8px !important;    /* Vertelt de browser wat te doen */
+
+  /* 3. De Schaar */
+  overflow: hidden !important;      /* Knipt alles af wat buiten de 8px valt */
+
+  /* 4. Schaduw */
+  --box-shadow: 0 4px 10px rgba(0, 121, 107, 0.4);
 }
