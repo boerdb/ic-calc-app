@@ -2,20 +2,25 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// Alle Ionic componenten die we in de HTML gebruiken
+// Alle Ionic componenten
 import {
   IonContent, IonHeader, IonToolbar, IonTitle,
   IonList, IonItem, IonInput, IonButton,
   IonCard, IonCardHeader, IonCardTitle, IonCardContent,
   IonLabel, IonNote, IonGrid, IonRow, IonCol, IonButtons,
-  IonBadge,AlertController, IonIcon // <--- TOEGEVOEGD
+  IonBadge, ModalController, IonIcon // <--- 1. ModalController ipv AlertController
 } from '@ionic/angular/standalone';
 
 // Onze eigen services
 import { CalculatorService } from '../services/calculator';
 import { PatientService } from '../services/patient';
+
+// De Info Component (die mooie popup)
+import { InfoModalComponent } from '../info-modal.component'; // <--- 2. Importeren
+
 import { addIcons } from 'ionicons';
-import { informationCircleOutline } from 'ionicons/icons'; // <--- TOEGEVOEGD
+import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons'; // <--- 3. Chevron icoon erbij
+
 @Component({
   selector: 'app-tab2',
   templateUrl: './tab2.page.html',
@@ -27,7 +32,7 @@ import { informationCircleOutline } from 'ionicons/icons'; // <--- TOEGEVOEGD
     IonList, IonItem, IonInput, IonButton,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonLabel, IonNote, IonGrid, IonRow, IonCol,
-    IonBadge,IonIcon // <--- TOEGEVOEGD AAN IMPORTS
+    IonBadge, IonIcon
   ]
 })
 export class Tab2Page {
@@ -57,7 +62,7 @@ export class Tab2Page {
   pfStatusTekst = '';
   pfStatusKleur = 'medium';
 
-  // NIEUW: SvO2 Status variabelen
+  // SvO2 Status variabelen
   resSvO2Message = '';
   resSvO2Color = 'medium';
 
@@ -65,29 +70,60 @@ export class Tab2Page {
   toonResultaten = false;
 
   constructor(
-    public patient: PatientService, // Voor de leeftijd (patient.current.leeftijd)
-    private calc: CalculatorService, // Voor de formules
-    private alertCtrl: AlertController // <--- TOEGEVOEGD
+    public patient: PatientService,
+    private calc: CalculatorService,
+    private modalCtrl: ModalController // <--- 4. ModalController injecteren
   ) {
     addIcons({
-      informationCircleOutline
+      informationCircleOutline,
+      chevronForwardOutline
     });
   }
 
-// --- AANGEPASTE INFO FUNCTIE (Nu zonder HTML tags) ---
+  // --- NIEUWE INFO FUNCTIE (Met mooie HTML Modal) ---
   async toonInfo() {
-    const alert = await this.alertCtrl.create({
-      header: 'Parameter Info',
-      // We gebruiken \n voor een nieuwe regel. Dit werkt altijd veilig.
-      message:
-        'PAO₂: Zuurstofspanning in de longblaasjes (Alveolair).\n\n' +
-        'A-a Gradiënt: Het drukverschil tussen longblaasje en bloed. Maat voor diffusie.\n\n' +
-        'P/F Ratio (Horowitz): Maat voor de ernst van longschade (ARDS).\n\n' +
-        'CaO₂: Totale zuurstofinhoud in het arteriële bloed (gebonden + opgelost).\n\n' +
-        'ScvO₂: Balans tussen zuurstofaanbod en zuurstofverbruik.',
-      buttons: ['OK']
+    const htmlContent = `
+      <h3>Zuurstofbalans & Diffusie</h3>
+      <p>Interpretatie van de parameters.</p>
+
+      <h3>1. P/F Ratio (Horowitz)</h3>
+      <p>De maat voor longschade (ARDS) bij PEEP ≥ 5.</p>
+      <ul>
+        <li><strong>> 40 kPa:</strong> Normaal</li>
+        <li><strong>26.6 - 40:</strong> Milde ARDS</li>
+        <li><strong>13.3 - 26.6:</strong> Matige ARDS</li>
+        <li><strong>< 13.3:</strong> Ernstige ARDS / overweeg buikligging</li>
+      </ul>
+
+      <h3>2. A-a Gradiënt</h3>
+      <p>Verschil tussen O₂ in longblaasje (A) en bloed (a). Maat voor diffusieprobleem.</p>
+      <ul>
+         <li><strong>Verhoogd:</strong> Probleem in de long (V/Q mismatch, shunt, fibrose).</li>
+         <li><strong>Normaal:</strong> Oorzaak buiten de long (bijv. hypoventilatie).</li>
+      <div style="text-align: center; margin: 10px 0;">
+           <img src="assets/VQ.png" style="width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #444;">
+           <div style="font-size: 0.8em; color: #888;">V/Q mismatch</div>
+        </div>
+
+
+         </ul>
+
+      <h3>3. SvO₂ (Veneuze Saturatie)</h3>
+      <p>De balans tussen aanbod (DO₂) en verbruik (VO₂).</p>
+      <ul>
+        <li><strong>Laag (< 60%):</strong> Het weefsel pakt alles wat het pakken kan. Oorzaak: Laag Hb, Lage Output, Koorts, Pijn.</li>
+        <li><strong>Hoog (> 80%):</strong> Bloed stroomt te snel (Sepsis) of cellen kunnen O₂ niet gebruiken.</li>
+      </ul>
+    `;
+
+    const modal = await this.modalCtrl.create({
+      component: InfoModalComponent,
+      componentProps: {
+        title: 'Oxygenatie Info',
+        content: htmlContent
+      }
     });
-    await alert.present();
+    await modal.present();
   }
 
   bereken() {
@@ -104,8 +140,8 @@ export class Tab2Page {
       this.resAaGrad = this.calc.calcAaGradient(this.resPAO2, this.pao2);
       this.resAaRatio = this.calc.calcAaRatio(this.pao2, this.resPAO2);
 
-      // --- JOUW LOGICA: Verwachte Gradiënt op basis van leeftijd ---
-      const leeftijd = this.patient.current.leeftijd || 20; // Default 20 als niet ingevuld
+      // Verwachte Gradiënt op basis van leeftijd
+      const leeftijd = this.patient.current.leeftijd || 20;
       this.aaVerwacht = 2.0 + (leeftijd * 0.03);
 
       if (this.resAaGrad > this.aaVerwacht) {
@@ -116,7 +152,7 @@ export class Tab2Page {
         this.aaStatusKleur = 'success';
       }
 
-      // --- JOUW LOGICA: P/F Ratio (Horowitz) ---
+      // P/F Ratio (Horowitz)
       const fiO2Decimaal = this.fio2 / 100;
       this.resPFRatio = this.pao2 / fiO2Decimaal;
 
@@ -135,12 +171,12 @@ export class Tab2Page {
       }
     }
 
-    // 3. Oxygen Content (CaO2) - Alleen als Hb en SaO2 er zijn
+    // 3. Oxygen Content (CaO2)
     if (this.hb != null && this.sao2 != null && this.pao2 != null) {
       this.resCaO2 = this.calc.calcCaO2(this.hb, this.sao2, this.pao2);
     }
 
-    // 4. NIEUW: SvO2 / ScvO2 Interpretatie
+    // 4. SvO2 / ScvO2 Interpretatie
     if (this.svo2 != null) {
       if (this.svo2 < 60) {
         this.resSvO2Color = 'danger';
@@ -153,7 +189,6 @@ export class Tab2Page {
         this.resSvO2Message = 'Normaal (Balans DO2/VO2 adequaat)';
       }
     } else {
-      // Als veld leeg is, ook bericht leegmaken
       this.resSvO2Message = '';
     }
 
@@ -170,11 +205,10 @@ export class Tab2Page {
 
     this.resPAO2 = null;
     this.resAaGrad = null;
-    this.resAaRatio = null; // Ook even resetten
+    this.resAaRatio = null;
     this.resPFRatio = null;
     this.resCaO2 = null;
 
-    // SvO2 resetten
     this.resSvO2Message = '';
     this.resSvO2Color = 'medium';
 

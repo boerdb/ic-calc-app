@@ -18,41 +18,48 @@
 
   <ion-card class="data-card">
     <ion-card-header>
-      <ion-card-title>PiCCO Parameters</ion-card-title>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <ion-card-title>PiCCO Input</ion-card-title>
+
+        <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
+          Uitleg
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
     </ion-card-header>
     <ion-card-content>
 
       <ion-grid>
         <ion-row>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="CI (L/min/m²)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="ci" placeholder="Target > 2.5"></ion-input>
+            <ion-input class="custom-green-input" label="CI (Index)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="ci" placeholder="N: 3.0 - 5.0"></ion-input>
           </ion-col>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="GEDI (ml/m²)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="gedi" placeholder="640 - 800"></ion-input>
+            <ion-input class="custom-green-input" label="GEDI (Vulling)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="gedi" placeholder="N: 640 - 800"></ion-input>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="ELWI (ml/kg)" label-placement="floating" fill="outline" type="number"
+            <ion-input class="custom-green-input" label="ELWI (Vocht)" label-placement="floating" fill="outline" type="number"
               [(ngModel)]="elwi" placeholder="Max 10"></ion-input>
           </ion-col>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="MAP (mmHg)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="map" placeholder="Target > 65"></ion-input>
+            <ion-input class="custom-green-input" label="MAP (Druk)" label-placement="floating" fill="outline" type="number"
+              [(ngModel)]="map" placeholder="Doel > 65"></ion-input>
           </ion-col>
         </ion-row>
       </ion-grid>
 
       <ion-list lines="none" style="margin-top: 10px; border-top: 1px solid #444; padding-top:10px;">
         <ion-item>
-          <ion-label>Loopt Vasopressie? (Nora)</ion-label>
+          <ion-label>Loopt Vasopressie? (Nor)</ion-label>
           <ion-toggle slot="end" [(ngModel)]="hasVaso" color="secondary"></ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-label>Loopt Inotropie? (Dobuta)</ion-label>
+          <ion-label>Loopt Inotropie? (Dobu)</ion-label>
           <ion-toggle slot="end" [(ngModel)]="hasIno" color="danger"></ion-toggle>
         </ion-item>
       </ion-list>
@@ -71,7 +78,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="diagnose" [color]="resultColor" class="result-card">
+  <ion-card *ngIf="diagnose" [color]="resultColor" class="result-card animate__animated animate__fadeInUp">
     <ion-card-header>
       <ion-card-title style="color: white; font-weight: bold;">
         {{ diagnose }}

@@ -8,15 +8,17 @@ import {
   IonInput, IonItem, IonLabel, IonRow,
   IonSegment, IonSegmentButton, IonText,
   IonTitle, IonToolbar, IonList, IonNote, IonButtons,
-  IonIcon, AlertController // <--- AlertController & IonIcon toegevoegd
+  IonIcon, ModalController // <--- HIER: ModalController ipv AlertController
 } from '@ionic/angular/standalone';
 
 import { PatientService } from '../services/patient';
 import { CalculatorService } from '../services/calculator';
+// Importeer je nieuwe Info Component
+import { InfoModalComponent } from '../info-modal.component';
 
 // Icoon registreren
 import { addIcons } from 'ionicons';
-import { informationCircleOutline } from 'ionicons/icons';
+import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tab3',
@@ -30,7 +32,7 @@ import { informationCircleOutline } from 'ionicons/icons';
     IonItem, IonInput, IonLabel, IonButton,
     IonText, IonBadge, IonGrid, IonRow, IonCol,
     IonSegment, IonSegmentButton, IonList, IonNote, IonButtons,
-    IonIcon // <--- Vergeet deze niet
+    IonIcon
   ]
 })
 export class Tab3Page {
@@ -72,44 +74,99 @@ export class Tab3Page {
   constructor(
     public patient: PatientService,
     private calc: CalculatorService,
-    private alertCtrl: AlertController // <--- Injecteren
+    private modalCtrl: ModalController // <--- Injecteer de ModalController
   ) {
-    // Icoon registreren
-    addIcons({ informationCircleOutline });
+    // Iconen registreren (ook de chevron voor de knop)
+    addIcons({ informationCircleOutline, chevronForwardOutline });
   }
 
   public segmentChanged(ev: any) {
     this.mode = ev.detail.value;
   }
 
-  // --- NIEUW: Info Pop-up die meeschakelt ---
-  async toonInfo() {
-    let header = 'Ventilatie Info';
-    let message = '';
+  // --- NIEUW: De functie die de mooie HTML pagina opent ---
+ async toonInfo() {
+    let titel = '';
+    let htmlContent = '';
 
     if (this.mode === 'controlled') {
-      header = 'Controlled Parameters';
-      message =
-        'Driving Pressure: De "drive" die de long belast (Pplat - PEEP). Doel < 15.\n\n' +
-        'C-Stat: Statische compliantie (rekbaarheid) van de long.\n\n' +
-        'Mech. Power: De hoeveelheid energie die per minuut in de longen wordt gepompt. Doel < 17 J/min.\n\n' +
-        'Tijdconstante (RC): Hoe snel de long vult/leegt (RxC). 3x RC is tijd voor 95% uitademing.\n\n' +
-        'Vd/Vt: Dode ruimte ratio. Het deel van de ademteug dat niet deelneemt aan gaswisseling.';
+      titel = 'Controlled Parameters';
+      htmlContent = `
+        <h3>Driving Pressure</h3>
+        <p>Het verschil tussen P-Plat en PEEP. Dit is de 'drive' die de longblaasjes belast.</p>
+
+        <div style="text-align: center; margin: 10px 0;">
+           <img src="assets/driving.png" style= "display: block; "width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #444;">
+           <div style="font-size: 0.8em; color: #888;">ΔP = Pplat - PEEP</div>
+        </div>
+
+        <ul>
+          <li><strong>Formule:</strong> Pplat - PEEP</li>
+          <li><strong>Doel:</strong> &lt; 15 cmH₂O (Amato et al, 2015)</li>
+          <li><em>Risico:</em> > 15 geeft verhoogde kans op longschade (VILI).</li>
+        </ul>
+
+        <h3>Tijdconstante (RC)</h3>
+        <p>De snelheid waarmee de long zich vult of leegt.</p>
+
+        <div style="text-align: center; margin: 10px 0;">
+           <img src="assets/rc.png" style= "display: block; "width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #444;">
+           <div style="font-size: 0.8em; color: #888;">1x RC = 63% uitgeademd</div>
+        </div>
+
+        <p>Voor een volledige uitademing (zonder auto-PEEP) is minimaal <strong>3x tot 4x RC</strong> aan tijd nodig.</p>
+
+        <h3>Dode Ruimte (Vd/Vt)</h3>
+        <p>Het deel van de ademteug dat niet deelneemt aan gaswisseling (trachea + slangen).</p>
+
+        <div style="text-align: center; margin: 10px 0;">
+           <img src="assets/vdvt.jpg" style="display: block; "width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #444;">
+        </div>
+
+        <p>Streefwaarde bij ARDS vaak < 40-50%. Hoge Vd/Vt wijst op slechte doorbloeding (dode ruimte ventilatie).</p>
+      `;
     } else {
-      header = 'Spontaneous (VentICalc)';
-      message =
-        'P-nadir: De diepste negatieve druk tijdens een occlusie-manoeuvre (inspiratoire hold).\n\n' +
-        'Pmus: Geschatte spierkracht van het diafragma. Doel < 10-15.\n\n' +
-        'Ptp: Transpulmonale druk (stress op de longblaasjes). Doel < 25.\n\n' +
-        'Doel: Beoordelen of de ademarbeid te hoog is (lung injury) of te laag (atrofie).';
+      titel = 'Spontaneous / Weaning';
+      htmlContent = `
+        <h3>P-Nadir</h3>
+        <p>De diepste negatieve druk tijdens een occlusie-manoeuvre (inspiratoire hold).</p>
+
+        <div style="text-align: center; margin: 10px 0;">
+           <img src="assets/pnadir.png" style="display: block; "width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #444;">
+        </div>
+
+        <h3>Pmus (Spierkracht)</h3>
+        <p>Geschatte druk die het diafragma genereert (Pmus = Pnadir - 0.75).</p>
+
+        <div style="text-align: center; margin: 10px 0;">
+           <img src="assets/pmus.png" style="display: block; "width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #444;">
+        </div>
+
+        <ul>
+          <li><strong>Target:</strong> Tussen 5 en 10-15 cmH₂O.</li>
+          <li><strong>Te hoog:</strong> Risico op lung injury (SI-PILI).</li>
+          <li><strong>Te laag:</strong> Risico op diafragma-atrofie.</li>
+        </ul>
+
+        <h3>Transpulmonale Druk (Ptp)</h3>
+        <p>De daadwerkelijke stress op de alveoli (Ptp = Pplat - Pes). Doel < 25 cmH₂O.</p>
+
+        <div style="text-align: center; margin: 10px 0;">
+           <img src="assets/ptp.png" style="display: block; "width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #444;">
+        </div>
+      `;
     }
 
-    const alert = await this.alertCtrl.create({
-      header: header,
-      message: message,
-      buttons: ['OK']
+    // Maak de modal aan met jouw component
+    const modal = await this.modalCtrl.create({
+      component: InfoModalComponent,
+      componentProps: {
+        title: titel,
+        content: htmlContent
+      }
     });
-    await alert.present();
+
+    await modal.present();
   }
 
   public berekenControlled(): void {

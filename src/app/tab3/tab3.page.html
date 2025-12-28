@@ -52,14 +52,16 @@
   <div *ngIf="mode === 'controlled'">
     <ion-card>
 
-      <ion-card-header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <ion-card-title>Instellingen & Mechanica</ion-card-title>
-          <ion-button fill="clear" size="small" (click)="toonInfo()">
-            <ion-icon name="information-circle-outline" slot="icon-only" style="font-size: 1.5em;"></ion-icon>
-          </ion-button>
-        </div>
-      </ion-card-header>
+     <ion-card-header>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <ion-card-title>Instellingen & Mechanica</ion-card-title>
+
+    <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
+      Uitleg
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-button>
+  </div>
+</ion-card-header>
 
       <ion-card-content>
         <ion-grid>
@@ -200,13 +202,15 @@
     <ion-card>
 
       <ion-card-header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <ion-card-title>Pressure Support / Weaning</ion-card-title>
-          <ion-button fill="clear" size="small" (click)="toonInfo()">
-            <ion-icon name="information-circle-outline" slot="icon-only" style="font-size: 1.5em;"></ion-icon>
-          </ion-button>
-        </div>
-      </ion-card-header>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <ion-card-title>Pressure Support / Weaning</ion-card-title>
+
+    <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
+      Uitleg
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-button>
+  </div>
+</ion-card-header>
 
       <ion-card-content>
         <ion-grid>
