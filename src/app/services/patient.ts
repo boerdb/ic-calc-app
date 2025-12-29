@@ -1,15 +1,27 @@
 import { Injectable } from '@angular/core';
 
-// Zo ziet een Bed eruit in het geheugen
-interface BedData {
-  id: number;
-  naam?: string; // Optioneel: "Jansen" of "Mvr de Vries"
-  geslacht: 'male' | 'female';
-  leeftijd?: number;
-  lengte: number | null;
+export interface BedData {
+  bedId: string;
+  naam: string;
+  leeftijd: number | null;
+  geslacht: string;
   gewicht: number | null;
-  ibw: number | null;
-  bsa: number | null;
+  lengte: number | null;
+
+  // Berekende waarden
+  ibw?: number;
+  bmi?: number;
+  bsa?: number;
+
+  // PiCCO data
+  picco?: {
+    ci: number | null;
+    svr: number | null;
+    gedi?: number | null;
+    elwi?: number | null;
+    map?: number | null;
+    gef?: number | null;
+  };
 }
 
 @Injectable({
@@ -17,99 +29,84 @@ interface BedData {
 })
 export class PatientService {
 
-  // We beheren 13 bedden
-  public beds: BedData[] = [];
+  // DEZE LIJST BEPAALT DE BEDNUMMERS:
+  private bedNames = ['1-1', '1-2', '1-3', '1-4', '2-1', '2-2', '3-1', '3-2', '4-1', '4-2', '5', '6', '7', '8'];
 
-  // Welk bed is er NU geselecteerd? (Standaard Bed 1)
-  public selectedBedId: number = 1;
+  // Hier maken we de bedden aan op basis van bovenstaande lijst
+  beds: BedData[] = this.bedNames.map(id => ({
+    bedId: id,
+    naam: '',
+    leeftijd: null,
+    geslacht: 'M',
+    gewicht: null,
+    lengte: null,
+    ibw: 0,
+    bmi: 0,
+    bsa: 0,
+    picco: { ci: null, svr: null, gedi: null, elwi: null, map: null }
+  }));
 
-  constructor() {
-    this.laadGegevens();
-  }
+  // Huidige selectie (standaard het eerste bed: 1-1)
+  current: BedData = this.beds[0];
 
-  // Huidige patiënt ophalen (zodat Tab 3 makkelijk data kan lezen)
-  get current(): BedData {
-    return this.beds.find(b => b.id === this.selectedBedId)!;
-  }
+  constructor() { }
 
-  // Gegevens laden uit telefoon geheugen
-  private laadGegevens() {
-    const opgeslagen = localStorage.getItem('mijn_patienten_data');
-
-    if (opgeslagen) {
-      this.beds = JSON.parse(opgeslagen);
-    } else {
-      // Eerste keer? Maak 13 lege bedden aan
-      for (let i = 1; i <= 13; i++) {
-        this.beds.push({
-          id: i,
-          naam: '',
-          geslacht: 'male',
-          lengte: null,
-          gewicht: null,
-          ibw: null,
-          bsa: null
-        });
+  selectBed(id: string) {
+    const found = this.beds.find(b => b.bedId === id);
+    if (found) {
+      this.current = found;
+      // Safety check voor picco object
+      if (!this.current.picco) {
+        this.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
       }
     }
-
-    // Onthoud ook welk bed als laatste open stond
-    const lastBed = localStorage.getItem('last_selected_bed');
-    if (lastBed) this.selectedBedId = parseInt(lastBed);
   }
 
-  // Gegevens opslaan (Automatisch aanroepen bij elke wijziging)
-  public opslaan() {
-    this.herbereken(); // Eerst zorgen dat BSA/IBW kloppen
-    localStorage.setItem('mijn_patienten_data', JSON.stringify(this.beds));
-    localStorage.setItem('last_selected_bed', this.selectedBedId.toString());
-  }
+  calculateDerivedValues() {
+    if (!this.current.lengte || !this.current.geslacht) return;
 
-  // De rekenmachine (nu voor de HUIDIGE patiënt)
-  public herbereken() {
-    const p = this.current; // Werk met de geselecteerde patiënt
+    const l = this.current.lengte;
+    const isMan = this.current.geslacht === 'M';
 
-    if (!p.lengte) {
-      p.ibw = null;
-      p.bsa = null;
-      return;
+    // IBW
+    if (l > 0) {
+      const base = isMan ? 50 : 45.5;
+      this.current.ibw = base + 0.91 * (l - 152.4);
+      this.current.ibw = Math.round(this.current.ibw * 10) / 10;
     }
 
-    // 1. IBW
-    const lengteBoven152 = Math.max(0, p.lengte - 152.4);
-    if (p.geslacht === 'male') {
-      p.ibw = 50 + (0.91 * lengteBoven152);
-    } else {
-      p.ibw = 45.5 + (0.91 * lengteBoven152);
+    // BMI
+    if (this.current.gewicht && this.current.gewicht > 0 && l > 0) {
+      const l_meter = l / 100;
+      this.current.bmi = this.current.gewicht / (l_meter * l_meter);
+      this.current.bmi = Math.round(this.current.bmi * 10) / 10;
     }
 
-    // 2. BSA
-    if (p.gewicht) {
-      p.bsa = 0.007184 * Math.pow(p.gewicht, 0.425) * Math.pow(p.lengte, 0.725);
+    // BSA (Du Bois)
+    if (this.current.gewicht && this.current.gewicht > 0 && l > 0) {
+      this.current.bsa = 0.007184 * Math.pow(this.current.gewicht, 0.425) * Math.pow(l, 0.725);
+      this.current.bsa = Math.round(this.current.bsa * 100) / 100;
     }
   }
 
-  // Bed wisselen
-  public kiesBed(id: number) {
-    this.selectedBedId = id;
-    this.opslaan(); // Sla keuze op
+  opslaan() {
+    this.calculateDerivedValues();
+    // Hier zou je eventueel data naar een echte database sturen later
   }
 
-  // Patiënt ontslaan (Bed leegmaken)
-  public bedLeegmaken() {
-    const index = this.beds.findIndex(b => b.id === this.selectedBedId);
-    if (index > -1) {
-      this.beds[index] = {
-        id: this.selectedBedId,
-        naam: '',
-        geslacht: 'male',
-        leeftijd: undefined,
-        lengte: null,
-        gewicht: null,
-        ibw: null,
-        bsa: null
-      };
-      this.opslaan();
-    }
+  bedLeegmaken() {
+    this.current.naam = '';
+    this.current.leeftijd = null;
+    this.current.geslacht = 'M';
+    this.current.gewicht = null;
+    this.current.lengte = null;
+    this.current.ibw = 0;
+    this.current.bmi = 0;
+    this.current.bsa = 0;
+    this.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
+  }
+
+  get selectedBedId(): string {
+    return this.current.bedId;
   }
 }

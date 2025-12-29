@@ -1,5 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-title>PiCCO & Hemodynamiek</ion-title>
+
     <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
@@ -10,67 +12,91 @@
         </div>
       </div>
     </ion-buttons>
-    <ion-title>Hemodynamiek</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
 
   <ion-card class="data-card">
-    <ion-card-header>
+
+    <ion-card-header style="padding-bottom: 0;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <ion-card-title>PiCCO Input</ion-card-title>
+        <ion-card-title>Meetwaarden</ion-card-title>
 
         <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
-          Uitleg
-          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-        </ion-button>
+      Uitleg
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-button>
       </div>
     </ion-card-header>
+
     <ion-card-content>
 
       <ion-grid>
         <ion-row>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="CI (Index)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="ci" placeholder="N: 3.0 - 5.0"></ion-input>
+            <ion-input
+              class="custom-green-input"
+              label="CI (L/min/m²)"
+              label-placement="floating"
+              placeholder="Norm: 3.0 - 5.0"
+              fill="outline"
+              type="number"
+              [(ngModel)]="patient.current.picco!.ci">
+            </ion-input>
           </ion-col>
+
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="GEDI (Vulling)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="gedi" placeholder="N: 640 - 800"></ion-input>
+            <ion-input
+              class="custom-green-input"
+              label="SVR (dyn)"
+              label-placement="floating"
+              placeholder="Norm: 1700 - 2400"
+              fill="outline"
+              type="number"
+              [(ngModel)]="patient.current.picco!.svr">
+            </ion-input>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="ELWI (Vocht)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="elwi" placeholder="Max 10"></ion-input>
+            <ion-input
+              class="custom-green-input"
+              label="GEDI (ml/m²)"
+              label-placement="floating"
+              placeholder="Norm: 640 - 800"
+              fill="outline"
+              type="number"
+              [(ngModel)]="patient.current.picco!.gedi">
+            </ion-input>
           </ion-col>
+
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="MAP (Druk)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="map" placeholder="Doel > 65"></ion-input>
+            <ion-input
+              class="custom-green-input"
+              label="ELWI (ml/kg)"
+              label-placement="floating"
+              placeholder="Norm: < 10"
+              fill="outline"
+              type="number"
+              [(ngModel)]="patient.current.picco!.elwi">
+            </ion-input>
           </ion-col>
         </ion-row>
       </ion-grid>
-
-      <ion-list lines="none" style="margin-top: 10px; border-top: 1px solid #444; padding-top:10px;">
-        <ion-item>
-          <ion-label>Loopt Vasopressie? (Nor)</ion-label>
-          <ion-toggle slot="end" [(ngModel)]="hasVaso" color="secondary"></ion-toggle>
-        </ion-item>
-        <ion-item>
-          <ion-label>Loopt Inotropie? (Dobu)</ion-label>
-          <ion-toggle slot="end" [(ngModel)]="hasIno" color="danger"></ion-toggle>
-        </ion-item>
-      </ion-list>
 
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" class="teal-btn" (click)="analyseer()">Interpreteer</ion-button>
+            <ion-button expand="block" class="teal-btn" (click)="analyseer()">
+              Analyseer
+            </ion-button>
           </ion-col>
           <ion-col size="4">
-            <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
+             <ion-button expand="block" color="medium" fill="outline" (click)="reset()">
+               Wis
+             </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -78,24 +104,27 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="diagnose" [color]="resultColor" class="result-card animate__animated animate__fadeInUp">
+  <ion-card *ngIf="diagnose" [color]="resultColor" style="margin-top: 20px;">
     <ion-card-header>
-      <ion-card-title style="color: white; font-weight: bold;">
+      <ion-card-title style="color: white; font-size: 1.2em;">
+        <ion-icon name="pulse-outline" style="vertical-align: bottom; margin-right: 5px;"></ion-icon>
         {{ diagnose }}
       </ion-card-title>
     </ion-card-header>
     <ion-card-content style="color: white;">
+      <p style="font-size: 1.1em; font-weight: bold; line-height: 1.4;">{{ advies }}</p>
 
-      <div *ngIf="elwiWarning" style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 10px; font-weight: bold; border-left: 5px solid yellow;">
-        {{ elwiWarning }}
+      <div *ngIf="elwiWarning" style="margin-top: 15px; background: rgba(0,0,0,0.25); padding: 8px; border-radius: 4px; display: flex; align-items: center;">
+        <ion-icon name="alert-circle-outline" style="font-size: 1.5em; margin-right: 10px;"></ion-icon>
+        <span>{{ elwiWarning }}</span>
       </div>
-
-      <p style="font-size: 1.1em; line-height: 1.4;">
-        <strong>Advies:</strong><br>
-        {{ advies }}
-      </p>
-
     </ion-card-content>
   </ion-card>
+
+  <div class="ion-padding ion-text-center">
+    <p style="color: #666; font-size: 0.85em; font-style: italic;">
+      Tip: Ga naar 'Pompen' (Tab 5) voor pompstanden op basis van deze waarden.
+    </p>
+  </div>
 
 </ion-content>

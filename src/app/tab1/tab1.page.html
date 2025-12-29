@@ -3,24 +3,24 @@
     <ion-title>
       Bed {{ patient.selectedBedId }}
       <span *ngIf="patient.current.naam" style="font-size: 0.8em; opacity: 0.9;">
-         - {{ patient.current.naam }}
+          - {{ patient.current.naam }}
       </span>
     </ion-title>
 
     <ion-buttons slot="end">
-      <div class="bed-selector-box">
+      <div class="bed-selector-box" style="display: flex; align-items: center; background: rgba(0,0,0,0.05); padding: 5px 10px; border-radius: 15px; margin-right: 10px;">
         <ion-icon name="bed-outline" style="margin-right: 5px; font-size: 1.2em;"></ion-icon>
 
         <ion-select
           [value]="patient.selectedBedId"
           (ionChange)="wisselBed($event)"
           interface="action-sheet"
-          placeholder="Kies Bed">
+          placeholder="Kies"
+          style="max-width: 100px;">
 
-          <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.id">
-            Bed {{ bed.id }} <span *ngIf="bed.naam">({{ bed.naam }})</span>
+          <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.bedId">
+            Bed {{ bed.bedId }} <span *ngIf="bed.naam">({{ bed.naam }})</span>
           </ion-select-option>
-
         </ion-select>
       </div>
     </ion-buttons>
@@ -37,7 +37,7 @@
 
     <ion-card-content>
 
-      <ion-grid style="padding: 0; margin-bottom: 20px;">
+      <ion-grid style="padding: 0; margin-bottom: 5px;">
         <ion-row>
           <ion-col size="8">
             <ion-input
@@ -58,6 +58,7 @@
               label-placement="floating"
               fill="outline"
               type="number"
+              placeholder=""
               [(ngModel)]="patient.current.leeftijd"
               (ionInput)="dataGewijzigd()">
             </ion-input>
@@ -65,43 +66,55 @@
         </ion-row>
       </ion-grid>
 
-      <ion-segment [(ngModel)]="patient.current.geslacht" (ionChange)="dataGewijzigd()" class="gender-segment" mode="ios">
-        <ion-segment-button value="male">
+      <ion-segment [(ngModel)]="patient.current.geslacht" (ionChange)="dataGewijzigd()" class="gender-segment" mode="ios" style="margin-bottom: 20px;">
+        <ion-segment-button value="M">
           <ion-icon name="male-outline"></ion-icon> <ion-label>Man</ion-label>
         </ion-segment-button>
-        <ion-segment-button value="female">
+        <ion-segment-button value="V">
           <ion-icon name="female-outline"></ion-icon> <ion-label>Vrouw</ion-label>
         </ion-segment-button>
       </ion-segment>
 
-      <br>
-
-      <ion-grid>
+      <ion-grid style="padding: 0;">
         <ion-row>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="Lengte (cm)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="patient.current.lengte" (ionInput)="dataGewijzigd()">
+            <ion-input
+              class="custom-green-input"
+              label="Lengte (cm)"
+              label-placement="floating"
+              fill="outline"
+              type="number"
+              placeholder=""
+              [(ngModel)]="patient.current.lengte"
+              (ionInput)="dataGewijzigd()">
             </ion-input>
           </ion-col>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="Gewicht (kg)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="patient.current.gewicht" (ionInput)="dataGewijzigd()">
+            <ion-input
+              class="custom-green-input"
+              label="Gewicht (kg)"
+              label-placement="floating"
+              fill="outline"
+              type="number"
+              placeholder=""
+              [(ngModel)]="patient.current.gewicht"
+              (ionInput)="dataGewijzigd()">
             </ion-input>
           </ion-col>
         </ion-row>
       </ion-grid>
 
-      <div *ngIf="patient.current.ibw || patient.current.bsa" style="margin-top: 20px;">
-        <ion-item lines="none" class="result-item">
-          <ion-label>Ideaal Gewicht (IBW)</ion-label>
-          <ion-note slot="end" style="font-size: 1.1em; font-weight: bold;">
+      <div *ngIf="patient.current.ibw || patient.current.bsa" style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <ion-item lines="none" class="result-item" style="--background: transparent; --min-height: 30px;">
+          <ion-label style="color: #aaa;">Ideaal Gewicht (IBW)</ion-label>
+          <ion-note slot="end" style="font-size: 1.2em; font-weight: bold; color: #28a745;">
             {{ patient.current.ibw | number:'1.0-0' }} kg
           </ion-note>
         </ion-item>
 
-        <ion-item lines="none" class="result-item">
-          <ion-label>Lichaamsoppervlak (BSA)</ion-label>
-          <ion-note slot="end" style="font-size: 1.1em; font-weight: bold;">
+        <ion-item lines="none" class="result-item" style="--background: transparent; --min-height: 30px;">
+          <ion-label style="color: #aaa;">Lichaamsoppervlak (BSA)</ion-label>
+          <ion-note slot="end" style="font-size: 1.2em; font-weight: bold; color: #28a745;">
             {{ patient.current.bsa | number:'1.2-2' }} m²
           </ion-note>
         </ion-item>
@@ -114,16 +127,17 @@
         </ion-button>
       </div>
 
-<div style="text-align: center; margin-top: 40px; margin-bottom: 20px; padding: 0 20px;">
-    <ion-text color="medium">
-      <p style="font-size: 0.75em; line-height: 1.4; font-style: italic;">
-        Disclaimer: Deze applicatie is bedoeld als ondersteunend hulpmiddel voor professionals.
-        De auteur aanvaardt geen aansprakelijkheid voor de uitkomsten.
-        Verifieer berekeningen altijd voor klinisch gebruik. © 2026 Ben de Boer
-      </p>
-    </ion-text>
-  </div>
-
+      <div style="text-align: center; margin-top: 40px; margin-bottom: 10px; padding: 0 20px;">
+        <ion-text color="medium">
+          <p style="font-size: 0.7em; line-height: 1.4; font-style: italic; opacity: 0.6;">
+            Disclaimer: Deze applicatie is bedoeld als ondersteunend hulpmiddel voor professionals.
+            De auteur aanvaardt geen aansprakelijkheid voor de uitkomsten.
+            Verifieer berekeningen altijd voor klinisch gebruik.
+            <br><br>
+            <strong>© 2026 Ben de Boer</strong>
+          </p>
+        </ion-text>
+      </div>
 
     </ion-card-content>
   </ion-card>

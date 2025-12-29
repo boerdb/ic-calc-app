@@ -1,19 +1,27 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonToolbar, IonTitle,
-  IonCard, IonCardHeader, IonCardTitle, IonCardContent, // <--- BELANGRIJK: Deze toegevoegd!
-  IonList, IonItem, IonInput, IonLabel, IonNote, IonGrid, IonRow, IonCol,
-  IonButton, IonButtons, IonIcon, IonToggle,
+  IonButton, IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader, IonCardTitle,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonRow,
+  IonTitle,
+  IonToolbar,
   ModalController
 } from '@ionic/angular/standalone';
 
-import { PatientService } from '../services/patient';
-import { InfoModalComponent } from '../info-modal.component';
-
 import { addIcons } from 'ionicons';
-import { chevronForwardOutline, pulseOutline } from 'ionicons/icons';
+import { alertCircleOutline, chevronForwardOutline, pulseOutline } from 'ionicons/icons';
+import { InfoModalComponent } from '../info-modal.component';
+import { PatientService } from '../services/patient';
 
 @Component({
   selector: 'app-tab4',
@@ -23,24 +31,13 @@ import { chevronForwardOutline, pulseOutline } from 'ionicons/icons';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonToolbar, IonTitle,
-    IonCard, IonCardHeader, IonCardTitle, IonCardContent, // <--- EN HIER OOK
-    IonList, IonItem, IonInput, IonLabel,  IonGrid, IonRow, IonCol,
-    IonButton, IonButtons, IonToggle, IonIcon
+    IonCard, IonCardHeader, IonCardTitle, IonCardContent,
+     IonInput, IonGrid, IonRow, IonCol,
+    IonButton, IonButtons, IonIcon
   ]
 })
 export class Tab4Page {
 
-  // Inputs: PiCCO Waarden
-  public ci: number | null = null;
-  public gedi: number | null = null;
-  public elwi: number | null = null;
-  public map: number | null = null;
-
-  // Inputs: Huidige Therapie
-  public hasVaso: boolean = false;
-  public hasIno: boolean = false;
-
-  // Resultaten
   public diagnose: string = '';
   public advies: string = '';
   public elwiWarning: string = '';
@@ -50,10 +47,13 @@ export class Tab4Page {
     public patient: PatientService,
     private modalCtrl: ModalController
   ) {
-    addIcons({ chevronForwardOutline, pulseOutline });
+    addIcons({ chevronForwardOutline, pulseOutline, alertCircleOutline });
+
+    if (!this.patient.current.picco) {
+      this.patient.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
+    }
   }
 
-// --- De Info Popup Functie ---
   async toonInfo() {
     const htmlContent = `
       <h3>PiCCO Interpretatie</h3>
@@ -102,67 +102,76 @@ export class Tab4Page {
     await modal.present();
   }
 
-  // --- Jouw Analyse Functie ---
+  // --- HIER ZIT DE UPDATE ---
   public analyseer() {
-    if (!this.ci || !this.gedi || !this.map) return;
+    const p = this.patient.current.picco;
 
-    // 1. Check Longwater (Veiligheid)
-    if (this.elwi && this.elwi > 10) {
+    // Check of minimale data er is
+    if (!p || !p.ci || !p.svr) {
+      this.diagnose = 'Vul in ieder geval CI en SVR in.';
+      this.resultColor = 'medium';
+      this.advies = '';
+      return;
+    }
+
+    // 1. Veiligheidscheck Longwater
+    if (p.elwi && p.elwi > 10) {
       this.elwiWarning = '⚠️ Let op: Hoog ELWI (>10). Wees voorzichtig met vullen!';
     } else {
       this.elwiWarning = '';
     }
 
-    // SCENARIO A: Laag Flow (CI < 2.5) -> Pomp of Vulling probleem
-    if (this.ci < 2.5) {
-      if (this.gedi < 640) {
-        this.diagnose = 'Hypovolemie';
-        this.resultColor = 'warning'; // Geel
-        this.advies = (this.elwi && this.elwi > 10)
-          ? 'Conflict: Patiënt is leeg maar longen zijn nat. Voorzichtig vullen!'
-          : 'Volume toediening (Vullen).';
+    // --- DE LOGICA ---
+
+    // SCENARIO A: Laag Flow (CI < 3.0) -> Contractiliteit of Vulling probleem
+    if (p.ci < 3.0) {
+      if (p.gedi && p.gedi < 640) {
+         this.diagnose = 'Hypovolemie (Te leeg)';
+         this.resultColor = 'warning'; // Geel
+         this.advies = (p.elwi && p.elwi > 10)
+           ? 'Let op: Patiënt is leeg maar natte longen. Voorzichtig vullen!'
+           : 'Volume toediening (Vullen).';
       } else {
-        this.diagnose = 'Cardiaal Falen';
-        this.resultColor = 'danger'; // Rood
-        this.advies = this.hasIno
-          ? 'Inotropie onvoldoende? Overweeg ophogen/switch.'
-          : 'Start Inotropie (Dobutamine/Milrinone).';
+         this.diagnose = 'Cardiaal Falen (Pompfunctie)';
+         this.resultColor = 'danger'; // Rood
+         this.advies = 'Start Milrinon (1e keus) of Dobutamine.';
       }
     }
 
-    // SCENARIO B: Normaal of Hoog Flow (CI >= 2.5)
-    else {
-      // Check: Is het Hyperdynamisch?
-      const isHyper = this.ci > 5.0; // Grenswaarde voor hyperdynamisch
-
-      if (this.map < 65) {
-        // Lage bloeddruk ondanks goede flow = Vasoplegie
-        this.diagnose = isHyper ? 'Vasoplegie (Hyperdynamisch)' : 'Vasoplegie';
-        this.resultColor = 'secondary'; // Blauw
-
-        this.advies = this.hasVaso
-          ? 'Vasoplegie houdt aan. Ophogen Noradrenaline of start Vasopressine?'
-          : 'Start Vasopressie (Noradrenaline).';
-      } else {
-        // Goede bloeddruk + Goede flow
-        if (isHyper) {
-           // Wel stabiel qua druk, maar hart gaat te keer
-           this.diagnose = 'Hyperdynamisch (Stabiel)';
-           this.resultColor = 'warning'; // Oranje waarschuwing
-           this.advies = 'Hoge Cardiac Output. Oorzaak? Pijn, onrust, koorts of beginnende sepsis?';
+    // SCENARIO B: Hoog Flow (CI > 5.0) -> HYPERDYNAMISCH (Dit miste net!)
+    else if (p.ci > 5.0) {
+        // Is de weerstand ook laag? Dan is het klassieke septische shock (Vasoplegie)
+        if (p.svr < 1700) {
+            this.diagnose = 'Vasoplegie (Hyperdynamisch)';
+            this.resultColor = 'secondary'; // Blauw
+            this.advies = 'Hoge output + Lage weerstand (Sepsis?). Start/Ophogen Noradrenaline.';
         } else {
-           // Saai is goed
-           this.diagnose = 'Hemodynamisch Stabiel';
-           this.resultColor = 'success'; // Groen
-           this.advies = 'Continueer beleid. Probeer medicatie af te bouwen.';
+            // Wel hoge output, maar weerstand is normaal.
+            this.diagnose = 'Hyperdynamisch (Hoge Output)';
+            this.resultColor = 'warning'; // Oranje (Even opletten)
+            this.advies = 'Het hart werkt hard. Oorzaak? Pijn, onrust, koorts of anemie?';
         }
-      }
+    }
+
+    // SCENARIO C: Normaal Flow (3.0 - 5.0), maar wel lage weerstand
+    else if (p.svr < 1700) {
+       this.diagnose = 'Vasoplegie (Vaten staan open)';
+       this.resultColor = 'secondary'; // Blauw
+       this.advies = 'Start/Ophogen Noradrenaline. Bij refractair: Argipressine (zie Tab 5).';
+    }
+
+    // SCENARIO D: Alles ok
+    else {
+       this.diagnose = 'Hemodynamisch Stabiel';
+       this.resultColor = 'success'; // Groen
+       this.advies = 'Continueer beleid. Probeer medicatie af te bouwen.';
     }
   }
 
   public reset() {
-    this.ci = null; this.gedi = null; this.elwi = null; this.map = null;
-    this.hasVaso = false; this.hasIno = false;
+    if (this.patient.current.picco) {
+       this.patient.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
+    }
     this.diagnose = ''; this.advies = ''; this.elwiWarning = '';
   }
 }

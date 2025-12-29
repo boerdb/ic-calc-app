@@ -1,7 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-
-<ion-buttons slot="end" style="margin-right: 10px;">
+    <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
           Bed {{ patient.selectedBedId || '?' }}
@@ -11,39 +10,119 @@
         </div>
       </div>
     </ion-buttons>
-
-    <ion-title>Medicatie & Pompen</ion-title>
+    <ion-title>Medicatie & Advies</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
 
+  <ion-card *ngIf="piccoAdvies" style="border-left: 5px solid #3880ff; background: #f0f8ff; margin-bottom: 20px;">
+    <ion-card-content>
+      <ion-item lines="none" style="--background: transparent; --padding-start: 0;">
+        <ion-icon name="pulse-outline" slot="start" style="color: #3880ff; margin-right: 10px;"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <h3 style="color: #3880ff; font-weight: bold; margin-bottom: 4px;">PiCCO Analyse</h3>
+          <p style="font-size: 0.9em; color: #555;">
+            CI: <strong>{{ patient.current.picco?.ci }}</strong> |
+            SVR: <strong>{{ patient.current.picco?.svr }}</strong>
+          </p>
+        </ion-label>
+      </ion-item>
+
+      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(56, 128, 255, 0.2); font-style: italic; color: #222; font-weight: 500;">
+        <ion-icon name="bulb-outline" style="vertical-align: -2px; margin-right: 5px; color: #ffca28;"></ion-icon>
+        {{ piccoAdvies }}
+      </div>
+    </ion-card-content>
+  </ion-card>
+
   <ion-card class="data-card">
+
     <ion-card-header>
-      <ion-card-title>Noradrenaline</ion-card-title>
-      <ion-card-subtitle>Continu Infuus</ion-card-subtitle>
+      <div style="display: flex; justify-content: space-between; align-items: start;">
+
+        <div style="margin-right: 5px;">
+          <ion-card-title style="font-size: 1.1em; line-height: 1.2;">
+            Noradrenaline
+            <span *ngIf="noraConcMg === 1" style="color: #ffca28; font-size: 0.8em; white-space: nowrap;">
+              (Slappe)
+            </span>
+          </ion-card-title>
+          <ion-card-subtitle style="margin-top: 4px;">1e keus Vasopressor</ion-card-subtitle>
+        </div>
+
+        <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
+      Protocol
+      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+    </ion-button>
+      </div>
     </ion-card-header>
 
     <ion-card-content>
 
-      <ion-input class="custom-green-input ion-readonly"
-                 label="Gewicht (uit Tab pat)"
-                 label-placement="floating"
-                 fill="outline"
-                 [value]="patient.current.gewicht ? patient.current.gewicht + ' kg' : 'Vul Tab pat in !'"
-                 readonly="true"
-                 style="margin-bottom: 15px;">
+      <ion-segment [(ngModel)]="noraMode" (ionChange)="modeChanged()" mode="ios" style="margin-bottom: 15px;">
+        <ion-segment-button value="naarMl">
+          <ion-label>Bereken Pompstand</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="naarGamma">
+          <ion-label>Bereken Gamma</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ion-input
+         class="custom-green-input"
+         label="Gewicht (kg)"
+         label-placement="floating"
+         fill="outline"
+         type="number"
+         inputmode="decimal"
+         placeholder="Vul gewicht in..."
+         [(ngModel)]="patient.current.gewicht"
+         (ionInput)="updateGewicht()"
+         style="margin-bottom: 15px;">
       </ion-input>
 
       <ion-grid>
         <ion-row>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="Dosis (mcg/kg/min)" label-placement="floating" fill="outline" type="number"
-              [(ngModel)]="dosis"></ion-input>
+
+            <ion-input *ngIf="noraMode === 'naarMl'"
+                       class="custom-green-input"
+                       label="Dosis (mcg/kg/min)"
+                       label-placement="floating"
+                       fill="outline"
+                       type="number"
+                       inputmode="decimal"
+                       placeholder="0.00"
+                       max="5"
+                       [(ngModel)]="noraDosis">
+                       </ion-input>
+
+            <div *ngIf="noraDosis && noraDosis > 1.0"
+                 style="color: #c62828; font-size: 0.8em; margin-top: -10px; margin-bottom: 10px; padding-left: 5px; font-weight: bold;">
+                 <ion-icon name="warning" style="vertical-align: bottom;"></ion-icon>
+                 Extreem hoog! Bedoel je {{ noraDosis / 100 }}?
+            </div>
+
+            <ion-input *ngIf="noraMode === 'naarGamma'"
+                       class="custom-green-input"
+                       label="Pompstand (ml/u)"
+                       label-placement="floating"
+                       fill="outline"
+                       type="number"
+                       inputmode="decimal"
+                       [(ngModel)]="noraInputMl">
+            </ion-input>
+
           </ion-col>
 
           <ion-col size="6">
-             <ion-select class="custom-green-input" label="Oplossing" label-placement="floating" fill="outline" [(ngModel)]="concentratieMg" interface="popover">
+             <ion-select class="custom-green-input"
+                         label="Oplossing"
+                         label-placement="floating"
+                         fill="outline"
+                         [(ngModel)]="noraConcMg"
+                         interface="popover">
                 <ion-select-option [value]="5">5 mg / 50ml</ion-select-option>
                 <ion-select-option [value]="1">1 mg / 50ml</ion-select-option>
              </ion-select>
@@ -54,7 +133,7 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" class="teal-btn" (click)="bereken()" [disabled]="!patient.current.gewicht">Bereken</ion-button>
+            <ion-button expand="block" class="teal-btn" (click)="bereken()">Bereken</ion-button>
           </ion-col>
           <ion-col size="4">
              <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Wis</ion-button>
@@ -62,14 +141,102 @@
         </ion-row>
       </ion-grid>
 
-      <div *ngIf="resStand !== null" style="margin-top: 20px; text-align: center; background: rgba(40, 167, 69, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #28a745;">
+      <div *ngIf="noraMode === 'naarMl' && noraResStand !== null"
+           style="margin-top: 20px; text-align: center; background: rgba(40, 167, 69, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #28a745;">
         <ion-label color="success">
-          <h2>Loopsnelheid</h2>
+          <h2>Zet Pomp op:</h2>
           <div style="font-size: 2.5em; font-weight: bold; margin: 10px 0;">
-            {{ resStand | number:'1.1-1' }}
+            {{ noraResStand | number:'1.1-1' }}
           </div>
           <p style="font-size: 1.2em;">ml/uur</p>
         </ion-label>
+      </div>
+
+      <div *ngIf="noraMode === 'naarGamma' && noraResultGamma !== null"
+           style="margin-top: 20px; text-align: center; background: rgba(56, 128, 255, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #3880ff;">
+        <ion-label color="primary">
+          <h2>Huidige Dosis:</h2>
+          <div style="font-size: 2.5em; font-weight: bold; margin: 10px 0;">
+            {{ noraResultGamma | number:'1.2-2' }}
+          </div>
+          <p style="font-size: 1.2em;">mcg/kg/min (Gamma)</p>
+        </ion-label>
+      </div>
+
+      <div *ngIf="isArgiIndicated"
+           style="margin-top: 15px; padding: 10px; background-color: #ffebee; color: #c62828; border-radius: 8px; font-size: 0.9em; text-align: center; border: 1px solid #ef9a9a;">
+        <ion-icon name="alert-circle-outline" style="font-size: 1.2em; vertical-align: middle;"></ion-icon>
+        <strong>Let op:</strong> Hoge dosering (> 0,20).<br>Overweeg Argipressine.
+      </div>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="data-card" *ngIf="isArgiIndicated || argiDosis" style="border-left: 5px solid #ff9800;">
+
+    <ion-card-header>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <ion-card-title>Argipressine</ion-card-title>
+          <ion-card-subtitle>Bij refractaire shock</ion-card-subtitle>
+        </div>
+
+        <ion-button fill="clear" size="small" (click)="toonInfo()" style="font-size: 0.9em; --color: #ff9800;">
+          Protocol
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p style="margin-bottom: 10px; font-size: 0.9em; color: #666; background: #fff3e0; padding: 5px; border-radius: 4px;">
+        <ion-icon name="information-circle-outline" style="vertical-align: middle;"></ion-icon>
+        Spuit: 40 IE in 50ml (= 0,8 IE/ml)
+      </p>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+             <ion-select class="custom-green-input"
+                         label="Dosis Stap (IE/min)"
+                         label-placement="floating"
+                         fill="outline"
+                         [(ngModel)]="argiDosis"
+                         interface="action-sheet"
+                         (ionChange)="bereken()">
+                <ion-select-option *ngFor="let opt of argiOptions" [value]="opt.value">
+                  {{ opt.label }}
+                </ion-select-option>
+             </ion-select>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <div *ngIf="argiResStand !== null" style="margin-top: 20px; text-align: center; background: rgba(255, 152, 0, 0.1); padding: 15px; border-radius: 8px; border: 1px solid #ff9800;">
+        <ion-label color="warning">
+          <h2 style="color: #e65100;">Loopsnelheid</h2>
+          <div style="font-size: 2.5em; font-weight: bold; margin: 10px 0; color: #e65100;">
+            {{ argiResStand | number:'1.2-2' }}
+          </div>
+          <p style="font-size: 1.2em; color: #e65100;">ml/uur</p>
+        </ion-label>
+      </div>
+
+      <div *ngIf="isArgiAfbouwIndicated" style="margin-top: 15px; padding: 10px; background-color: #fff3e0; color: #e65100; border-radius: 8px; font-size: 0.9em; text-align: center; border: 1px solid #ffcc80;">
+        <ion-icon name="warning" style="font-size: 1.2em; vertical-align: middle;"></ion-icon>
+        <strong>Afbouwen:</strong> Nora is &le; 0,1.<br>Verminder Argipressine met 0,01 IE/min per uur.
+      </div>
+
+      <div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid rgba(230, 81, 0, 0.2);">
+        <h3 style="font-size: 0.9em; font-weight: bold; color: #e65100; margin-bottom: 2px;">
+          Afbouwbeleid:
+        </h3>
+        <p style="font-size: 0.85em; color: #444; margin: 0;">
+          Start pas met afbouwen als <strong>Noradrenaline &le; 0,10</strong> is.
+        </p>
+        <p style="font-size: 0.8em; color: #666; font-style: italic; margin-top: 2px;">
+          Stap: -0,01 IE/min per uur.
+        </p>
       </div>
 
     </ion-card-content>
