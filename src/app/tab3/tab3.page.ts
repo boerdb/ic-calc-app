@@ -196,6 +196,9 @@ export class Tab3Page {
     const compliance = this.resCstat || this.resCdyn;
     if (compliance && this.inputResistance) {
       this.resTimeConstant = this.calc.calcTimeConstant(compliance, this.inputResistance);
+    this.patient.current.rcExp = this.resTimeConstant;
+      this.patient.opslaan();
+
     }
 
     if (this.inputPaCO2 && this.inputPeCO2) {

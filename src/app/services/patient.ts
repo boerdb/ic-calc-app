@@ -13,6 +13,9 @@ export interface BedData {
   bmi?: number;
   bsa?: number;
 
+  rcExp?: number | null;
+
+
   // PiCCO data
   picco?: {
     ci: number | null;
@@ -104,6 +107,8 @@ export class PatientService {
     this.current.bmi = 0;
     this.current.bsa = 0;
     this.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
+    this.current.rcExp = null;
+
   }
 
   get selectedBedId(): string {

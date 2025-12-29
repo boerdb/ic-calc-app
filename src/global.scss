@@ -235,3 +235,36 @@ ion-button[fill="outline"] {
   /* 4. Schaduw */
   --box-shadow: 0 4px 10px rgba(0, 121, 107, 0.4);
 }
+/* --- CENTREREN VAN TITELS IN DE HEADER (VOOR ALLE TABS) --- */
+
+ion-toolbar {
+  // Zorgt dat de titel weet ten opzichte van WIE hij in het midden moet staan
+  position: relative;
+
+  ion-title {
+    // Haal de titel uit de normale 'flow' en plak hem hard in het midden
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    // Zorg voor perfecte centrering (horizontaal én verticaal)
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // Zorg dat de titel ACHTER de knoppen ligt en je er doorheen kunt klikken
+    z-index: 0;
+    pointer-events: none;
+    padding: 0 !important; // Forceer padding naar 0
+  }
+
+  ion-buttons {
+    // Zorg dat knoppen (zoals je info-knop en patiënt-info) VÓÓR de titel liggen
+    z-index: 10;
+    position: relative;
+    background: transparent; // Voorkomt witte blokken
+  }
+}
