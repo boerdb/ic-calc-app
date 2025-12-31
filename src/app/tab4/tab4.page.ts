@@ -103,7 +103,7 @@ export class Tab4Page {
   }
 
   // --- HIER ZIT DE UPDATE ---
-  public analyseer() {
+ public analyseer() {
     const p = this.patient.current.picco;
 
     // Check of minimale data er is
@@ -114,8 +114,14 @@ export class Tab4Page {
       return;
     }
 
+    // Veiligheid: Zeker weten dat we met getallen rekenen (voorkomt string fouten)
+    const ci = Number(p.ci);
+    const svr = Number(p.svr);
+    const gedi = p.gedi ? Number(p.gedi) : null;
+    const elwi = p.elwi ? Number(p.elwi) : null;
+
     // 1. Veiligheidscheck Longwater
-    if (p.elwi && p.elwi > 10) {
+    if (elwi && elwi > 10) {
       this.elwiWarning = '⚠️ Let op: Hoog ELWI (>10). Wees voorzichtig met vullen!';
     } else {
       this.elwiWarning = '';
@@ -124,11 +130,11 @@ export class Tab4Page {
     // --- DE LOGICA ---
 
     // SCENARIO A: Laag Flow (CI < 3.0) -> Contractiliteit of Vulling probleem
-    if (p.ci < 3.0) {
-      if (p.gedi && p.gedi < 640) {
+    if (ci < 3.0) {
+      if (gedi && gedi < 640) {
          this.diagnose = 'Hypovolemie (Te leeg)';
          this.resultColor = 'warning'; // Geel
-         this.advies = (p.elwi && p.elwi > 10)
+         this.advies = (elwi && elwi > 10)
            ? 'Let op: Patiënt is leeg maar natte longen. Voorzichtig vullen!'
            : 'Volume toediening (Vullen).';
       } else {
@@ -138,29 +144,36 @@ export class Tab4Page {
       }
     }
 
-    // SCENARIO B: Hoog Flow (CI > 5.0) -> HYPERDYNAMISCH (Dit miste net!)
-    else if (p.ci > 5.0) {
+    // SCENARIO B: Hoog Flow (CI > 5.0) -> HYPERDYNAMISCH
+    else if (ci > 5.0) {
         // Is de weerstand ook laag? Dan is het klassieke septische shock (Vasoplegie)
-        if (p.svr < 1700) {
+        if (svr < 1700) {
             this.diagnose = 'Vasoplegie (Hyperdynamisch)';
             this.resultColor = 'secondary'; // Blauw
             this.advies = 'Hoge output + Lage weerstand (Sepsis?). Start/Ophogen Noradrenaline.';
         } else {
             // Wel hoge output, maar weerstand is normaal.
             this.diagnose = 'Hyperdynamisch (Hoge Output)';
-            this.resultColor = 'warning'; // Oranje (Even opletten)
+            this.resultColor = 'warning'; // Oranje
             this.advies = 'Het hart werkt hard. Oorzaak? Pijn, onrust, koorts of anemie?';
         }
     }
 
     // SCENARIO C: Normaal Flow (3.0 - 5.0), maar wel lage weerstand
-    else if (p.svr < 1700) {
+    else if (svr < 1700) {
        this.diagnose = 'Vasoplegie (Vaten staan open)';
        this.resultColor = 'secondary'; // Blauw
        this.advies = 'Start/Ophogen Noradrenaline. Bij refractair: Argipressine (zie Tab 5).';
     }
 
-    // SCENARIO D: Alles ok
+    // SCENARIO D: Normaal Flow, maar HOGE weerstand (NIEUW TOEGEVOEGD)
+    else if (svr > 2400) {
+      this.diagnose = 'Vasoconstrictie (Hoge weerstand)';
+      this.resultColor = 'warning'; // Oranje
+      this.advies = 'Patiënt is "afgeknepen". Oorzaak? Pijn, kou, stress? Overweeg afbouw Nora.';
+    }
+
+    // SCENARIO E: Alles ok
     else {
        this.diagnose = 'Hemodynamisch Stabiel';
        this.resultColor = 'success'; // Groen

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PatientService } from '../services/patient';
 import { LungProfile, VentilationService } from '../services/ventilation';
 
+// 1. We hebben ModalController hier nodig
 import {
   IonAccordion, IonAccordionGroup,
   IonAlert,
@@ -22,27 +23,31 @@ import {
   IonItem, IonLabel, IonList,
   IonRange,
   IonRow,
-  IonTitle, IonToolbar
+  IonTitle, IonToolbar,
+  ModalController  // <--- DEZE TOEGEVOEGD
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { informationCircleOutline, medkitOutline, pulseOutline, reorderTwoOutline, stopCircleOutline, warning } from 'ionicons/icons';
+import { informationCircleOutline, medkitOutline, pulseOutline, reorderTwoOutline, stopCircleOutline, warning, analyticsOutline, chevronForward } from 'ionicons/icons';
+
+// 2. We importeren je nieuwe Wizard Component
+import { PvWizardComponent } from '../components/pv-wizard/pv-wizard.component';
 
 @Component({
   selector: 'app-tab6',
   templateUrl: './tab6.page.html',
   styleUrls: ['./tab6.page.scss'],
   standalone: true,
-  imports: [IonCardSubtitle,
+  imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
-    IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent,
+    IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCardSubtitle,
     IonItem, IonLabel, IonList, IonCheckbox, IonRow, IonCol,
     IonRange, IonAccordion, IonAccordionGroup, IonGrid, IonAlert
-
   ]
 })
 export class Tab6Page implements OnInit {
+
   currentRC: number = 0.75; // Standaardwaarde
   analysis: LungProfile | null = null;
   afspraken: any[] = [];
@@ -52,18 +57,26 @@ export class Tab6Page implements OnInit {
 
   constructor(
     private ventService: VentilationService,
-    public patient: PatientService
+    public patient: PatientService,
+    private modalCtrl: ModalController // 3. DEZE TOEGEVOEGD IN DE CONSTRUCTOR
   ) {
     this.afspraken = this.ventService.WERK_AFSPRAKEN;
-    addIcons({ pulseOutline, reorderTwoOutline, informationCircleOutline, warning, stopCircleOutline, medkitOutline });
+    addIcons({pulseOutline,reorderTwoOutline,analyticsOutline,chevronForward,informationCircleOutline,warning,stopCircleOutline,medkitOutline});
   }
 
   ngOnInit() {
     this.updateAnalysis();
   }
 
-  // --- NIEUW: DEZE FUNCTIE ONTVANGT DE DATA ---
-  // Dit draait elke keer als je op Tab 6 klikt
+  // 4. DEZE FUNCTIE WERKT NU ECHT
+  async openPVWizard() {
+    const modal = await this.modalCtrl.create({
+      component: PvWizardComponent
+    });
+    return await modal.present();
+  }
+
+  // --- DATA UPDATE LOGICA ---
   ionViewWillEnter() {
     // Check of er een RC-waarde is berekend in Tab 3 (en of die geldig is)
     if (this.patient.current.rcExp && this.patient.current.rcExp > 0) {

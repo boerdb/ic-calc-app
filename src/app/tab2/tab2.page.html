@@ -34,37 +34,37 @@
       <ion-grid>
         <ion-row>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="FiO₂ (%)" label-placement="floating" fill="outline" type="number"
+            <ion-input class="custom-green-input" label="FiO₂ (%)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
               [(ngModel)]="fio2"></ion-input>
           </ion-col>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="PaCO₂ (kPa)" label-placement="floating" fill="outline" type="number"
+            <ion-input class="custom-green-input" label="PaCO₂ (kPa)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
               [(ngModel)]="paco2"></ion-input>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="PaO₂ (kPa)" label-placement="floating" fill="outline" type="number"
+            <ion-input class="custom-green-input" label="PaO₂ (kPa)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
               [(ngModel)]="pao2"></ion-input>
           </ion-col>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="Leeftijd (jaren)" label-placement="floating" fill="outline" type="number"
+            <ion-input class="custom-green-input" label="Leeftijd (jaren)" label-placement="floating" fill="outline"  type="number" inputmode="decimal"
               [(ngModel)]="patient.current.leeftijd" (ionInput)="patient.opslaan()"></ion-input>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="4">
-            <ion-input class="custom-green-input" label="Hb" label-placement="floating" fill="outline" type="number"
+            <ion-input class="custom-green-input" label="Hb" label-placement="floating" fill="outline" type="number" inputmode="decimal"
               [(ngModel)]="hb"></ion-input>
           </ion-col>
           <ion-col size="4">
-            <ion-input class="custom-green-input" label="SaO₂ (%)" label-placement="floating" fill="outline" type="number"
+            <ion-input class="custom-green-input" label="SaO₂ (%)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
               [(ngModel)]="sao2"></ion-input>
           </ion-col>
            <ion-col size="4">
-            <ion-input class="custom-green-input" label="ScvO₂ (%)" label-placement="floating" fill="outline" type="number"
+            <ion-input class="custom-green-input" label="ScvO₂ (%)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
               [(ngModel)]="svo2" placeholder="Optioneel"></ion-input>
           </ion-col>
         </ion-row>

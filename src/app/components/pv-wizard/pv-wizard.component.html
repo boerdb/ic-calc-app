@@ -1,0 +1,185 @@
+<ion-header>
+  <ion-toolbar style="--background: #004D40; --color: white;">
+    <ion-title style="font-weight: bold;">PV Tool Protocol</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="sluit()" style="color: white; font-weight: bold;">Sluit</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" style="--background: url('assets/image_2.jpg') no-repeat center center / cover;">
+
+  <div slot="fixed" class="ghost-arrow-container">
+    <div class="ghost-arrow left" *ngIf="!isBeginning" (click)="slidePrev()">
+      <ion-icon name="chevron-back"></ion-icon>
+    </div>
+    <div class="ghost-arrow right" *ngIf="!isEnd" (click)="slideNext()">
+      <ion-icon name="chevron-forward"></ion-icon>
+    </div>
+  </div>
+
+  <swiper-container #swiper pagination="true" style="height: 100%;" (swiperslidechange)="onSlideChange($event)">
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h2>Voorbereiding</h2>
+        <div class="image-container">
+           <img src="assets/pv-safety.jpg" alt="Safety">
+        </div>
+        <div class="instruction-box">
+          <ul>
+            <li><strong>Sedatie:</strong> Patiënt diep gesedeerd?</li>
+            <li><strong>NMB:</strong> Spierverslapping vereist?</li>
+            <li><strong>Stabiel:</strong> Geen hypotensie.</li>
+            <li><strong>Lekvrij:</strong> Geen lekkende (thorax)drains/cuffs.</li>
+          </ul>
+          <div class="alert-box error">
+            <ion-icon name="stop-circle"></ion-icon> STOP bij instabiliteit
+          </div>
+        </div>
+      </div>
+    </swiper-slide>
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h2>Stap 1: Meting</h2>
+
+        <div class="image-container">
+           <img src="assets/pv-step1-settings.png" alt="Settings Stap 1">
+        </div>
+
+        <div class="instruction-box">
+          <p>Instellingen voor beoordeling:</p>
+          <table class="settings-table">
+            <tr><td>P-Start</td><td><strong>5</strong> cmH2O</td></tr>
+            <tr><td>P-Top</td><td><strong>40</strong> cmH2O (of 35)</td></tr>
+            <tr><td>End PEEP</td><td><strong>5</strong> cmH2O</td></tr>
+            <tr><td>Ramp</td><td><strong>2</strong> cmH2O/s (Langzaam)</td></tr>
+            <tr><td>T-Pause</td><td><strong>0</strong> s</td></tr>
+          </table>
+          <p class="subtext">Druk op Start/Stop Manoeuvre</p>
+          <p class="subtext">Let op de heamodynamische instabiliteit!</p>
+        </div>
+      </div>
+    </swiper-slide>
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h2>Analyse: Laag Potentieel</h2>
+
+        <div class="math-formula">
+          <span class="label">NMD% = </span>
+          <div class="fraction">
+            <span class="numerator">Max dV (inflation - deflation)</span>
+            <span class="denominator">Maximum Volume</span>
+          </div>
+        </div>
+
+        <div class="instruction-box fail-border">
+          <h3 style="color: #ff5252; margin: 0 0 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <ion-icon name="alert-circle"></ion-icon> NMD < 41%
+          </h3>
+
+          <div class="graph-view">
+            <img src="assets/nmd-low.png" alt="Low NMD">
+          </div>
+
+          <div class="alert-box error">
+            STOP. Niet recruteren.
+          </div>
+
+          <div style="margin-top: 15px; text-align: left;">
+            <p style="margin-bottom: 5px; font-weight: bold;">Overweeg:</p>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>PEEP < 10 cmH2O</li>
+              <li>Buikligging (Prone)</li>
+              <li>ECMO?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </swiper-slide>
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h2>Analyse: Hoog Potentieel</h2>
+
+        <div class="math-formula">
+          <span class="label">NMD% = </span>
+          <div class="fraction">
+            <span class="numerator">Max dV (inflation - deflation)</span>
+            <span class="denominator">Maximum Volume</span>
+          </div>
+        </div>
+
+        <div class="instruction-box success-border">
+          <h3 style="color: #69f0ae; margin: 0 0 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <ion-icon name="checkmark-circle"></ion-icon> NMD ≥ 41%
+          </h3>
+
+          <div class="graph-view">
+            <img src="assets/nmd-high.png" alt="High NMD">
+          </div>
+
+          <p style="text-align: center; margin: 15px 0;">
+            De curve heeft een <strong>"dikke buik"</strong> (Hysterese).
+          </p>
+
+          <div class="alert-box success" (click)="slideNext()">
+            Ga door naar Stap 2 <ion-icon name="arrow-forward"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </swiper-slide>
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h2>Stap 2: Recruteren</h2>
+
+        <div class="image-container">
+           <img src="assets/pv-step2-recruit.png" alt="Settings Stap 2">
+        </div>
+
+        <div class="instruction-box">
+          <p style="color: #ffab40; text-align: center; font-weight: bold;">Alleen als NMD ≥ 41%</p>
+          <table class="settings-table">
+            <tr><td>P-Start</td><td>Huidige PEEP</td></tr>
+            <tr><td>P-Top</td><td><strong>40</strong> cmH2O</td></tr>
+            <tr><td>End PEEP</td><td><strong>15</strong> cmH2O</td></tr>
+            <tr><td>Ramp</td><td><strong>5</strong> cmH2O/s (Snel)</td></tr>
+            <tr><td>T-Pause</td><td><strong>10</strong> s (Hold)</td></tr>
+          </table>
+          <div class="alert-box warning">
+            Kies 'JA' bij vraag:<br>"Nieuwe PEEP behouden?"
+          </div>
+        </div>
+      </div>
+    </swiper-slide>
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h2>Resultaat</h2>
+        <div class="image-container">
+            <img src="assets/pv-step2-result.png" alt="Resultaat">
+        </div>
+        <div class="instruction-box">
+            <p><strong>Succesvol als:</strong></p>
+            <ul>
+                <li>Volume winst > 2 ml/kg</li>
+                <li>SpO2 > 97% binnen 5 min</li>
+                <li>Bij goed resultaat eventueel procedure herhalen</li>
+            </ul>
+            <ion-button expand="block" color="success" (click)="sluit()" style="margin-top: 20px;">
+                <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+                Afronden
+            </ion-button>
+
+        <p class="subtext" style="margin-top: 20px;">
+  Voor meer informatie <a href="https://youtu.be/VXI-umXLybY?si=r5zj4Wi-z_6CG7_C" target="_blank" style="color: #69f0ae; text-decoration: underline;">bekijk</a> deze YouTube film
+</p>
+        </div>
+      </div>
+    </swiper-slide>
+
+  </swiper-container>
+</ion-content>

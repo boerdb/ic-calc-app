@@ -16,10 +16,10 @@
   <ion-toolbar>
     <ion-segment mode="ios" [(ngModel)]="mode" (ionChange)="segmentChanged($event)" class="custom-toolbar-segment">
       <ion-segment-button value="controlled">
-        <ion-label>Controlled</ion-label>
+        <ion-label>Gecontroleerd</ion-label>
       </ion-segment-button>
       <ion-segment-button value="spontaneous">
-        <ion-label>Spontaneous</ion-label>
+        <ion-label>Spontaan</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -54,7 +54,7 @@
 
      <ion-card-header>
   <div style="display: flex; justify-content: space-between; align-items: center;">
-    <ion-card-title>Instellingen & Mechanica</ion-card-title>
+    <ion-card-title>Mechanica</ion-card-title>
 
     <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
       Uitleg
@@ -67,42 +67,42 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <ion-input class="custom-green-input" label="Vt (ml)" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="Vt (ml)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputVt"></ion-input>
             </ion-col>
             <ion-col>
-              <ion-input class="custom-green-input" label="RR (/min)" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="RR (/min)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputRR"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-input class="custom-green-input" label="PEEP" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="PEEP" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputPeep"></ion-input>
             </ion-col>
             <ion-col>
-              <ion-input class="custom-green-input" label="P-Plat" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="P-Plat" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputPplat"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-input class="custom-green-input" label="P-Piek" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="P-Piek" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputPpiek"></ion-input>
             </ion-col>
             <ion-col>
-              <ion-input class="custom-green-input" label="Resistance (R)" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="Resistance (R)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputResistance" placeholder="Optioneel"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
              <ion-col size="6">
-               <ion-input class="custom-green-input" label="PaCO₂" label-placement="floating" fill="outline" type="number"
-                 [(ngModel)]="inputPaCO2"></ion-input>
+               <ion-input class="custom-green-input" label="PaCO₂" label-placement="floating" fill="outline" type="number" inputmode="decimal"
+                 [(ngModel)]="inputPaCO2" placeholder="kPa"></ion-input>
              </ion-col>
              <ion-col size="6">
-               <ion-input class="custom-green-input" label="PeCO₂ (Exp)" label-placement="floating" fill="outline" type="number"
-                 [(ngModel)]="inputPeCO2"></ion-input>
+               <ion-input class="custom-green-input" label="EtCO₂ " label-placement="floating" fill="outline" type="number" inputmode="decimal"
+                 [(ngModel)]="inputPeCO2" placeholder="kPa"></ion-input>
              </ion-col>
           </ion-row>
         </ion-grid>
@@ -219,28 +219,28 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <ion-input class="custom-green-input" label="P-Peak" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="P-Peak" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputSponPpeak"></ion-input>
             </ion-col>
             <ion-col>
-              <ion-input class="custom-green-input" label="PEEP-tot" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="PEEP-tot" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputSponPeepTot"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-input class="custom-green-input" label="P-nadir (negatief!)" label-placement="floating" fill="outline" type="number"
+              <ion-input class="custom-green-input" label="P-nadir (negatief!)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
                 [(ngModel)]="inputSponPnadir" placeholder="-4.0"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
              <ion-col size="6">
-               <ion-input class="custom-green-input" label="PaCO₂" label-placement="floating" fill="outline" type="number"
-                 [(ngModel)]="inputPaCO2"></ion-input>
+               <ion-input class="custom-green-input" label="PaCO₂" label-placement="floating" fill="outline" type="number" inputmode="decimal"
+                 [(ngModel)]="inputPaCO2" placeholder="kPa"></ion-input>
              </ion-col>
              <ion-col size="6">
-               <ion-input class="custom-green-input" label="PeCO₂ (Exp)" label-placement="floating" fill="outline" type="number"
-                 [(ngModel)]="inputPeCO2"></ion-input>
+               <ion-input class="custom-green-input" label="EtCO₂" label-placement="floating" fill="outline" type="number" inputmode="decimal"
+                 [(ngModel)]="inputPeCO2" placeholder="kPa"></ion-input>
              </ion-col>
           </ion-row>
         </ion-grid>
