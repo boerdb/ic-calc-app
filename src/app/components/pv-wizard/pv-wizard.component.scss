@@ -1,5 +1,5 @@
 // --------------------------------------------------
-// 1. ALGEMENE LAYOUT
+// 1. ALGEMENE LAYOUT & SCROLLBAR FIX
 // --------------------------------------------------
 swiper-slide {
   display: flex;
@@ -14,15 +14,19 @@ swiper-slide {
   width: 100%;
   height: 100%;
   padding-top: 10px;
-  padding-bottom: 50px; // Ruimte voor de bolletjes onderin
+  padding-bottom: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: auto; // Zorg dat scrollen werkt op kleine schermen
+  overflow-y: auto;
 
-  // Titel styling
+  // SCROLLBAR VERBERGEN
+  &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
   h2 {
-    color: #80cbc4; // Teal accent
+    color: #80cbc4;
     font-weight: bold;
     font-size: 1.5em;
     margin-top: 25px;
@@ -30,72 +34,49 @@ swiper-slide {
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
   }
 }
-// Verberg de lelijke scrollbar (Chrome, Safari, Ionic)
-.slide-content::-webkit-scrollbar {
-  display: none;
-}
 
-// Verberg de scrollbar voor Firefox (voor de zekerheid)
-.slide-content {
-  scrollbar-width: none;
-}
-// --------------------------------------------------
-// 2. NAVIGATIE (GHOST ARROWS)
-// --------------------------------------------------
-// De container zorgt dat de pijlen vast staan (fixed slot)
 // --------------------------------------------------
 // 2. NAVIGATIE (GHOST ARROWS)
 // --------------------------------------------------
 .ghost-arrow-container {
-  // We zorgen dat deze container over het hele scherm ligt
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; // Klikken gaat er doorheen
+  pointer-events: none;
   z-index: 999;
 }
 
 .ghost-arrow {
-  pointer-events: auto; // De pijl zelf is wel klikbaar
-  position: absolute;   // We pinnen ze vast
+  pointer-events: auto;
+  position: absolute;
   top: 50%;
-  transform: translateY(-50%); // Precies in het midden verticaal
-
+  transform: translateY(-50%);
   font-size: 50px;
   color: white;
-  opacity: 0.25;
+  opacity: 0.3;
   cursor: pointer;
-  padding: 20px;
+  padding: 5px;
   transition: opacity 0.3s;
 
-  &:active { opacity: 0.8; }
-
-  // HIER IS DE FIX: Harde posities links en rechts
-  &.left {
-    left: 0;  // Plakt altijd links
-  }
-
-  &.right {
-    right: 0; // Plakt altijd rechts
-  }
+  &:active { opacity: 0.9; }
+  &.left { left: 0; }
+  &.right { right: 0; }
 }
 
 // --------------------------------------------------
 // 3. KAARTEN & INSTRUCTIES
 // --------------------------------------------------
 .instruction-box {
-  // Glas-effect (Glassmorphism)
   background: rgba(30, 30, 30, 0.90);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-
   color: #e0e0e0;
   padding: 20px;
   border-radius: 12px;
   margin-top: 10px;
-  width: 90%;
+  width: 88%;
   max-width: 400px;
   border: 1px solid rgba(255,255,255,0.1);
   font-size: 1.05em;
@@ -104,53 +85,81 @@ swiper-slide {
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   margin-bottom: 20px;
 
-  // Lijstjes binnen de kaart
-  ::ng-deep ul {
-    padding-left: 20px;
-    margin: 0;
-  }
+  ::ng-deep ul { padding-left: 20px; margin: 0; }
+  ::ng-deep li { margin-bottom: 8px; }
 
-  ::ng-deep li {
-    margin-bottom: 8px;
-  }
-
-  // Randen voor de analyse slides (Rood/Groen)
   &.fail-border { border: 2px solid #ff5252; box-shadow: 0 0 10px rgba(255, 82, 82, 0.2); }
   &.success-border { border: 2px solid #69f0ae; box-shadow: 0 0 10px rgba(105, 240, 174, 0.2); }
 }
 
 // --------------------------------------------------
-// 4. AFBEELDINGEN
+// 4. TABELLEN
 // --------------------------------------------------
-.image-container {
+.settings-table {
   width: 100%;
-  max-width: 350px;
-  background: #000;
-  border: 1px solid #444;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-  margin-bottom: 10px;
+  border-collapse: collapse;
+  margin-top: 10px;
+
+  td {
+    padding: 8px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  td:first-child {
+    color: #80cbc4;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+}
+
+// --------------------------------------------------
+// 5. AFBEELDINGEN (HET PROBLEEM OPGELOST)
+// --------------------------------------------------
+// --------------------------------------------------
+// 5. AFBEELDINGEN & GRAFIEKEN
+// --------------------------------------------------
+
+// 1. De standaard "Mooie Zwarte Doos" stijl
+// Dit geldt nu voor image-container EN graph-view
+.image-container, .graph-view {
+  width: 95%;
+  max-width: 400px;
+
+  // Zorgt dat het plaatje nooit geplet wordt
+  height: auto;
+  flex-shrink: 0;
+
+  // HET MOOIE ZWARTE KADERTJE
+  background: #000;              // Zwarte achtergrond
+  border: 1px solid #444;        // Dun grijs randje
+  border-radius: 12px;           // Ronde hoeken
+  overflow: hidden;              // Zorgt dat plaatje binnen de lijntjes kleurt
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5); // Diepte schaduw
+
+  display: block;
+  margin-bottom: 20px;
 
   img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: auto;
+    display: block;
     object-fit: contain;
   }
 }
 
-.graph-view img {
+// 2. UITZONDERING: Grafiekjes die IN een tekstblok zitten
+// (Bijvoorbeeld bij de NMD analyse in de rode/groene blokken)
+// Die moeten GEEN zwart kader hebben, want ze zitten al in een blok.
+.instruction-box .graph-view {
   width: 100%;
-  border-radius: 8px;
-  margin: 5px 0;
+  max-width: none;
+  background: transparent; // Geen zwart
+  border: none;            // Geen rand
+  box-shadow: none;        // Geen schaduw
+  margin-bottom: 5px;
+  border-radius: 4px;      // Iets kleinere hoekjes
 }
 
-// --------------------------------------------------
-// 5. DE WISKUNDIGE FORMULE (NIEUW!)
-// --------------------------------------------------
 .math-formula {
   background: white;
   color: #333;
@@ -163,34 +172,14 @@ swiper-slide {
   box-shadow: 0 4px 6px rgba(0,0,0,0.3);
   font-family: 'Courier New', Courier, monospace;
 
-  .label {
-    font-weight: bold;
-    font-size: 1.1em;
-    margin-right: 10px;
-  }
-
-  .fraction {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    font-size: 0.9em;
-  }
-
-  .numerator {
-    border-bottom: 2px solid #333; // De streep van de breuk
-    padding-bottom: 2px;
-    margin-bottom: 2px;
-    font-weight: 500;
-  }
-
-  .denominator {
-    font-weight: bold;
-  }
+  .label { font-weight: bold; font-size: 1.1em; margin-right: 10px; }
+  .fraction { display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 0.9em; }
+  .numerator { border-bottom: 2px solid #333; padding-bottom: 2px; margin-bottom: 2px; font-weight: 500; }
+  .denominator { font-weight: bold; }
 }
 
 // --------------------------------------------------
-// 6. ALERT BALKEN & TABELLEN
+// 6. OVERIG
 // --------------------------------------------------
 .alert-box {
   margin-top: 10px;
@@ -208,26 +197,8 @@ swiper-slide {
   &.warning { background: rgba(255, 171, 64, 0.15); color: #ffab40; border: 1px solid #ffab40; }
 }
 
-.settings-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+.subtext { text-align: center; font-style: italic; font-size: 0.85em; color: #aaa; margin-top: 15px; }
 
-  td {
-    padding: 8px 5px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-  td:first-child { color: #80cbc4; font-weight: bold; }
-  tr:last-child td { border-bottom: none; }
-}
-
-.subtext {
-  text-align: center; font-style: italic; font-size: 0.85em; color: #aaa; margin-top: 15px;
-}
-
-// --------------------------------------------------
-// 7. PAGINATION (BOLLETJES)
-// --------------------------------------------------
 swiper-container {
   --swiper-pagination-color: #ffffff;
   --swiper-pagination-bullet-inactive-color: rgba(255, 255, 255, 0.4);
