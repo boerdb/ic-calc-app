@@ -8,21 +8,25 @@
     </ion-title>
 
     <ion-buttons slot="end">
-      <div class="bed-selector-box" style="display: flex; align-items: center; background: rgba(0,0,0,0.05); padding: 5px 10px; border-radius: 15px; margin-right: 10px;">
-        <ion-icon name="bed-outline" style="margin-right: 5px; font-size: 1.2em;"></ion-icon>
+      <div class="bed-selector-box">
+  <ion-icon name="bed-outline"></ion-icon>
 
-        <ion-select
-          [value]="patient.selectedBedId"
-          (ionChange)="wisselBed($event)"
-          interface="action-sheet"
-          placeholder="Kies"
-          style="max-width: 100px;">
+  <ion-select
+    [value]="patient.selectedBedId"
+    (ionChange)="wisselBed($event)"
 
-          <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.bedId">
-            Bed {{ bed.bedId }} <span *ngIf="bed.naam">({{ bed.naam }})</span>
-          </ion-select-option>
-        </ion-select>
-      </div>
+    interface="popover"
+    [interfaceOptions]="{'cssClass': 'mijn-bed-popover'}"
+
+    placeholder="Kies"
+    toggleIcon="chevron-down-outline">
+
+    <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.bedId">
+      Bed {{ bed.bedId }} <span *ngIf="bed.naam">({{ bed.naam }})</span>
+    </ion-select-option>
+
+  </ion-select>
+</div>
     </ion-buttons>
 
   </ion-toolbar>
@@ -136,7 +140,12 @@
             Disclaimer: Deze applicatie is bedoeld als ondersteunend hulpmiddel voor professionals.
             De auteur aanvaardt geen aansprakelijkheid voor de uitkomsten.
             Verifieer berekeningen altijd voor klinisch gebruik.
-            <br><br>
+            <br>
+Voor meer info mail naar
+<a href="mailto:info.webapp@icloud.com" style="color: #69f0ae; text-decoration: none; font-weight: bold;">
+  info.webapp@icloud.com
+</a>
+<br>
             <strong>© 2026 Ben de Boer</strong>
           </p>
         </ion-text>

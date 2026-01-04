@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
@@ -10,7 +11,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { maleOutline, femaleOutline, trashOutline, bedOutline } from 'ionicons/icons';
+import { maleOutline, femaleOutline, trashOutline, bedOutline, chevronDownOutline} from 'ionicons/icons';
 import { PatientService } from '../services/patient';
 
 @Component({
@@ -30,7 +31,7 @@ import { PatientService } from '../services/patient';
 export class Tab1Page {
 
   constructor(public patient: PatientService) {
-    addIcons({ maleOutline, femaleOutline, trashOutline, bedOutline });
+    addIcons({ maleOutline, femaleOutline, trashOutline, bedOutline, chevronDownOutline });
   }
 
   // Als je een ander bed kiest

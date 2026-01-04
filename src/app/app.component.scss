@@ -1,0 +1,62 @@
+/* --- INSTALLATIE BALK BOVENAAN --- */
+.install-top-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99999; /* Zorgt dat het overal bovenop ligt */
+
+  background-color: #1e1e1e; /* Donkergrijs */
+  border-bottom: 2px solid var(--ion-color-primary); /* Jouw GROENE randje */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /* Zorgt voor ruimte bij de notch van iPhones */
+  padding: 15px;
+  padding-top: max(15px, env(safe-area-inset-top));
+
+  animation: slideDown 0.5s ease-out;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.95em;
+
+  .install-icon {
+    color: var(--ion-color-primary); /* Groen icoon */
+    font-size: 1.5em;
+  }
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.install-link {
+  color: var(--ion-color-primary); /* Groene tekst */
+  font-weight: bold;
+  font-size: 0.85em;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.close-icon {
+  color: #888;
+  font-size: 1.4em;
+  cursor: pointer;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}

@@ -134,7 +134,7 @@ export class Tab5Page {
     }
 
     if (p.ci < 3.0) {
-      return 'CI is laag (<3.0). Dit duidt op een contractiliteitsprobleem. Protocol: Start Milrinon (1e keus).';
+      return 'CI is laag (<3.0). Dit duidt op een contractiliteitsprobleem. Protocol: Start Enoximon (1e keus).';
     }
 
     return 'PiCCO waarden lijken stabiel (SVR > 1700, CI > 3.0).';

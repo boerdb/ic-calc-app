@@ -1,12 +1,19 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
 
-  @if (showInstallButton) {
-    <ion-fab vertical="bottom" horizontal="center" slot="fixed" style="margin-bottom: 20px;">
-      <ion-fab-button (click)="installApp()" color="primary">
-        <ion-icon name="download-outline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+  @if (showInstallBanner) {
+    <div class="install-top-banner">
+      <div class="banner-content">
+        <ion-icon name="download-outline" class="install-icon"></ion-icon>
+        <span>Installeer app voor snellere toegang</span>
+      </div>
+
+      <div class="banner-actions">
+        <span (click)="installApp()" class="install-link">INSTALLEREN</span>
+
+        <ion-icon name="close" (click)="closeBanner()" class="close-icon"></ion-icon>
+      </div>
+    </div>
   }
 
+  <ion-router-outlet></ion-router-outlet>
 </ion-app>

@@ -268,3 +268,51 @@ ion-toolbar {
     background: transparent; // Voorkomt witte blokken
   }
 }
+/* --- DE FIX VOOR DE INVISIBLE TEKST --- */
+
+/* 1. De Container (Donker) */
+.mijn-laatste-poging .popover-content {
+  background: #1e1e1e !important;
+  width: 250px !important;
+  border: 1px solid #444;
+}
+
+/* 2. De Regels (WIT afdwingen!) */
+.mijn-laatste-poging ion-item {
+  --background: transparent;
+
+  /* Ionic variabele wit */
+  --color: white !important;
+  /* Harde CSS wit (voor de zekerheid) */
+  color: white !important;
+
+  /* Centreren */
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  --inner-padding-end: 0;
+}
+
+/* 3. Het Label ZELF (Dit is de boosdoener, nu wit gemaakt) */
+.mijn-laatste-poging ion-label {
+  color: white !important; /* <--- HIER ZIT DE FIX */
+
+  text-align: center !important;
+  width: 100%;
+  margin: 0 !important;
+  font-weight: 500;
+}
+
+/* 4. Geselecteerde item (Groen) */
+.mijn-laatste-poging ion-item.item-radio-checked {
+  --color: rgb(110, 224, 158) !important;
+}
+.mijn-laatste-poging ion-item.item-radio-checked ion-label {
+  color: rgb(110, 224, 158) !important;
+  font-weight: bold;
+}
+
+/* 5. Vinkjes weg */
+.mijn-laatste-poging ion-radio {
+  display: none !important;
+}

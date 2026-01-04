@@ -140,7 +140,7 @@ export class Tab4Page {
       } else {
          this.diagnose = 'Cardiaal Falen (Pompfunctie)';
          this.resultColor = 'danger'; // Rood
-         this.advies = 'Start Milrinon (1e keus) of Dobutamine.';
+         this.advies = 'Start Enoximon (1e keus) of Dobutamine.';
       }
     }
 
