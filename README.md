@@ -69,6 +69,8 @@ To create an optimized production build:
 ```bash
 ionic build --prod
 
+---
+
 ⚠️ Medical Disclaimer
 IMPORTANT: This application is intended as a support tool for trained medical professionals only.
 
@@ -78,5 +80,4 @@ Calculations should always be verified with clinical judgment and hospital proto
 
 The developers assume no liability for decisions made based on this software.
 
-📄 License
-MIT
+
