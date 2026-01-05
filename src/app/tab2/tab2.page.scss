@@ -91,3 +91,85 @@
 
   border-radius: 8px;
 }
+/* --- CO2 & ROX GEDEELDE STYLING --- */
+/* We stylen beide blokken tegelijk omdat ze dezelfde look hebben */
+.co2-container, .rox-container {
+  background-color: #1e1e1e !important;
+  border-radius: 15px;
+  border: 1px solid #333;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  /* GEEN padding hier, dat doet ion-card-content nu */
+
+  /* Header Styling */
+  .co2-header, .rox-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 15px 5px 15px; /* Padding alleen boven en zijkant voor header */
+    margin-bottom: 5px;
+
+    ion-icon {
+      color: var(--ion-color-primary);
+      font-size: 1.5em;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: white;
+    }
+  }
+
+  /* Resultaat vakken styling */
+  .co2-result-box, .rox-result-box {
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px dashed #555;
+    text-align: center; /* Voor ROX centreren, CO2 overschrijft dit */
+
+    /* Specifiek voor CO2 regels */
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 1em;
+      color: #ccc;
+
+      .value {
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+    }
+
+    /* Specifiek voor ROX score */
+    .score-label {
+      font-size: 0.8em;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .score-value {
+      font-size: 2.2em;
+      font-weight: 900;
+      margin: 5px 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Advies tekst (voor beiden) */
+    .score-advies {
+      font-size: 0.9em;
+      color: white;
+      font-style: italic;
+      border-top: 1px solid #444;
+      padding-top: 10px;
+      margin-top: 10px;
+      text-align: center;
+    }
+  }
+}

@@ -8,18 +8,18 @@ import {
   IonList, IonItem, IonInput, IonButton,
   IonCard, IonCardHeader, IonCardTitle, IonCardContent,
   IonLabel, IonNote, IonGrid, IonRow, IonCol, IonButtons,
-  IonBadge, ModalController, IonIcon // <--- 1. ModalController ipv AlertController
+  IonBadge, ModalController, IonIcon
 } from '@ionic/angular/standalone';
 
 // Onze eigen services
 import { CalculatorService } from '../services/calculator';
 import { PatientService } from '../services/patient';
 
-// De Info Component (die mooie popup)
-import { InfoModalComponent } from '../info-modal.component'; // <--- 2. Importeren
+// De Info Component
+import { InfoModalComponent } from '../info-modal.component';
 
 import { addIcons } from 'ionicons';
-import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons'; // <--- 3. Chevron icoon erbij
+import { informationCircleOutline, chevronForwardOutline, cloudOutline, calculatorOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tab2',
@@ -37,22 +37,38 @@ import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons'
 })
 export class Tab2Page {
 
-  // --- INPUTS ---
-  fio2: number | null = null;    // %
-  pao2: number | null = null;    // kPa
-  paco2: number | null = null;   // kPa
+  // --- INPUTS (Gedeeld) ---
+  fio2: number | null = null;
+  pao2: number | null = null;
+  paco2: number | null = null;
+  sao2: number | null = null;
 
-  // Nieuwe inputs voor uitgebreide berekening
-  hb: number | null = null;      // Hb
-  sao2: number | null = null;    // Saturatie arterieel
-  svo2: number | null = null;    // Saturatie veneus (optioneel)
+  // Nieuwe inputs voor uitgebreide berekening (boven)
+  hb: number | null = null;
+  svo2: number | null = null;
 
-  // --- RESULTATEN ---
+  // --- INPUTS NIEUWE BLOKJES (onder) ---
+  etCO2: number | null = null;
+  rr: number | null = null;
+
+  // --- RESULTATEN BOVEN (Oxygenatie) ---
   resPAO2: number | null = null;
   resAaGrad: number | null = null;
   resAaRatio: number | null = null;
   resPFRatio: number | null = null;
   resCaO2: number | null = null;
+
+  // --- RESULTATEN CO2 ONDER ---
+  co2Gradient: string | null = null;
+  deadSpacePerc: string | null = null;
+  gapColor: string = 'white';
+  vdColor: string = 'white';
+  co2Advies: string = '';
+
+  // --- RESULTATEN ROX ONDER ---
+  roxScore: string | null = null;
+  roxColor: string = 'white';
+  roxAdvies: string = '';
 
   // --- STATUS TEKSTEN & KLEUREN ---
   aaStatusTekst = '';
@@ -62,25 +78,73 @@ export class Tab2Page {
   pfStatusTekst = '';
   pfStatusKleur = 'medium';
 
-  // SvO2 Status variabelen
   resSvO2Message = '';
   resSvO2Color = 'medium';
 
-  // Helper om te zien of we resultaten moeten tonen
   toonResultaten = false;
 
   constructor(
     public patient: PatientService,
     private calc: CalculatorService,
-    private modalCtrl: ModalController // <--- 4. ModalController injecteren
+    private modalCtrl: ModalController
   ) {
-    addIcons({
-      informationCircleOutline,
-      chevronForwardOutline
-    });
+    addIcons({chevronForwardOutline,cloudOutline,calculatorOutline,informationCircleOutline});
   }
 
-  // --- NIEUWE INFO FUNCTIE (Met mooie HTML Modal) ---
+  // --- 1. CO2 BEREKENING ---
+  calculateCO2() {
+    if (this.paco2 != null && this.etCO2 != null) {
+      const gap = this.paco2 - this.etCO2;
+      this.co2Gradient = gap.toFixed(1);
+
+      if (this.paco2 > 0) {
+        const vd = (gap / this.paco2) * 100;
+        this.deadSpacePerc = vd.toFixed(0);
+        this.vdColor = vd > 30 ? '#ffc409' : '#2dd36f';
+      }
+
+      if (gap < 0.8) {
+        this.gapColor = '#2dd36f';
+        this.co2Advies = 'Normale gaswisseling';
+      } else if (gap < 1.5) {
+        this.gapColor = '#ffc409';
+        this.co2Advies = 'Verhoogde dode ruimte (mogelijke V/Q mismatch)';
+      } else {
+        this.gapColor = '#eb445a';
+        this.co2Advies = 'Ernstige dode ruimte ventilatie (o.a. Longembolie?)';
+      }
+    } else {
+      this.co2Gradient = null;
+      this.deadSpacePerc = null;
+      this.co2Advies = '';
+    }
+  }
+
+  // --- 2. ROX BEREKENING ---
+  calculateROX() {
+    if (this.sao2 && this.fio2 && this.rr && this.rr > 0) {
+      const fio2Fraction = this.fio2 / 100;
+      const result = (this.sao2 / fio2Fraction) / this.rr;
+
+      this.roxScore = result.toFixed(2);
+
+      if (result >= 4.88) {
+        this.roxColor = '#2dd36f';
+        this.roxAdvies = 'Laag risico op falen HFNO';
+      } else if (result < 3.85) {
+        this.roxColor = '#eb445a';
+        this.roxAdvies = 'HOOG RISICO! Overweeg intubatie';
+      } else {
+        this.roxColor = '#ffc409';
+        this.roxAdvies = 'Grijs gebied: Monitor nauwgezet';
+      }
+    } else {
+      this.roxScore = null;
+      this.roxAdvies = '';
+    }
+  }
+
+  // --- INFO MODAL (NU MET ALLE TEKST TERUG!) ---
   async toonInfo() {
     const htmlContent = `
       <h3>Zuurstofbalans & Diffusie</h3>
@@ -100,47 +164,51 @@ export class Tab2Page {
       <ul>
          <li><strong>Verhoogd:</strong> Probleem in de long (V/Q mismatch, shunt, fibrose).</li>
          <li><strong>Normaal:</strong> Oorzaak buiten de long (bijv. hypoventilatie).</li>
+      </ul>
       <div style="text-align: center; margin: 10px 0;">
            <img src="assets/VQ.png" style="width: 100%; max-width: 350px; border-radius: 8px; border: 1px solid #444;">
            <div style="font-size: 0.8em; color: #888;">V/Q mismatch</div>
-        </div>
+      </div>
 
-
-         </ul>
-
-      <h3>3. SvO₂ (Veneuze Saturatie)</h3>
-      <p>De balans tussen aanbod (DO₂) en verbruik (VO₂).</p>
+      <h3>3. CO₂ Gradiënt (Dode ruimte)</h3>
+      <p>Verschil tussen PaCO₂ en EtCO₂.</p>
       <ul>
-        <li><strong>Laag (< 60%):</strong> Het weefsel pakt alles wat het pakken kan. Oorzaak: Laag Hb, Lage Output, Koorts, Pijn.</li>
-        <li><strong>Hoog (> 80%):</strong> Bloed stroomt te snel (Sepsis) of cellen kunnen O₂ niet gebruiken.</li>
+        <li><strong>Normaal (< 0.8 kPa):</strong> Goede match tussen ventilatie en perfusie.</li>
+        <li><strong>Verhoogd:</strong> Dode ruimte ventilatie (wel lucht, geen bloed). Denk aan longembolie, lage cardiac output of hoge PEEP.</li>
+      </ul>
+
+      <h3>4. ROX Index (HFNO)</h3>
+      <p>Voorspeller voor falen van High Flow therapie.</p>
+      <ul>
+         <li><strong>< 3.85:</strong> Hoog risico op falen (Overweeg intubatie).</li>
+         <li><strong>> 4.88:</strong> Laag risico op falen.</li>
       </ul>
     `;
 
     const modal = await this.modalCtrl.create({
       component: InfoModalComponent,
       componentProps: {
-        title: 'Oxygenatie Info',
+        title: 'Gaswisseling Info',
         content: htmlContent
       }
     });
     await modal.present();
   }
 
+  // --- BEREKEN ALLES (Grote knop) ---
   bereken() {
-    // Minimale vereisten: FiO2 en PaCO2
     if (this.fio2 == null || this.paco2 == null) {
       return;
     }
 
-    // 1. Bereken PAO2 (Alveolair) via de Service
+    // 1. PAO2
     this.resPAO2 = this.calc.calcPAO2(this.fio2, this.paco2);
 
-    // 2. Als PaO2 ook is ingevuld, kunnen we de gradiënt doen
+    // 2. Gradiënten & P/F
     if (this.pao2 != null) {
       this.resAaGrad = this.calc.calcAaGradient(this.resPAO2, this.pao2);
       this.resAaRatio = this.calc.calcAaRatio(this.pao2, this.resPAO2);
 
-      // Verwachte Gradiënt op basis van leeftijd
       const leeftijd = this.patient.current.leeftijd || 20;
       this.aaVerwacht = 2.0 + (leeftijd * 0.03);
 
@@ -152,7 +220,6 @@ export class Tab2Page {
         this.aaStatusKleur = 'success';
       }
 
-      // P/F Ratio (Horowitz)
       const fiO2Decimaal = this.fio2 / 100;
       this.resPFRatio = this.pao2 / fiO2Decimaal;
 
@@ -171,26 +238,30 @@ export class Tab2Page {
       }
     }
 
-    // 3. Oxygen Content (CaO2)
+    // 3. CaO2
     if (this.hb != null && this.sao2 != null && this.pao2 != null) {
       this.resCaO2 = this.calc.calcCaO2(this.hb, this.sao2, this.pao2);
     }
 
-    // 4. SvO2 / ScvO2 Interpretatie
+    // 4. SvO2
     if (this.svo2 != null) {
       if (this.svo2 < 60) {
         this.resSvO2Color = 'danger';
-        this.resSvO2Message = 'Laag! Verhoogde extractie (DD: Laag HMV/Shock, Laag Hb, Pijn/Koorts)';
+        this.resSvO2Message = 'Laag! (Laag HMV/Hb/Pijn)';
       } else if (this.svo2 > 80) {
         this.resSvO2Color = 'warning';
-        this.resSvO2Message = 'Hoog! Verlaagde extractie (DD: Sepsis/Shunting, Leverfalen)';
+        this.resSvO2Message = 'Hoog! (Sepsis/Shunt)';
       } else {
         this.resSvO2Color = 'success';
-        this.resSvO2Message = 'Normaal (Balans DO2/VO2 adequaat)';
+        this.resSvO2Message = 'Normaal';
       }
     } else {
       this.resSvO2Message = '';
     }
+
+    // Trigger ook de andere berekeningen
+    this.calculateROX();
+    this.calculateCO2();
 
     this.toonResultaten = true;
   }
@@ -202,15 +273,23 @@ export class Tab2Page {
     this.hb = null;
     this.sao2 = null;
     this.svo2 = null;
+    this.etCO2 = null;
+    this.rr = null;
 
     this.resPAO2 = null;
     this.resAaGrad = null;
     this.resAaRatio = null;
     this.resPFRatio = null;
     this.resCaO2 = null;
-
     this.resSvO2Message = '';
     this.resSvO2Color = 'medium';
+
+    this.co2Gradient = null;
+    this.deadSpacePerc = null;
+    this.co2Advies = '';
+
+    this.roxScore = null;
+    this.roxAdvies = '';
 
     this.toonResultaten = false;
   }
