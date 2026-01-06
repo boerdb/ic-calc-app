@@ -76,8 +76,8 @@ export class PatientService {
       const base = isMan ? 50 : 45.5;
       this.current.ibw = base + 0.91 * (l - 152.4);
       this.current.ibw = Math.round(this.current.ibw * 10) / 10;
-      // Ensure IBW is not negative
-      if (this.current.ibw < 0) this.current.ibw = 0;
+      // For very short patients (< 152.4cm), ensure minimum meaningful IBW
+      if (this.current.ibw < 30) this.current.ibw = 30;
     }
 
     // BMI (Body Mass Index)
