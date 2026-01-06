@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 
 import { PvWizardComponent } from './pv-wizard.component';
 
@@ -9,8 +9,13 @@ describe('PvWizardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PvWizardComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [PvWizardComponent, IonicModule.forRoot()],
+      providers: [
+        {
+          provide: ModalController,
+          useValue: { dismiss: jasmine.createSpy('dismiss') }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PvWizardComponent);
