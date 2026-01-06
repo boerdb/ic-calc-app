@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { inject } from '@angular/core';
 
 // Alle Ionic componenten
 import {
@@ -83,11 +84,11 @@ export class Tab2Page {
 
   toonResultaten = false;
 
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController
-  ) {
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private modalCtrl = inject(ModalController);
+
+  constructor() {
     addIcons({chevronForwardOutline,cloudOutline,calculatorOutline,informationCircleOutline});
   }
 

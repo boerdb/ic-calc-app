@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton,
@@ -75,11 +75,11 @@ export class Tab5Page {
     { value: 0.03, label: 'Max: 0,03 IE/min' }
   ];
 
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController
-  ) {
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private modalCtrl = inject(ModalController);
+
+  constructor() {
     addIcons({ alertCircleOutline, warning, bulbOutline, pulseOutline, informationCircleOutline, chevronForwardOutline });
   }
 

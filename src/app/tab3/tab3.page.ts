@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -8,12 +8,11 @@ import {
   IonInput, IonItem, IonLabel, IonRow,
   IonSegment, IonSegmentButton, IonText,
   IonTitle, IonToolbar, IonList, IonNote, IonButtons,
-  IonIcon, ModalController // <--- HIER: ModalController ipv AlertController
+  IonIcon, ModalController
 } from '@ionic/angular/standalone';
 
 import { PatientService } from '../services/patient';
 import { CalculatorService } from '../services/calculator';
-// Importeer je nieuwe Info Component
 import { InfoModalComponent } from '../info-modal.component';
 
 // Icoon registreren
@@ -71,11 +70,11 @@ export class Tab3Page {
   public pmusKleur: string = 'medium';
   public ptpKleur: string = 'medium';
 
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController // <--- Injecteer de ModalController
-  ) {
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private modalCtrl = inject(ModalController);
+
+  constructor() {
     // Iconen registreren (ook de chevron voor de knop)
     addIcons({ informationCircleOutline, chevronForwardOutline });
   }

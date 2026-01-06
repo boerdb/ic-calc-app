@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
@@ -29,8 +28,9 @@ import { PatientService } from '../services/patient';
   ]
 })
 export class Tab1Page {
+  public patient = inject(PatientService);
 
-  constructor(public patient: PatientService) {
+  constructor() {
     addIcons({ maleOutline, femaleOutline, trashOutline, bedOutline, chevronDownOutline });
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'; // OnInit toegevoegd
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
@@ -7,7 +7,6 @@ import {
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 
-// 1. We hebben deze twee nodig voor de veiligheid:
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -67,13 +66,12 @@ export class InfoModalComponent implements OnInit {
   @Input() title: string = 'Informatie';
   @Input() content: string = '';
 
-  // Deze variabele slaat de "goedgekeurde" HTML op
   public safeContent: SafeHtml = '';
 
-  constructor(
-    private modalCtrl: ModalController,
-    private sanitizer: DomSanitizer // 2. Injecteer de Sanitizer
-  ) {
+  private modalCtrl = inject(ModalController);
+  private sanitizer = inject(DomSanitizer);
+
+  constructor() {
     addIcons({ closeOutline });
   }
 

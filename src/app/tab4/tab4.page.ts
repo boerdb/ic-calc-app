@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton, IonButtons,
@@ -43,10 +43,10 @@ export class Tab4Page {
   public elwiWarning: string = '';
   public resultColor: string = 'medium';
 
-  constructor(
-    public patient: PatientService,
-    private modalCtrl: ModalController
-  ) {
+  public patient = inject(PatientService);
+  private modalCtrl = inject(ModalController);
+
+  constructor() {
     addIcons({ chevronForwardOutline, pulseOutline, alertCircleOutline });
 
     if (!this.patient.current.picco) {

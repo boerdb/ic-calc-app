@@ -66,26 +66,28 @@ export class PatientService {
   }
 
   calculateDerivedValues() {
-    if (!this.current.lengte || !this.current.geslacht) return;
+    if (!this.current.lengte || !this.current.geslacht || this.current.lengte <= 0) return;
 
     const l = this.current.lengte;
     const isMan = this.current.geslacht === 'M';
 
-    // IBW
+    // IBW (Ideal Body Weight)
     if (l > 0) {
       const base = isMan ? 50 : 45.5;
       this.current.ibw = base + 0.91 * (l - 152.4);
       this.current.ibw = Math.round(this.current.ibw * 10) / 10;
+      // Ensure IBW is not negative
+      if (this.current.ibw < 0) this.current.ibw = 0;
     }
 
-    // BMI
+    // BMI (Body Mass Index)
     if (this.current.gewicht && this.current.gewicht > 0 && l > 0) {
       const l_meter = l / 100;
       this.current.bmi = this.current.gewicht / (l_meter * l_meter);
       this.current.bmi = Math.round(this.current.bmi * 10) / 10;
     }
 
-    // BSA (Du Bois)
+    // BSA (Body Surface Area - Du Bois formula)
     if (this.current.gewicht && this.current.gewicht > 0 && l > 0) {
       this.current.bsa = 0.007184 * Math.pow(this.current.gewicht, 0.425) * Math.pow(l, 0.725);
       this.current.bsa = Math.round(this.current.bsa * 100) / 100;
