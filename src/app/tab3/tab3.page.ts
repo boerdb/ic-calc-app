@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -20,6 +20,7 @@ import { InfoModalComponent } from '../info-modal.component';
 // Icoon registreren
 import { addIcons } from 'ionicons';
 import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tab3',
@@ -36,8 +37,10 @@ import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons'
     IonIcon
   ]
 })
-export class Tab3Page {
+export class Tab3Page implements OnInit, OnDestroy {
   public mode: string = 'controlled';
+
+  private subscriptions: Subscription[] = [];
 
   // --- CONTROLLED INPUTS ---
   public inputVt: number | null = null;
@@ -80,27 +83,41 @@ export class Tab3Page {
   ) {
     // Iconen registreren (ook de chevron voor de knop)
     addIcons({ informationCircleOutline, chevronForwardOutline });
+  }
+
+  ngOnInit() {
+    // Initialize with current values from the shared service
+    this.inputPaCO2 = this.clinicalData.getPaCO2();
+    this.inputPeCO2 = this.clinicalData.getEtCO2();
     
     // Subscribe to shared PaCO2 and EtCO2 values
-    this.clinicalData.paCO2$.subscribe(value => {
-      this.inputPaCO2 = value;
-      // Recalculate if in controlled mode and we have the needed values
-      if (this.mode === 'controlled' && this.inputVt && this.inputPeep) {
-        this.berekenControlled();
-      }
-      // Recalculate if in spontaneous mode
-      if (this.mode === 'spontaneous') {
-        this.berekenSpontaneous();
+    // Update local values when they change in other components
+    const paco2Sub = this.clinicalData.paCO2$.subscribe(value => {
+      if (this.inputPaCO2 !== value) {
+        this.inputPaCO2 = value;
+        // Recalculate Vd/Vt if we have both values
+        if (this.inputPaCO2 && this.inputPeCO2) {
+          this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
+        }
       }
     });
     
-    this.clinicalData.etCO2$.subscribe(value => {
-      this.inputPeCO2 = value;
-      // Recalculate Vd/Vt if we have both values
-      if (this.inputPaCO2 && this.inputPeCO2) {
-        this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
+    const etco2Sub = this.clinicalData.etCO2$.subscribe(value => {
+      if (this.inputPeCO2 !== value) {
+        this.inputPeCO2 = value;
+        // Recalculate Vd/Vt if we have both values
+        if (this.inputPaCO2 && this.inputPeCO2) {
+          this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
+        }
       }
     });
+
+    this.subscriptions.push(paco2Sub, etco2Sub);
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe to prevent memory leaks
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   public segmentChanged(ev: any) {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -19,6 +19,9 @@ import { ClinicalDataService } from '../services/clinical-data.service';
 // De Info Component
 import { InfoModalComponent } from '../info-modal.component';
 
+// Importeer de Subscription type voor proper cleanup
+import { Subscription } from 'rxjs';
+
 import { addIcons } from 'ionicons';
 import { informationCircleOutline, chevronForwardOutline, cloudOutline, calculatorOutline } from 'ionicons/icons';
 
@@ -36,7 +39,9 @@ import { informationCircleOutline, chevronForwardOutline, cloudOutline, calculat
     IonBadge, IonIcon
   ]
 })
-export class Tab2Page {
+export class Tab2Page implements OnInit, OnDestroy {
+
+  private subscriptions: Subscription[] = [];
 
   // --- INPUTS (Gedeeld) ---
   fio2: number | null = null;
@@ -91,32 +96,55 @@ export class Tab2Page {
     private clinicalData: ClinicalDataService
   ) {
     addIcons({chevronForwardOutline,cloudOutline,calculatorOutline,informationCircleOutline});
+  }
+
+  ngOnInit() {
+    // Initialize with current values from the shared service
+    this.paco2 = this.clinicalData.getPaCO2();
+    this.etCO2 = this.clinicalData.getEtCO2();
     
     // Subscribe to shared PaCO2 and EtCO2 values
-    this.clinicalData.paCO2$.subscribe(value => {
-      this.paco2 = value;
-      // Recalculate if we have all needed values
-      if (this.toonResultaten && this.fio2 != null && this.paco2 != null) {
-        this.bereken();
+    // Update local values when they change in other components
+    const paco2Sub = this.clinicalData.paCO2$.subscribe(value => {
+      if (this.paco2 !== value) {
+        this.paco2 = value;
+        // Trigger recalculation if needed
+        if (this.toonResultaten && this.fio2 != null && this.paco2 != null) {
+          this.bereken();
+        }
       }
     });
     
-    this.clinicalData.etCO2$.subscribe(value => {
-      this.etCO2 = value;
-      // Recalculate CO2 and ROX if needed
-      if (this.toonResultaten) {
-        this.calculateCO2();
-        this.calculateROX();
+    const etco2Sub = this.clinicalData.etCO2$.subscribe(value => {
+      if (this.etCO2 !== value) {
+        this.etCO2 = value;
+        // Trigger recalculation if needed  
+        if (this.toonResultaten) {
+          this.performCO2Calculation();
+          this.calculateROX();
+        }
       }
     });
+
+    this.subscriptions.push(paco2Sub, etco2Sub);
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe to prevent memory leaks
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   // --- 1. CO2 BEREKENING ---
   calculateCO2() {
-    // Update shared service when PaCO2 or EtCO2 changes
+    // Update shared service when PaCO2 or EtCO2 changes locally
     this.clinicalData.setPaCO2(this.paco2);
     this.clinicalData.setEtCO2(this.etCO2);
     
+    this.performCO2Calculation();
+  }
+
+  // Perform CO2 calculation without updating shared service
+  private performCO2Calculation() {
     if (this.paco2 != null && this.etCO2 != null) {
       const gap = this.paco2 - this.etCO2;
       this.co2Gradient = gap.toFixed(1);
