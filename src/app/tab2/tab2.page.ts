@@ -109,8 +109,9 @@ export class Tab2Page implements OnInit, OnDestroy {
       if (this.paco2 !== value) {
         this.paco2 = value;
         // Trigger recalculation if needed
-        if (this.toonResultaten && this.fio2 != null && this.paco2 != null) {
-          this.bereken();
+        if (this.toonResultaten) {
+          this.performCO2Calculation();
+          this.calculateROX();
         }
       }
     });

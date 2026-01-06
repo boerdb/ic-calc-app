@@ -95,20 +95,14 @@ export class Tab3Page implements OnInit, OnDestroy {
     const paco2Sub = this.clinicalData.paCO2$.subscribe(value => {
       if (this.inputPaCO2 !== value) {
         this.inputPaCO2 = value;
-        // Recalculate Vd/Vt if we have both values
-        if (this.inputPaCO2 && this.inputPeCO2) {
-          this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
-        }
+        this.updateVdVtCalculation();
       }
     });
     
     const etco2Sub = this.clinicalData.etCO2$.subscribe(value => {
       if (this.inputPeCO2 !== value) {
         this.inputPeCO2 = value;
-        // Recalculate Vd/Vt if we have both values
-        if (this.inputPaCO2 && this.inputPeCO2) {
-          this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
-        }
+        this.updateVdVtCalculation();
       }
     });
 
@@ -118,6 +112,13 @@ export class Tab3Page implements OnInit, OnDestroy {
   ngOnDestroy() {
     // Unsubscribe to prevent memory leaks
     this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  // Helper method to update Vd/Vt calculation when PaCO2 or EtCO2 changes
+  private updateVdVtCalculation(): void {
+    if (this.inputPaCO2 && this.inputPeCO2) {
+      this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
+    }
   }
 
   public segmentChanged(ev: any) {
