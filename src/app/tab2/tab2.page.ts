@@ -14,6 +14,7 @@ import {
 // Onze eigen services
 import { CalculatorService } from '../services/calculator';
 import { PatientService } from '../services/patient';
+import { ClinicalDataService } from '../services/clinical-data.service';
 
 // De Info Component
 import { InfoModalComponent } from '../info-modal.component';
@@ -86,13 +87,36 @@ export class Tab2Page {
   constructor(
     public patient: PatientService,
     private calc: CalculatorService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private clinicalData: ClinicalDataService
   ) {
     addIcons({chevronForwardOutline,cloudOutline,calculatorOutline,informationCircleOutline});
+    
+    // Subscribe to shared PaCO2 and EtCO2 values
+    this.clinicalData.paCO2$.subscribe(value => {
+      this.paco2 = value;
+      // Recalculate if we have all needed values
+      if (this.toonResultaten && this.fio2 != null && this.paco2 != null) {
+        this.bereken();
+      }
+    });
+    
+    this.clinicalData.etCO2$.subscribe(value => {
+      this.etCO2 = value;
+      // Recalculate CO2 and ROX if needed
+      if (this.toonResultaten) {
+        this.calculateCO2();
+        this.calculateROX();
+      }
+    });
   }
 
   // --- 1. CO2 BEREKENING ---
   calculateCO2() {
+    // Update shared service when PaCO2 or EtCO2 changes
+    this.clinicalData.setPaCO2(this.paco2);
+    this.clinicalData.setEtCO2(this.etCO2);
+    
     if (this.paco2 != null && this.etCO2 != null) {
       const gap = this.paco2 - this.etCO2;
       this.co2Gradient = gap.toFixed(1);
@@ -275,6 +299,10 @@ export class Tab2Page {
     this.svo2 = null;
     this.etCO2 = null;
     this.rr = null;
+
+    // Update shared service
+    this.clinicalData.setPaCO2(null);
+    this.clinicalData.setEtCO2(null);
 
     this.resPAO2 = null;
     this.resAaGrad = null;

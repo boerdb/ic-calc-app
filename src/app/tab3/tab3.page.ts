@@ -13,6 +13,7 @@ import {
 
 import { PatientService } from '../services/patient';
 import { CalculatorService } from '../services/calculator';
+import { ClinicalDataService } from '../services/clinical-data.service';
 // Importeer je nieuwe Info Component
 import { InfoModalComponent } from '../info-modal.component';
 
@@ -74,10 +75,32 @@ export class Tab3Page {
   constructor(
     public patient: PatientService,
     private calc: CalculatorService,
-    private modalCtrl: ModalController // <--- Injecteer de ModalController
+    private modalCtrl: ModalController, // <--- Injecteer de ModalController
+    private clinicalData: ClinicalDataService
   ) {
     // Iconen registreren (ook de chevron voor de knop)
     addIcons({ informationCircleOutline, chevronForwardOutline });
+    
+    // Subscribe to shared PaCO2 and EtCO2 values
+    this.clinicalData.paCO2$.subscribe(value => {
+      this.inputPaCO2 = value;
+      // Recalculate if in controlled mode and we have the needed values
+      if (this.mode === 'controlled' && this.inputVt && this.inputPeep) {
+        this.berekenControlled();
+      }
+      // Recalculate if in spontaneous mode
+      if (this.mode === 'spontaneous') {
+        this.berekenSpontaneous();
+      }
+    });
+    
+    this.clinicalData.etCO2$.subscribe(value => {
+      this.inputPeCO2 = value;
+      // Recalculate Vd/Vt if we have both values
+      if (this.inputPaCO2 && this.inputPeCO2) {
+        this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
+      }
+    });
   }
 
   public segmentChanged(ev: any) {
@@ -170,6 +193,10 @@ export class Tab3Page {
   }
 
   public berekenControlled(): void {
+    // Update shared service with PaCO2 and EtCO2 values
+    this.clinicalData.setPaCO2(this.inputPaCO2);
+    this.clinicalData.setEtCO2(this.inputPeCO2);
+    
     if (!this.inputVt || !this.inputPeep) return;
 
     if (this.patient.current.ibw) {
@@ -207,6 +234,10 @@ export class Tab3Page {
   }
 
   public berekenSpontaneous(): void {
+    // Update shared service with PaCO2 and EtCO2 values
+    this.clinicalData.setPaCO2(this.inputPaCO2);
+    this.clinicalData.setEtCO2(this.inputPeCO2);
+    
     if (this.inputSponPpeak !== null && this.inputSponPeepTot !== null && this.inputSponPnadir !== null) {
       this.resPocc = this.inputSponPnadir - this.inputSponPeepTot;
       this.resPmus = this.calc.calcPmus(this.inputSponPnadir, this.inputSponPeepTot);
@@ -224,6 +255,10 @@ export class Tab3Page {
     this.inputPplat = null; this.inputPpiek = null;
     this.inputResistance = null; this.inputPaCO2 = null; this.inputPeCO2 = null;
     this.inputSponPpeak = null; this.inputSponPeepTot = null; this.inputSponPnadir = null;
+
+    // Update shared service
+    this.clinicalData.setPaCO2(null);
+    this.clinicalData.setEtCO2(null);
 
     this.resDrivingPressure = null; this.resCstat = null; this.resCdyn = null;
     this.resVtPerKg = null; this.resMechPower = null; this.resTimeConstant = null;
