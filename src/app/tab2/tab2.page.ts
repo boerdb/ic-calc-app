@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -14,9 +14,7 @@ import {
 // Onze eigen services
 import { CalculatorService } from '../services/calculator';
 import { PatientService } from '../services/patient';
-
-// De Info Component
-import { InfoModalComponent } from '../info-modal.component';
+import { InfoModalService } from '../services/info-modal.service';
 
 import { addIcons } from 'ionicons';
 import { informationCircleOutline, chevronForwardOutline, cloudOutline, calculatorOutline } from 'ionicons/icons';
@@ -83,11 +81,12 @@ export class Tab2Page {
 
   toonResultaten = false;
 
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController
-  ) {
+  // Modern inject pattern
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private infoModal = inject(InfoModalService);
+
+  constructor() {
     addIcons({chevronForwardOutline,cloudOutline,calculatorOutline,informationCircleOutline});
   }
 
@@ -199,14 +198,7 @@ ROX = (SpO₂ / FiO₂) / Ademfrequentie
 
     `;
 
-    const modal = await this.modalCtrl.create({
-      component: InfoModalComponent,
-      componentProps: {
-        title: 'Gaswisseling Info',
-        content: htmlContent
-      }
-    });
-    await modal.present();
+    await this.infoModal.openInfoModal('Gaswisseling Info', htmlContent);
   }
 
   // --- BEREKEN ALLES (Grote knop) ---

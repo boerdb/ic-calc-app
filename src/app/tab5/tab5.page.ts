@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton,
@@ -28,7 +28,7 @@ import {
 import { addIcons } from 'ionicons';
 import { alertCircleOutline, bulbOutline, chevronForwardOutline, informationCircleOutline, pulseOutline, warning } from 'ionicons/icons';
 
-import { InfoModalComponent } from '../info-modal.component';
+import { InfoModalService } from '../services/info-modal.service';
 import { CalculatorService } from '../services/calculator';
 import { PatientService } from '../services/patient';
 
@@ -75,11 +75,12 @@ export class Tab5Page {
     { value: 0.03, label: 'Max: 0,03 IE/min' }
   ];
 
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController
-  ) {
+  // Modern inject pattern
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private infoModal = inject(InfoModalService);
+
+  constructor() {
     addIcons({ alertCircleOutline, warning, bulbOutline, pulseOutline, informationCircleOutline, chevronForwardOutline });
   }
 
@@ -111,11 +112,7 @@ export class Tab5Page {
       <p>Daarna Argipressine verlagen met 0,01 IE/min per uur.</p>
     `;
 
-    const modal = await this.modalCtrl.create({
-      component: InfoModalComponent,
-      componentProps: { title: 'Protocol Info', content: htmlContent }
-    });
-    await modal.present();
+    await this.infoModal.openInfoModal('Protocol Info', htmlContent);
   }
 
   // --- PiCCO Advies Logica ---

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton, IonButtons,
@@ -20,7 +20,7 @@ import {
 
 import { addIcons } from 'ionicons';
 import { alertCircleOutline, chevronForwardOutline, pulseOutline } from 'ionicons/icons';
-import { InfoModalComponent } from '../info-modal.component';
+import { InfoModalService } from '../services/info-modal.service';
 import { PatientService } from '../services/patient';
 
 @Component({
@@ -43,10 +43,11 @@ export class Tab4Page {
   public elwiWarning: string = '';
   public resultColor: string = 'medium';
 
-  constructor(
-    public patient: PatientService,
-    private modalCtrl: ModalController
-  ) {
+  // Modern inject pattern
+  public patient = inject(PatientService);
+  private infoModal = inject(InfoModalService);
+
+  constructor() {
     addIcons({ chevronForwardOutline, pulseOutline, alertCircleOutline });
 
     if (!this.patient.current.picco) {
@@ -95,11 +96,7 @@ export class Tab4Page {
       </ul>
     `;
 
-    const modal = await this.modalCtrl.create({
-      component: InfoModalComponent,
-      componentProps: { title: 'PiCCO Info', content: htmlContent }
-    });
-    await modal.present();
+    await this.infoModal.openInfoModal('PiCCO Info', htmlContent);
   }
 
   // --- HIER ZIT DE UPDATE ---

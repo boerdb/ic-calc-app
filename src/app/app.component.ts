@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'; // Nodig voor algemene dingen
 import { IonApp, IonRouterOutlet, IonIcon, IonFab, IonFabButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { downloadOutline, close } from 'ionicons/icons'; // 'close' toegevoegd voor het kruisje
+import { registerAppIcons } from './utils/icon-registry'; // Import centralized icon registry
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,8 @@ export class AppComponent {
   showInstallBanner = false; // Hernoemd van 'Button' naar 'Banner'
 
   constructor() {
+    // Register all app icons centrally
+    registerAppIcons();
     // Registreer beide iconen
     addIcons({ downloadOutline, close });
   }

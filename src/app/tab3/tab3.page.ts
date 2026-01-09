@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -13,8 +13,7 @@ import {
 
 import { PatientService } from '../services/patient';
 import { CalculatorService } from '../services/calculator';
-// Importeer je nieuwe Info Component
-import { InfoModalComponent } from '../info-modal.component';
+import { InfoModalService } from '../services/info-modal.service';
 
 // Icoon registreren
 import { addIcons } from 'ionicons';
@@ -71,11 +70,12 @@ export class Tab3Page {
   public pmusKleur: string = 'medium';
   public ptpKleur: string = 'medium';
 
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController // <--- Injecteer de ModalController
-  ) {
+  // Modern inject pattern
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private infoModal = inject(InfoModalService);
+
+  constructor() {
     // Iconen registreren (ook de chevron voor de knop)
     addIcons({ informationCircleOutline, chevronForwardOutline });
   }
@@ -157,16 +157,7 @@ export class Tab3Page {
       `;
     }
 
-    // Maak de modal aan met jouw component
-    const modal = await this.modalCtrl.create({
-      component: InfoModalComponent,
-      componentProps: {
-        title: titel,
-        content: htmlContent
-      }
-    });
-
-    await modal.present();
+    await this.infoModal.openInfoModal(titel, htmlContent);
   }
 
   public berekenControlled(): void {

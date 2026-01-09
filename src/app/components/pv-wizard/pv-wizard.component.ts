@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { register } from 'swiper/element/bundle';
@@ -32,7 +32,10 @@ export class PvWizardComponent {
   isBeginning: boolean = true;
   isEnd: boolean = false;
 
-  constructor(private modalCtrl: ModalController) {
+  // Modern inject pattern
+  private modalCtrl = inject(ModalController);
+
+  constructor() {
     addIcons({ checkmarkCircle, alertCircle, stopCircle, warning, chevronBack, chevronForward, arrowForward });
   }
 

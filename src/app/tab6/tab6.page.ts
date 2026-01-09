@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PatientService } from '../services/patient';
 import { LungProfile, VentilationService } from '../services/ventilation';
@@ -55,11 +55,12 @@ export class Tab6Page implements OnInit {
   isAlertOpen = false;
   alertButtons = ['Begrepen'];
 
-  constructor(
-    private ventService: VentilationService,
-    public patient: PatientService,
-    private modalCtrl: ModalController // 3. DEZE TOEGEVOEGD IN DE CONSTRUCTOR
-  ) {
+  // Modern inject pattern
+  private ventService = inject(VentilationService);
+  public patient = inject(PatientService);
+  private modalCtrl = inject(ModalController);
+
+  constructor() {
     this.afspraken = this.ventService.WERK_AFSPRAKEN;
     addIcons({pulseOutline,reorderTwoOutline,analyticsOutline,chevronForward,informationCircleOutline,warning,stopCircleOutline,medkitOutline});
   }

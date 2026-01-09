@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'; // OnInit toegevoegd
+import { Component, Input, OnInit, inject } from '@angular/core'; // OnInit toegevoegd
 import { CommonModule } from '@angular/common';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
@@ -70,10 +70,11 @@ export class InfoModalComponent implements OnInit {
   // Deze variabele slaat de "goedgekeurde" HTML op
   public safeContent: SafeHtml = '';
 
-  constructor(
-    private modalCtrl: ModalController,
-    private sanitizer: DomSanitizer // 2. Injecteer de Sanitizer
-  ) {
+  // Modern inject pattern
+  private modalCtrl = inject(ModalController);
+  private sanitizer = inject(DomSanitizer);
+
+  constructor() {
     addIcons({ closeOutline });
   }
 
