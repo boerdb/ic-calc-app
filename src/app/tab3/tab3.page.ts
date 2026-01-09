@@ -15,10 +15,6 @@ import { PatientService } from '../services/patient';
 import { CalculatorService } from '../services/calculator';
 import { InfoModalService } from '../services/info-modal.service';
 
-// Icoon registreren
-import { addIcons } from 'ionicons';
-import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons';
-
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -76,8 +72,7 @@ export class Tab3Page {
   private infoModal = inject(InfoModalService);
 
   constructor() {
-    // Iconen registreren (ook de chevron voor de knop)
-    addIcons({ informationCircleOutline, chevronForwardOutline });
+    // Icons are registered centrally in app.component.ts
   }
 
   public segmentChanged(ev: any) {

@@ -25,9 +25,6 @@ import {
   ModalController
 } from '@ionic/angular/standalone';
 
-import { addIcons } from 'ionicons';
-import { alertCircleOutline, bulbOutline, chevronForwardOutline, informationCircleOutline, pulseOutline, warning } from 'ionicons/icons';
-
 import { InfoModalService } from '../services/info-modal.service';
 import { CalculatorService } from '../services/calculator';
 import { PatientService } from '../services/patient';
@@ -81,7 +78,7 @@ export class Tab5Page {
   private infoModal = inject(InfoModalService);
 
   constructor() {
-    addIcons({ alertCircleOutline, warning, bulbOutline, pulseOutline, informationCircleOutline, chevronForwardOutline });
+    // Icons are registered centrally in app.component.ts
   }
 
   // --- Info Popup ---

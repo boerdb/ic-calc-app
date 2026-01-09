@@ -4,10 +4,8 @@ import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
   IonIcon, ModalController
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { closeOutline } from 'ionicons/icons';
 
-// 1. We hebben deze twee nodig voor de veiligheid:
+// We hebben deze twee nodig voor de veiligheid:
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -75,7 +73,7 @@ export class InfoModalComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
 
   constructor() {
-    addIcons({ closeOutline });
+    // Icons are registered centrally in app.component.ts
   }
 
   // 3. Zodra de pagina laadt, keuren we de HTML goed

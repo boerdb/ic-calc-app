@@ -2,17 +2,6 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, inject } from
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { register } from 'swiper/element/bundle';
-import { addIcons } from 'ionicons';
-// Alle iconen die we nodig hebben
-import {
-  checkmarkCircle,
-  alertCircle,
-  stopCircle,
-  warning,
-  chevronBack,
-  chevronForward,
-  arrowForward
-} from 'ionicons/icons';
 
 register();
 
@@ -36,7 +25,7 @@ export class PvWizardComponent {
   private modalCtrl = inject(ModalController);
 
   constructor() {
-    addIcons({ checkmarkCircle, alertCircle, stopCircle, warning, chevronBack, chevronForward, arrowForward });
+    // Icons are registered centrally in app.component.ts
   }
 
   // Checkt bij elke swipe waar we zijn

@@ -21,7 +21,7 @@ export class AppComponent {
   constructor() {
     // Register all app icons centrally
     registerAppIcons();
-    // Registreer beide iconen
+    // Register app-specific icons
     addIcons({ downloadOutline, close });
   }
 

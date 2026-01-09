@@ -18,8 +18,6 @@ import {
   ModalController
 } from '@ionic/angular/standalone';
 
-import { addIcons } from 'ionicons';
-import { alertCircleOutline, chevronForwardOutline, pulseOutline } from 'ionicons/icons';
 import { InfoModalService } from '../services/info-modal.service';
 import { PatientService } from '../services/patient';
 
@@ -48,8 +46,7 @@ export class Tab4Page {
   private infoModal = inject(InfoModalService);
 
   constructor() {
-    addIcons({ chevronForwardOutline, pulseOutline, alertCircleOutline });
-
+    // Icons are registered centrally in app.component.ts
     if (!this.patient.current.picco) {
       this.patient.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
     }

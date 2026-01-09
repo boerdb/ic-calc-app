@@ -16,9 +16,6 @@ import { CalculatorService } from '../services/calculator';
 import { PatientService } from '../services/patient';
 import { InfoModalService } from '../services/info-modal.service';
 
-import { addIcons } from 'ionicons';
-import { informationCircleOutline, chevronForwardOutline, cloudOutline, calculatorOutline } from 'ionicons/icons';
-
 @Component({
   selector: 'app-tab2',
   templateUrl: './tab2.page.html',
@@ -87,7 +84,7 @@ export class Tab2Page {
   private infoModal = inject(InfoModalService);
 
   constructor() {
-    addIcons({chevronForwardOutline,cloudOutline,calculatorOutline,informationCircleOutline});
+    // Icons are registered centrally in app.component.ts
   }
 
   // --- 1. CO2 BEREKENING ---

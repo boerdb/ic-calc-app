@@ -27,10 +27,7 @@ import {
   ModalController  // <--- DEZE TOEGEVOEGD
 } from '@ionic/angular/standalone';
 
-import { addIcons } from 'ionicons';
-import { informationCircleOutline, medkitOutline, pulseOutline, reorderTwoOutline, stopCircleOutline, warning, analyticsOutline, chevronForward } from 'ionicons/icons';
-
-// 2. We importeren je nieuwe Wizard Component
+// We importeren je nieuwe Wizard Component
 import { PvWizardComponent } from '../components/pv-wizard/pv-wizard.component';
 
 @Component({
@@ -62,7 +59,7 @@ export class Tab6Page implements OnInit {
 
   constructor() {
     this.afspraken = this.ventService.WERK_AFSPRAKEN;
-    addIcons({pulseOutline,reorderTwoOutline,analyticsOutline,chevronForward,informationCircleOutline,warning,stopCircleOutline,medkitOutline});
+    // Icons are registered centrally in app.component.ts
   }
 
   ngOnInit() {
