@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonCard, IonCardHeader, IonCardTitle, IonCardContent,
   IonSegment, IonSegmentButton, IonIcon, IonLabel,
   IonGrid, IonRow, IonCol, IonInput, IonItem, IonNote,
-  IonSelect, IonSelectOption, IonButton, IonButtons, IonText
+  IonSelect, IonSelectOption, IonButton, IonButtons, IonText,
+  IonFooter, IonModal // <--- Toegevoegd
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { maleOutline, femaleOutline, trashOutline, bedOutline, chevronDownOutline} from 'ionicons/icons';
+import {
+  maleOutline, femaleOutline, trashOutline, bedOutline, chevronDownOutline,
+  informationCircleOutline, closeOutline, logoAndroid, logoApple // <--- Nieuwe iconen
+} from 'ionicons/icons';
 import { PatientService } from '../services/patient';
 
 @Component({
@@ -25,18 +28,38 @@ import { PatientService } from '../services/patient';
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonSegment, IonSegmentButton, IonIcon, IonLabel,
     IonGrid, IonRow, IonCol, IonInput, IonItem, IonNote,
-    IonSelect, IonSelectOption, IonButton, IonButtons, IonText
+    IonSelect, IonSelectOption, IonButton, IonButtons, IonText,
+    IonFooter, IonModal // <--- Toegevoegd aan imports array
   ]
 })
 export class Tab1Page {
+  // Modernere injectie (vervangt constructor parameter)
+  public patient = inject(PatientService);
 
-  constructor(public patient: PatientService) {
-    addIcons({ maleOutline, femaleOutline, trashOutline, bedOutline, chevronDownOutline });
+  // Variabele voor de installatie-modal
+  isModalOpen = false;
+
+  constructor() {
+    addIcons({
+      maleOutline,
+      femaleOutline,
+      trashOutline,
+      bedOutline,
+      chevronDownOutline,
+      informationCircleOutline, // <---
+      closeOutline,             // <---
+      logoAndroid,              // <---
+      logoApple                 // <---
+    });
+  }
+
+  // Functie om de modal te openen/sluiten
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
   }
 
   // Als je een ander bed kiest
   wisselBed(event: any) {
-    // AANGEPAST: De service gebruikt nu de Engelse term 'selectBed'
     this.patient.selectBed(event.detail.value);
   }
 

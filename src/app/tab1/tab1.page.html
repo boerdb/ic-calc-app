@@ -146,7 +146,6 @@ Voor meer info mail naar
   info.webapp@icloud.com
 </a>
 <br>
-            <strong>© 2026 Ben de Boer</strong>
           </p>
         </ion-text>
       </div>
@@ -154,3 +153,72 @@ Voor meer info mail naar
     </ion-card-content>
   </ion-card>
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <div class="copyright-container ion-text-center">
+      <ion-note>
+        &copy; 2026 Ben de Boer
+        <ion-icon
+          name="information-circle-outline"
+          color="primary"
+          style="font-size: 18px; vertical-align: middle; margin-left: 5px; cursor: pointer;"
+          (click)="setOpen(true)">
+        </ion-icon>
+      </ion-note>
+    </div>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>App Installeren</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="setOpen(false)">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <div class="install-guide">
+        <h3>📱 Haal het beste uit de app</h3>
+        <p>Installeer de IC calculator als app op je telefoon voor de beste gebruikservaring zonder browser-randen.</p>
+
+        <ion-card>
+          <ion-card-content>
+            <h4><ion-icon name="logo-android" color="success"></ion-icon> Android</h4>
+            <p>Gebruik <b>Google Chrome</b>.</p>
+            <ol>
+              <li>Klik op de <b>"Install"</b> knop rechtsboven in deze app.</li>
+              <li>Of tik op de <b>3 puntjes</b> (menu) en kies <i>"App installeren"</i>.</li>
+            </ol>
+            <p style="font-size: 0.9em; color: gray;">
+              <i>Tip: Gebruik geen Samsung Internet of Edge als je een mooi icoon wilt zonder browser-logo.</i>
+            </p>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-content>
+            <h4><ion-icon name="logo-apple"></ion-icon> iPhone / iPad</h4>
+            <p>Gebruik <b>Safari</b>.</p>
+            <ol>
+              <li>Tik onderin op de <b>Deel-knop</b> <br>(vierkantje met pijl omhoog).</li>
+              <li>Scroll naar beneden.</li>
+              <li>Kies <b>"Zet op beginscherm"</b>.</li>
+            </ol>
+          </ion-card-content>
+        </ion-card>
+
+        <br>
+        <ion-button expand="block" (click)="setOpen(false)">
+          OK!
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

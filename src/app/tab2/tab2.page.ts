@@ -133,10 +133,10 @@ export class Tab2Page {
         this.roxAdvies = 'Laag risico op falen HFNO';
       } else if (result < 3.85) {
         this.roxColor = '#eb445a';
-        this.roxAdvies = 'HOOG RISICO! Overweeg intubatie';
+        this.roxAdvies = 'Hoge kans op falen → overweeg intubatie';
       } else {
         this.roxColor = '#ffc409';
-        this.roxAdvies = 'Grijs gebied: Monitor nauwgezet';
+        this.roxAdvies = 'Grensgebied → opnieuw beoordelen na 1–2 uur';
       }
     } else {
       this.roxScore = null;
@@ -171,18 +171,32 @@ export class Tab2Page {
       </div>
 
       <h3>3. CO₂ Gradiënt (Dode ruimte)</h3>
-      <p>Verschil tussen PaCO₂ en EtCO₂.</p>
-      <ul>
-        <li><strong>Normaal (< 0.8 kPa):</strong> Goede match tussen ventilatie en perfusie.</li>
-        <li><strong>Verhoogd:</strong> Dode ruimte ventilatie (wel lucht, geen bloed). Denk aan longembolie, lage cardiac output of hoge PEEP.</li>
-      </ul>
+<p>Verschil tussen PaCO₂ en EtCO₂.</p>
+
+<p><strong>Formule:</strong><br>
+CO₂‑gradiënt = PaCO₂ − EtCO₂
+</p>
+
+<ul>
+  <li><strong>Normaal (< 0.8 kPa):</strong> Goede match tussen ventilatie en perfusie.</li>
+  <li><strong>Verhoogd:</strong> Dode ruimte ventilatie (wel lucht, geen bloed). Denk aan longembolie, lage cardiac output of hoge PEEP.</li>
+</ul>
+
+
 
       <h3>4. ROX Index (HFNO)</h3>
-      <p>Voorspeller voor falen van High Flow therapie.</p>
-      <ul>
-         <li><strong>< 3.85:</strong> Hoog risico op falen (Overweeg intubatie).</li>
-         <li><strong>> 4.88:</strong> Laag risico op falen.</li>
-      </ul>
+<p>Voorspeller voor falen van High Flow therapie.</p>
+
+<p><strong>Formule:</strong><br>
+ROX = (SpO₂ / FiO₂) / Ademfrequentie
+</p>
+
+<ul>
+  <li><strong>&lt; 3.85:</strong> Hoog risico op falen (Overweeg intubatie).</li>
+  <li><strong>&gt; 4.88:</strong> Laag risico op falen.</li>
+</ul>
+
+
     `;
 
     const modal = await this.modalCtrl.create({

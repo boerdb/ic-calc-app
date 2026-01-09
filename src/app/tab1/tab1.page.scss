@@ -82,3 +82,24 @@
     }
   }
 }
+
+.copyright-container {
+  padding: 10px 0;
+
+  ion-note {
+    font-size: 0.8rem;
+  }
+}
+
+// Zorg dat de modal content netjes leest
+.install-guide {
+  h3 {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  ion-card {
+    margin-inline: 0;
+    margin-top: 15px;
+  }
+}
