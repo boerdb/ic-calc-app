@@ -83,13 +83,7 @@
   }
 }
 
-.copyright-container {
-  padding: 10px 0;
 
-  ion-note {
-    font-size: 0.8rem;
-  }
-}
 
 // Zorg dat de modal content netjes leest
 .install-guide {
@@ -101,5 +95,43 @@
   ion-card {
     margin-inline: 0;
     margin-top: 15px;
+  }
+}
+
+.minimal-footer {
+  // We stijlen de toolbar die IN de footer zit
+  ion-toolbar {
+    // Dit forceert de achtergrond naar donkergrijs (#222428 is een mooie standaard donkere tint)
+    --background: #222428 !important;
+
+    // Zorgt dat er geen randjes zijn
+    --border-width: 0;
+  }
+
+  // De tekst container
+  div.ion-text-center {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  // De tekst zelf
+  ion-note {
+    font-size: 0.75rem;
+    color: #92949c !important; // Mooi subtiel lichtgrijs
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Het icoontje
+  .info-icon {
+    font-size: 16px;
+    margin-left: 6px;
+    color: #666666; // Iets donkerder dan de tekst
+
+    &:hover {
+      color: #ffffff; // Wit als je eroverheen muist
+    }
   }
 }
