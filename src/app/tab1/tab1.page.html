@@ -161,7 +161,7 @@ Voor meer info mail naar
         &copy; 2026 Ben de Boer
         <ion-icon
           name="information-circle-outline"
-
+          class="info-icon"
 
           (click)="setOpen(true)">
         </ion-icon>
@@ -173,7 +173,7 @@ Voor meer info mail naar
 <ion-modal [isOpen]="isModalOpen">
   <ng-template>
     <ion-header>
-      <ion-toolbar color="primary">
+      <ion-toolbar>
         <ion-title>App Installeren</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="setOpen(false)">
@@ -215,9 +215,9 @@ Voor meer info mail naar
         </ion-card>
 
         <br>
-        <ion-button expand="block" (click)="setOpen(false)">
-          OK!
-        </ion-button>
+       <ion-button expand="block" class="teal-btn" (click)="setOpen(false)">
+  OK!
+</ion-button>
       </div>
     </ion-content>
   </ng-template>
