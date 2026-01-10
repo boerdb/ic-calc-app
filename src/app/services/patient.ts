@@ -52,8 +52,6 @@ export class PatientService {
   // Huidige selectie (standaard het eerste bed: 1-1)
   current: BedData = this.beds[0];
 
-  constructor() { }
-
   selectBed(id: string) {
     const found = this.beds.find(b => b.bedId === id);
     if (found) {

@@ -9,8 +9,6 @@ export class CalculatorService {
   private readonly PB = 101.3;
   private readonly PH2O = 6.3;
 
-  constructor() { }
-
   // ==========================================
   // 1. OXYGENATIE FORMULES
   // ==========================================

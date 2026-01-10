@@ -23,8 +23,6 @@ export class VentilationService {  // <--- Zorg dat er 'export class' staat
     { id: 5, text: 'Vooraf nooit beademen op de testballon', checked: false }
   ];
 
-  constructor() {}
-
   getProfileByRCexp(rcExp: number): LungProfile {
     const tExp = rcExp * 3;
 
