@@ -173,3 +173,25 @@
     }
   }
 }
+.rox-info-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: rgba(0, 128, 128, 0.08); /* Zacht teal achtergrondje */
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 12px;
+
+  .trigger-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ion-text-color);
+  }
+}
+
+.icon-teal {
+  color: teal;
+  font-size: 1.2rem;
+}

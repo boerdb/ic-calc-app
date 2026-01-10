@@ -142,10 +142,17 @@
   </ion-card>
 
 <ion-card class="co2-container">
-    <div class="co2-header">
-      <ion-icon name="cloud-outline"></ion-icon>
+  <div class="co2-header" style="display: flex; justify-content: space-between; align-items: center; padding-right: 8px;">
+    <div style="display: flex; align-items: center;">
+      <ion-icon name="cloud-outline" style="margin-right: 8px;"></ion-icon>
       <h3>CO₂ Gradiënt & Dode Ruimte</h3>
     </div>
+
+    <ion-button fill="clear" size="small" (click)="toonCO2Info()" style="--color: #00796B; font-weight: bold;">
+      Uitleg
+      <ion-icon name="chevron-forward-outline" slot="end" style="color:teal;"></ion-icon>
+    </ion-button>
+  </div>
 
     <ion-card-content>
       <ion-grid class="ion-no-padding">
@@ -193,61 +200,46 @@
   </ion-card>
 
   <ion-card class="rox-container">
-    <div class="rox-header">
-      <ion-icon name="calculator-outline"></ion-icon>
+  <div class="rox-header" style="display: flex; justify-content: space-between; align-items: center; padding-right: 8px;">
+    <div style="display: flex; align-items: center;">
+      <ion-icon name="calculator-outline" style="margin-right: 8px;"></ion-icon>
       <h3>ROX Index (HFNO)</h3>
     </div>
 
-    <ion-card-content>
-      <ion-grid class="ion-no-padding">
-        <ion-row>
-          <ion-col size="4">
-            <ion-input
-              class="custom-green-input"
-              label="SpO₂ (%)"
-              label-placement="floating"
-              fill="outline"
-              type="number"
-              inputmode="decimal"
-              [(ngModel)]="sao2"
-              (ionInput)="calculateROX()">
-            </ion-input>
-          </ion-col>
+    <ion-button fill="clear" size="small" (click)="toonRoxInfo()" style="--color: #00796B; font-weight: bold;">
+      Uitleg
+      <ion-icon name="chevron-forward-outline" slot="end" style="color:teal;"></ion-icon>
+    </ion-button>
+  </div>
 
-          <ion-col size="4">
-            <ion-input
-              class="custom-green-input"
-              label="FiO₂ (%)"
-              label-placement="floating"
-              fill="outline"
-              type="number"
-              inputmode="decimal"
-              [(ngModel)]="fio2"
-              (ionInput)="calculateROX()">
-            </ion-input>
-          </ion-col>
+  <ion-card-content>
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col size="4">
+          <ion-input class="custom-green-input" label="SpO₂ (%)" label-placement="floating" fill="outline"
+            type="number" inputmode="decimal" [(ngModel)]="sao2" (ionInput)="calculateROX()">
+          </ion-input>
+        </ion-col>
 
-          <ion-col size="4">
-            <ion-input
-              class="custom-green-input"
-              label="RR (/min)"
-              label-placement="floating"
-              fill="outline"
-              type="number"
-              inputmode="decimal"
-              [(ngModel)]="rr"
-              (ionInput)="calculateROX()">
-            </ion-input>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+        <ion-col size="4">
+          <ion-input class="custom-green-input" label="FiO₂ (%)" label-placement="floating" fill="outline"
+            type="number" inputmode="decimal" [(ngModel)]="fio2" (ionInput)="calculateROX()">
+          </ion-input>
+        </ion-col>
 
-      <div class="rox-result-box" *ngIf="roxScore !== null">
-        <div class="score-label">ROX Score</div>
-        <div class="score-value" [style.color]="roxColor">{{ roxScore }}</div>
-        <div class="score-advies">{{ roxAdvies }}</div>
-      </div>
-    </ion-card-content>
-  </ion-card>
+        <ion-col size="4">
+          <ion-input class="custom-green-input" label="RR (/min)" label-placement="floating" fill="outline"
+            type="number" inputmode="decimal" [(ngModel)]="rr" (ionInput)="calculateROX()">
+          </ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
+    <div class="rox-result-box" *ngIf="roxScore !== null">
+      <div class="score-label">ROX Score</div>
+      <div class="score-value" [style.color]="roxColor">{{ roxScore }}</div>
+      <div class="score-advies">{{ roxAdvies }}</div>
+    </div>
+  </ion-card-content>
+</ion-card>
 </ion-content>
