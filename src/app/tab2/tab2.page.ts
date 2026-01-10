@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -18,9 +18,6 @@ import { PatientService } from '../services/patient';
 // De Info Component
 import { InfoModalComponent } from '../info-modal.component';
 
-import { addIcons } from 'ionicons';
-import { informationCircleOutline, chevronForwardOutline, cloudOutline, calculatorOutline } from 'ionicons/icons';
-
 @Component({
   selector: 'app-tab2',
   templateUrl: './tab2.page.html',
@@ -36,6 +33,11 @@ import { informationCircleOutline, chevronForwardOutline, cloudOutline, calculat
   ]
 })
 export class Tab2Page {
+
+  // Modern inject() function instead of constructor injection
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private modalCtrl = inject(ModalController);
 
   // --- INPUTS (Gedeeld) ---
   fio2: number | null = null;
@@ -82,14 +84,6 @@ export class Tab2Page {
   resSvO2Color = 'medium';
 
   toonResultaten = false;
-
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController
-  ) {
-    addIcons({chevronForwardOutline,cloudOutline,calculatorOutline,informationCircleOutline});
-  }
 
   // --- 1. CO2 BEREKENING ---
   calculateCO2() {

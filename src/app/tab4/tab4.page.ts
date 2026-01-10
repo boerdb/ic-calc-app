@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton, IonButtons,
@@ -18,8 +18,6 @@ import {
   ModalController
 } from '@ionic/angular/standalone';
 
-import { addIcons } from 'ionicons';
-import { alertCircleOutline, chevronForwardOutline, pulseOutline } from 'ionicons/icons';
 import { InfoModalComponent } from '../info-modal.component';
 import { PatientService } from '../services/patient';
 
@@ -38,17 +36,16 @@ import { PatientService } from '../services/patient';
 })
 export class Tab4Page {
 
+  // Modern inject() function instead of constructor injection
+  public patient = inject(PatientService);
+  private modalCtrl = inject(ModalController);
+
   public diagnose: string = '';
   public advies: string = '';
   public elwiWarning: string = '';
   public resultColor: string = 'medium';
 
-  constructor(
-    public patient: PatientService,
-    private modalCtrl: ModalController
-  ) {
-    addIcons({ chevronForwardOutline, pulseOutline, alertCircleOutline });
-
+  constructor() {
     if (!this.patient.current.picco) {
       this.patient.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
     }

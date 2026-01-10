@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -16,10 +16,6 @@ import { CalculatorService } from '../services/calculator';
 // Importeer je nieuwe Info Component
 import { InfoModalComponent } from '../info-modal.component';
 
-// Icoon registreren
-import { addIcons } from 'ionicons';
-import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons';
-
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -36,6 +32,11 @@ import { informationCircleOutline, chevronForwardOutline } from 'ionicons/icons'
   ]
 })
 export class Tab3Page {
+  // Modern inject() function instead of constructor injection
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private modalCtrl = inject(ModalController);
+
   public mode: string = 'controlled';
 
   // --- CONTROLLED INPUTS ---
@@ -70,15 +71,6 @@ export class Tab3Page {
   public mpKleur: string = 'medium';
   public pmusKleur: string = 'medium';
   public ptpKleur: string = 'medium';
-
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController // <--- Injecteer de ModalController
-  ) {
-    // Iconen registreren (ook de chevron voor de knop)
-    addIcons({ informationCircleOutline, chevronForwardOutline });
-  }
 
   public segmentChanged(ev: any) {
     this.mode = ev.detail.value;

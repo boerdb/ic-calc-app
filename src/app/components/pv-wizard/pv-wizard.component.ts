@@ -1,18 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { register } from 'swiper/element/bundle';
-import { addIcons } from 'ionicons';
-// Alle iconen die we nodig hebben
-import {
-  checkmarkCircle,
-  alertCircle,
-  stopCircle,
-  warning,
-  chevronBack,
-  chevronForward,
-  arrowForward
-} from 'ionicons/icons';
 
 register();
 
@@ -28,13 +17,12 @@ export class PvWizardComponent {
 
   @ViewChild('swiper') swiperRef: ElementRef | undefined;
 
+  // Modern inject() function instead of constructor injection
+  private modalCtrl = inject(ModalController);
+
   // Variabelen om te weten of we pijlen moeten tonen
   isBeginning: boolean = true;
   isEnd: boolean = false;
-
-  constructor(private modalCtrl: ModalController) {
-    addIcons({ checkmarkCircle, alertCircle, stopCircle, warning, chevronBack, chevronForward, arrowForward });
-  }
 
   // Checkt bij elke swipe waar we zijn
   onSlideChange(event: any) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton,
@@ -25,9 +25,6 @@ import {
   ModalController
 } from '@ionic/angular/standalone';
 
-import { addIcons } from 'ionicons';
-import { alertCircleOutline, bulbOutline, chevronForwardOutline, informationCircleOutline, pulseOutline, warning } from 'ionicons/icons';
-
 import { InfoModalComponent } from '../info-modal.component';
 import { CalculatorService } from '../services/calculator';
 import { PatientService } from '../services/patient';
@@ -50,6 +47,11 @@ import { PatientService } from '../services/patient';
   ]
 })
 export class Tab5Page {
+
+  // Modern inject() function instead of constructor injection
+  public patient = inject(PatientService);
+  private calc = inject(CalculatorService);
+  private modalCtrl = inject(ModalController);
 
   // HIER IS HET SLOTJE:
   private hasCalculated: boolean = false;
@@ -74,14 +76,6 @@ export class Tab5Page {
     { value: 0.02, label: 'Stap 2: 0,02 IE/min' },
     { value: 0.03, label: 'Max: 0,03 IE/min' }
   ];
-
-  constructor(
-    public patient: PatientService,
-    private calc: CalculatorService,
-    private modalCtrl: ModalController
-  ) {
-    addIcons({ alertCircleOutline, warning, bulbOutline, pulseOutline, informationCircleOutline, chevronForwardOutline });
-  }
 
   // --- Info Popup ---
   async toonInfo() {

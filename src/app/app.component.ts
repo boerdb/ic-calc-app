@@ -1,8 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Nodig voor algemene dingen
 import { IonApp, IonRouterOutlet, IonIcon, IonFab, IonFabButton } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { downloadOutline, close } from 'ionicons/icons'; // 'close' toegevoegd voor het kruisje
 
 @Component({
   selector: 'app-root',
@@ -16,11 +14,6 @@ export class AppComponent {
 
   deferredPrompt: any = null;
   showInstallBanner = false; // Hernoemd van 'Button' naar 'Banner'
-
-  constructor() {
-    // Registreer beide iconen
-    addIcons({ downloadOutline, close });
-  }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
   onBeforeInstallPrompt(e: any) {

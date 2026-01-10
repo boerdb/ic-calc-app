@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PatientService } from '../services/patient';
 import { LungProfile, VentilationService } from '../services/ventilation';
@@ -27,9 +27,6 @@ import {
   ModalController  // <--- DEZE TOEGEVOEGD
 } from '@ionic/angular/standalone';
 
-import { addIcons } from 'ionicons';
-import { informationCircleOutline, medkitOutline, pulseOutline, reorderTwoOutline, stopCircleOutline, warning, analyticsOutline, chevronForward } from 'ionicons/icons';
-
 // 2. We importeren je nieuwe Wizard Component
 import { PvWizardComponent } from '../components/pv-wizard/pv-wizard.component';
 
@@ -48,6 +45,11 @@ import { PvWizardComponent } from '../components/pv-wizard/pv-wizard.component';
 })
 export class Tab6Page implements OnInit {
 
+  // Modern inject() function instead of constructor injection
+  private ventService = inject(VentilationService);
+  public patient = inject(PatientService);
+  private modalCtrl = inject(ModalController);
+
   currentRC: number = 0.75; // Standaardwaarde
   analysis: LungProfile | null = null;
   afspraken: any[] = [];
@@ -55,13 +57,8 @@ export class Tab6Page implements OnInit {
   isAlertOpen = false;
   alertButtons = ['Begrepen'];
 
-  constructor(
-    private ventService: VentilationService,
-    public patient: PatientService,
-    private modalCtrl: ModalController // 3. DEZE TOEGEVOEGD IN DE CONSTRUCTOR
-  ) {
+  constructor() {
     this.afspraken = this.ventService.WERK_AFSPRAKEN;
-    addIcons({pulseOutline,reorderTwoOutline,analyticsOutline,chevronForward,informationCircleOutline,warning,stopCircleOutline,medkitOutline});
   }
 
   ngOnInit() {

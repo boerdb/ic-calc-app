@@ -10,11 +10,6 @@ import {
   IonFooter, IonModal // <--- Toegevoegd
 } from '@ionic/angular/standalone';
 
-import { addIcons } from 'ionicons';
-import {
-  maleOutline, femaleOutline, trashOutline, bedOutline, chevronDownOutline,
-  informationCircleOutline, closeOutline, logoAndroid, logoApple // <--- Nieuwe iconen
-} from 'ionicons/icons';
 import { PatientService } from '../services/patient';
 
 @Component({
@@ -38,20 +33,6 @@ export class Tab1Page {
 
   // Variabele voor de installatie-modal
   isModalOpen = false;
-
-  constructor() {
-    addIcons({
-      maleOutline,
-      femaleOutline,
-      trashOutline,
-      bedOutline,
-      chevronDownOutline,
-      informationCircleOutline, // <---
-      closeOutline,             // <---
-      logoAndroid,              // <---
-      logoApple                 // <---
-    });
-  }
 
   // Functie om de modal te openen/sluiten
   setOpen(isOpen: boolean) {
