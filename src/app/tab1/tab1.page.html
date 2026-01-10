@@ -9,23 +9,21 @@
 
     <ion-buttons slot="end">
       <div class="bed-selector-box">
-  <ion-icon name="bed-outline"></ion-icon>
+        <ion-icon name="bed-outline"></ion-icon>
 
-  <ion-select
-    [value]="patient.selectedBedId"
-    (ionChange)="wisselBed($event)"
+       <ion-select
+  [value]="patient.selectedBedId"
+  (ionChange)="wisselBed($event)"
+  interface="popover"
+  [interfaceOptions]="{'cssClass': 'mijn-bed-popover'}"
+  placeholder="Kies"
+  toggleIcon="chevron-down-outline">
 
-    interface="popover"
-    [interfaceOptions]="{'cssClass': 'mijn-bed-popover'}"
+  <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.bedId">
+    Bed {{ bed.bedId }}
+  </ion-select-option>
 
-    placeholder="Kies"
-    toggleIcon="chevron-down-outline">
-
-    <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.bedId">
-      Bed {{ bed.bedId }} <span *ngIf="bed.naam">({{ bed.naam }})</span>
-    </ion-select-option>
-
-  </ion-select>
+</ion-select>
 </div>
     </ion-buttons>
 
