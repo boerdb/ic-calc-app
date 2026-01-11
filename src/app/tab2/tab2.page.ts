@@ -7,7 +7,7 @@ import {
   IonList, IonItem, IonInput, IonButton,
   IonCard, IonCardHeader, IonCardTitle, IonCardContent,
   IonLabel, IonNote, IonGrid, IonRow, IonCol, IonButtons,
-  IonBadge, ModalController, IonIcon, IonText
+  IonBadge, ModalController, IonIcon, IonText,IonMenuButton
 } from '@ionic/angular/standalone';
 
 import { CalculatorService } from '../services/calculator';
@@ -25,7 +25,7 @@ import { InfoModalComponent } from '../info-modal.component';
     IonList, IonItem, IonInput, IonButton,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonLabel, IonNote, IonGrid, IonRow, IonCol,
-    IonBadge, IonIcon
+    IonBadge, IonIcon, IonMenuButton
   ]
 })
 export class Tab2Page {

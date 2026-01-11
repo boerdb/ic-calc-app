@@ -22,7 +22,7 @@ import {
   IonSelect, IonSelectOption,
   IonTitle,
   IonToolbar,
-  ModalController
+  ModalController, IonMenuButton
 } from '@ionic/angular/standalone';
 
 import { InfoModalComponent } from '../info-modal.component';
@@ -43,7 +43,7 @@ import { PatientService } from '../services/patient';
     IonGrid, IonRow, IonCol, IonInput, IonButton,
     IonLabel,
     IonSelect, IonSelectOption,
-    IonSegment, IonSegmentButton
+    IonSegment, IonSegmentButton, IonMenuButton
   ]
 })
 export class Tab5Page {

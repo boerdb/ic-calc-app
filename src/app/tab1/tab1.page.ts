@@ -7,7 +7,7 @@ import {
   IonSegment, IonSegmentButton, IonIcon, IonLabel,
   IonGrid, IonRow, IonCol, IonInput, IonItem, IonNote,
   IonSelect, IonSelectOption, IonButton, IonButtons, IonText,
-  IonFooter, IonModal // <--- Toegevoegd
+  IonFooter, IonModal,IonMenuButton// <--- Toegevoegd
 } from '@ionic/angular/standalone';
 
 import { PatientService } from '../services/patient';
@@ -24,7 +24,7 @@ import { PatientService } from '../services/patient';
     IonSegment, IonSegmentButton, IonIcon, IonLabel,
     IonGrid, IonRow, IonCol, IonInput, IonItem, IonNote,
     IonSelect, IonSelectOption, IonButton, IonButtons, IonText,
-    IonFooter, IonModal // <--- Toegevoegd aan imports array
+    IonFooter, IonModal,IonMenuButton // <--- Toegevoegd aan imports array
   ]
 })
 export class Tab1Page {

@@ -8,7 +8,8 @@ import {
   IonInput, IonItem, IonLabel, IonRow,
   IonSegment, IonSegmentButton, IonText,
   IonTitle, IonToolbar, IonList, IonNote, IonButtons,
-  IonIcon, ModalController // <--- HIER: ModalController ipv AlertController
+  IonIcon, ModalController,IonMenuButton,IonMenuToggle
+  // <--- HIER: ModalController ipv AlertController
 } from '@ionic/angular/standalone';
 
 import { PatientService } from '../services/patient';
@@ -28,7 +29,7 @@ import { InfoModalComponent } from '../info-modal.component';
     IonItem, IonInput, IonLabel, IonButton,
     IonText, IonBadge, IonGrid, IonRow, IonCol,
     IonSegment, IonSegmentButton, IonList, IonNote, IonButtons,
-    IonIcon
+    IonIcon, IonMenuButton
   ]
 })
 export class Tab3Page {

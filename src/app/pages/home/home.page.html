@@ -1,0 +1,31 @@
+<ion-content class="leather-bg">
+  <div class="hero-header">
+    <div class="hero-image-container">
+      <div class="hero-overlay">
+        <div class="hero-text">
+          <h1>ICU Decision Support</h1>
+          <p>Intelligente calculators voor kritieke zorg</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <ion-grid>
+      <ion-row>
+        @for (page of pages; track page.title) {
+          <ion-col size="6" size-sm="4">
+            <div class="menu-tile" [routerLink]="page.url">
+              <div class="tile-icon-box">
+                <ion-icon [name]="page.icon"></ion-icon>
+              </div>
+              <div class="tile-footer">
+                <span>{{ page.title }}</span>
+              </div>
+            </div>
+          </ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

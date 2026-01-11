@@ -1,19 +1,44 @@
 <ion-app>
-
   @if (showInstallBanner) {
     <div class="install-top-banner">
       <div class="banner-content">
         <ion-icon name="download-outline" class="install-icon"></ion-icon>
         <span>Installeer app voor snellere toegang</span>
       </div>
-
       <div class="banner-actions">
         <span (click)="installApp()" class="install-link">INSTALLEREN</span>
-
         <ion-icon name="close" (click)="closeBanner()" class="close-icon"></ion-icon>
       </div>
     </div>
   }
 
-  <ion-router-outlet></ion-router-outlet>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" class="leather-bg" type="overlay">
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-title style="color: var(--med-teal); font-weight: bold;">ICU Calculators</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <ion-list lines="none" style="background: transparent;">
+          @for (page of pages; track page.url) {
+            <ion-menu-toggle auto-hide="false">
+              <ion-item
+                [routerLink]="page.url"
+                routerDirection="root"
+                detail="false"
+                routerLinkActive="selected-item"
+                style="--background: transparent; margin: 4px 8px; border-radius: 8px;">
+                <ion-icon slot="start" [name]="page.icon" style="color: var(--med-teal);"></ion-icon>
+                <ion-label style="color: white; font-weight: 500;">{{ page.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          }
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
 </ion-app>

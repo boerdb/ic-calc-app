@@ -8,7 +8,9 @@ import {
   // App Component
   downloadOutline,
   close,
-  
+  peopleOutline,
+  homeOutline,
+
   // Tab 1
   maleOutline,
   femaleOutline,
@@ -19,29 +21,29 @@ import {
   closeOutline,
   logoAndroid,
   logoApple,
-  
+
   // Tab 2
   chevronForwardOutline,
   cloudOutline,
   calculatorOutline,
-  
+
   // Tab 3 (already covered above: informationCircleOutline, chevronForwardOutline)
-  
+
   // Tab 4
   alertCircleOutline,
   pulseOutline,
-  
+
   // Tab 5
   warning,
   bulbOutline,
-  
+
   // Tab 6
   reorderTwoOutline,
   analyticsOutline,
   chevronForward,
   stopCircleOutline,
   medkitOutline,
-  
+
   // Tabs
   flash,
   flask,
@@ -49,14 +51,17 @@ import {
   heart,
   medkit,
   settings,
-  
+
   // PV Wizard Component
   checkmarkCircle,
   alertCircle,
   stopCircle,
   chevronBack,
   arrowForward
+
+
 } from 'ionicons/icons';
+
 
 /**
  * Initialize all icons for the application.
@@ -67,7 +72,9 @@ export function registerAppIcons(): void {
     // App Component
     downloadOutline,
     close,
-    
+    peopleOutline,
+    homeOutline,
+
     // Tab 1
     maleOutline,
     femaleOutline,
@@ -78,27 +85,28 @@ export function registerAppIcons(): void {
     closeOutline,
     logoAndroid,
     logoApple,
-    
+
+
     // Tab 2
     chevronForwardOutline,
     cloudOutline,
     calculatorOutline,
-    
+
     // Tab 4
     alertCircleOutline,
     pulseOutline,
-    
+
     // Tab 5
     warning,
     bulbOutline,
-    
+
     // Tab 6
     reorderTwoOutline,
     analyticsOutline,
     chevronForward,
     stopCircleOutline,
     medkitOutline,
-    
+
     // Tabs
     flash,
     flask,
@@ -106,7 +114,7 @@ export function registerAppIcons(): void {
     heart,
     medkit,
     settings,
-    
+
     // PV Wizard Component
     checkmarkCircle,
     alertCircle,

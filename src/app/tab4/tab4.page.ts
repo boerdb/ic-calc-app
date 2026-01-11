@@ -15,7 +15,8 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
-  ModalController
+  ModalController,
+  IonMenuButton,IonMenuToggle
 } from '@ionic/angular/standalone';
 
 import { InfoModalComponent } from '../info-modal.component';
@@ -31,7 +32,7 @@ import { PatientService } from '../services/patient';
     IonContent, IonHeader, IonToolbar, IonTitle,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
      IonInput, IonGrid, IonRow, IonCol,
-    IonButton, IonButtons, IonIcon
+    IonButton, IonButtons, IonIcon, IonMenuButton
   ]
 })
 export class Tab4Page {

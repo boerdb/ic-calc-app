@@ -60,3 +60,45 @@
   from { transform: translateY(-100%); }
   to { transform: translateY(0); }
 }
+
+/* --- LEATHER BACKGROUND FOR MENU --- */
+.leather-bg {
+  --background: linear-gradient(
+    135deg,
+    #2a2522 0%,
+    #1a1715 25%,
+    #2a2522 50%,
+    #1a1715 75%,
+    #2a2522 100%
+  );
+
+  ion-content {
+    --background: linear-gradient(
+      135deg,
+      #2a2522 0%,
+      #1a1715 25%,
+      #2a2522 50%,
+      #1a1715 75%,
+      #2a2522 100%
+    );
+  }
+
+  ion-item {
+    --background: transparent;
+    --color: #e0d5c7;
+    --border-color: rgba(224, 213, 199, 0.1);
+
+    &:hover {
+      --background: rgba(224, 213, 199, 0.1);
+    }
+  }
+
+  ion-icon {
+    color: var(--ion-color-primary);
+  }
+
+  ion-label {
+    color: #e0d5c7;
+    font-weight: 500;
+  }
+}

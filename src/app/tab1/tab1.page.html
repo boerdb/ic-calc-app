@@ -1,8 +1,12 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button style="color: var(--med-teal);"></ion-menu-button>
+    </ion-buttons>
+
     <ion-title>
       Bed {{ patient.selectedBedId }}
-      <span *ngIf="patient.current.naam" style="font-size: 0.8em; opacity: 0.9;">
+      <span *ngIf="patient.current?.naam" style="font-size: 0.8em; opacity: 0.9;">
           - {{ patient.current.naam }}
       </span>
     </ion-title>
@@ -10,23 +14,19 @@
     <ion-buttons slot="end">
       <div class="bed-selector-box">
         <ion-icon name="bed-outline"></ion-icon>
-
-       <ion-select
-  [value]="patient.selectedBedId"
-  (ionChange)="wisselBed($event)"
-  interface="popover"
-  [interfaceOptions]="{'cssClass': 'mijn-bed-popover'}"
-  placeholder="Kies"
-  toggleIcon="chevron-down-outline">
-
-  <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.bedId">
-    Bed {{ bed.bedId }}
-  </ion-select-option>
-
-</ion-select>
-</div>
+        <ion-select
+          [value]="patient.selectedBedId"
+          (ionChange)="wisselBed($event)"
+          interface="popover"
+          [interfaceOptions]="{'cssClass': 'mijn-bed-popover'}"
+          placeholder="Kies"
+          toggleIcon="chevron-down-outline">
+          <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.bedId">
+            Bed {{ bed.bedId }}
+          </ion-select-option>
+        </ion-select>
+      </div>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 

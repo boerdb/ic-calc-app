@@ -24,7 +24,7 @@ import {
   IonRange,
   IonRow,
   IonTitle, IonToolbar,
-  ModalController  // <--- DEZE TOEGEVOEGD
+  ModalController , IonMenuButton // <--- DEZE TOEGEVOEGD
 } from '@ionic/angular/standalone';
 
 // 2. We importeren je nieuwe Wizard Component
@@ -40,7 +40,7 @@ import { PvWizardComponent } from '../components/pv-wizard/pv-wizard.component';
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
     IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCardSubtitle,
     IonItem, IonLabel, IonList, IonCheckbox, IonRow, IonCol,
-    IonRange, IonAccordion, IonAccordionGroup, IonGrid, IonAlert
+    IonRange, IonAccordion, IonAccordionGroup, IonGrid, IonAlert, IonMenuButton
   ]
 })
 export class Tab6Page implements OnInit {

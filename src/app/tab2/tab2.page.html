@@ -1,17 +1,21 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button style="color: var(--med-teal);"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Circulatie & ROX</ion-title>
+
     <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
           Bed {{ patient.selectedBedId || '?' }}
         </div>
-        <div *ngIf="patient.current.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
+        <div *ngIf="patient.current?.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
           {{ patient.current.naam }}
         </div>
       </div>
     </ion-buttons>
-
-    <ion-title>Circulatie & CO₂ gap & ROX</ion-title>
   </ion-toolbar>
 </ion-header>
 

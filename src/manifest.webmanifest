@@ -1,8 +1,8 @@
 {
-  "name": "IC Calculator",
-  "short_name": "IC Calc",
-  "theme_color": "#3880ff",
-  "background_color": "#ffffff",
+  "name": "ICU Support Dashboard",
+  "short_name": "ICU Support",
+  "theme_color": "#4db6ac",
+  "background_color": "#000000",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
