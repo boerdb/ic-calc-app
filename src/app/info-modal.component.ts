@@ -1,63 +1,90 @@
-import { Component, Input, OnInit, inject } from '@angular/core'; // OnInit toegevoegd
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
   IonIcon, ModalController
 } from '@ionic/angular/standalone';
-
-// 1. We hebben deze twee nodig voor de veiligheid:
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { addIcons } from 'ionicons';
+import { closeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-info-modal',
   standalone: true,
   imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonIcon],
   template: `
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title>{{ title }}</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="sluiten()">
-            <ion-icon name="close-outline" slot="icon-only" style="font-size: 1.5em;"></ion-icon>
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding">
-      <div [innerHTML]="safeContent" style="font-size: 1.1em; line-height: 1.6; color: var(--ion-text-color);"></div>
+    <ion-content class="leather-bg ion-padding" [scrollY]="true">
+      <div [innerHTML]="safeContent" class="modal-body"></div>
     </ion-content>
   `,
   styles: [`
-    /* Styling voor de HTML content */
+    /* 1. Donkere Leerstructuur */
+    .leather-bg {
+      --background: #0a0a0a;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+      background-color: #0a0a0a;
+    }
+
+    ion-toolbar {
+      --background: #121212;
+      --color: white;
+      --border-color: #222;
+      font-weight: 600;
+    }
+
+    /* 2. Content Styling */
+    .modal-body {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.05em;
+      line-height: 1.6;
+      padding-bottom: 40px;
+    }
+
     ::ng-deep h3 {
-      color: #00796B;
-      margin-top: 20px;
-      font-size: 1.2em;
-      font-weight: bold;
-      border-bottom: 1px solid #444;
-      padding-bottom: 5px;
+      color: #4db6ac; /* Subtiel Teal */
+      margin-top: 25px;
+      font-size: 1.25em;
+      font-weight: 600;
+      border-bottom: 1px solid #333;
+      padding-bottom: 8px;
     }
-    ::ng-deep ul {
-      padding-left: 20px;
-      margin-bottom: 15px;
-    }
-    ::ng-deep li {
-      margin-bottom: 8px;
-    }
+
     ::ng-deep strong {
-      color: #90caf9;
+      color: #4db6ac;
     }
-    /* Zorg dat plaatjes altijd passen */
-    ::ng-deep img {
-      max-width: 100%;
-      height: auto;
+
+    /* Tabel styling voor de CO2-uitleg op zwart leer */
+    ::ng-deep table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: rgba(255,255,255,0.03);
       border-radius: 8px;
-      display: block; /* Voorkomt rare witruimtes */
+      overflow: hidden;
     }
-    /* Zorg dat linkjes en knoppen er goed uitzien */
-    ::ng-deep a {
-      text-decoration: none;
+
+    ::ng-deep th, ::ng-deep td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #222;
+    }
+
+    ::ng-deep th {
+      background: #1a1a1a;
+      color: #4db6ac;
+      font-size: 0.9em;
+      text-transform: uppercase;
     }
   `]
 })
@@ -65,16 +92,17 @@ export class InfoModalComponent implements OnInit {
   @Input() title: string = 'Informatie';
   @Input() content: string = '';
 
-  // Modern inject() function instead of constructor injection
   private modalCtrl = inject(ModalController);
   private sanitizer = inject(DomSanitizer);
 
-  // Deze variabele slaat de "goedgekeurde" HTML op
   public safeContent: SafeHtml = '';
 
-  // 3. Zodra de pagina laadt, keuren we de HTML goed
+  constructor() {
+    // Registreer het sluit-icoon centraal
+    addIcons({ 'close-outline': closeOutline });
+  }
+
   ngOnInit() {
-    // bypassSecurityTrustHtml vertelt Angular: "Vertrouw deze code, ik heb het zelf geschreven"
     this.safeContent = this.sanitizer.bypassSecurityTrustHtml(this.content);
   }
 
