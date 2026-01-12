@@ -1,6 +1,6 @@
 {
-  "name": "IcuCirculatieApp",
-  "version": "0.0.1",
+  "name": "icu-support-app",
+  "version": "1.2.0",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
