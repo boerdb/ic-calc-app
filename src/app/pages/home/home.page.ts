@@ -16,9 +16,9 @@ import { PatientService } from '../../services/patient'; // Check even of dit pa
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule, // Toegevoegd voor de logica in je HTML
-    IonCardContent, IonCardSubtitle, IonCardHeader, IonRow, IonGrid,
-    IonCard, IonCol, IonContent,
-      IonButton, IonIcon, IonMenuButton, RouterLink
+     IonRow, IonGrid,
+     IonCol, IonContent,
+     IonIcon, IonMenuButton, RouterLink
   ]
 })
 export class HomePage {
@@ -28,7 +28,7 @@ export class HomePage {
   // De lijst met pagina's voor je dashboard-tegels
  public pages = [
   { title: 'Patiëntbeheer', url: '/patient', icon: 'people-outline' }, // Nu als eerste blokje
-  { title: 'Circulatie & ROX', url: '/oxygen-gas', icon: 'calculator-outline' },
+  { title: 'O₂ balans & diffusie', url: '/oxygen-gas', icon: 'calculator-outline' },
   { title: 'Ventilatie', url: '/ventilatie', icon: 'cloud-outline' },
   { title: 'Hemodynamiek', url: '/hemodynamiek', icon: 'pulse-outline' },
   { title: 'Medicatie', url: '/medicatie', icon: 'medkit-outline' },

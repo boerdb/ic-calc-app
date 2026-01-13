@@ -38,16 +38,17 @@ export class AppComponent {
     {
       header: 'Ventilation Practitioner',
       items: [
-        { title: 'ROX-index', url: '/rox', icon: 'flask-outline' },
-        { title: 'Co2 gap', url: '/oxygen-gas', icon: 'analytics-outline' },
-        { title: 'Ventilatie', url: '/ventilatie', icon: 'cloud-outline' }
+        { title: 'ROX-index & CO₂ Gap', url: '/rox', icon: 'flask-outline' },
+        { title: 'Ventilatie', url: '/ventilatie', icon: 'cloud-outline' },
+        { title: 'Hamilton Wizard', url: '/hamilton', icon: 'medkit-outline' }
       ]
     },
     {
       header: 'Circulation Practitioner',
       items: [
         { title: 'Hemodynamiek', url: '/hemodynamiek', icon: 'heart-outline' },
-        { title: 'Medicatie', url: '/medicatie', icon: 'medkit-outline' }
+        { title: 'Medicatie', url: '/medicatie', icon: 'medkit-outline' },
+        { title: 'O₂ balans & diffusie', url: '/oxygen-gas', icon: 'calculator-outline' }
       ]
     },
     {
@@ -61,7 +62,7 @@ export class AppComponent {
     {
       header: 'Overige',
       items: [
-        { title: 'Patiëntbeheer', url: '/tab1', icon: 'people-outline' }
+        { title: 'Patiëntbeheer', url: '/patient', icon: 'people-outline' }
       ]
     }
   ];
