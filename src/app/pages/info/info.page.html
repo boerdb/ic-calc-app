@@ -1,19 +1,43 @@
-<ion-header class="ion-no-border">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button style="color: var(--med-teal);"></ion-menu-button>
     </ion-buttons>
     <ion-title>Informatie</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <h2>ICU Calculators App</h2>
-  <p>Welkom bij de ICU Calculators app. Deze app biedt diverse tools voor IC-professionals.</p>
-  
-  <h3>Over deze app</h3>
-  <p>Deze applicatie is ontwikkeld om IC-professionals te ondersteunen bij hun dagelijkse werkzaamheden met praktische rekenhulpmiddelen.</p>
-  
-  <h3>Contact & Support</h3>
-  <p>Voor vragen of opmerkingen, neem contact op met het ontwikkelteam.</p>
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <div style="text-align: center; margin-top: 20px; padding: 20px;">
+
+    <ion-text>
+      <h3 style="color: var(--med-teal); margin-bottom: 10px; font-weight: bold;">Privacy & Veiligheid</h3>
+      <p style="font-size: 0.9em; line-height: 1.6;">
+        Uw privacy en die van uw patiënten staat voorop. Deze applicatie werkt volledig <strong>lokaal</strong> op uw toestel.
+      </p>
+      <p style="font-size: 0.9em; line-height: 1.6;">
+        Er wordt <strong>geen enkele data</strong> verzonden via het internet en er vindt geen opslag plaats in de cloud. Alle gegevens die u invoert, blijven veilig op uw eigen telefoon.
+      </p>
+    </ion-text>
+
+    <div style="height: 1px; background: var(--ion-item-border-color); margin: 30px auto; width: 60%; opacity: 0.5;"></div>
+
+    <ion-text color="medium">
+      <p style="font-size: 0.75em; line-height: 1.5; font-style: italic; opacity: 0.7;">
+        Disclaimer: Deze applicatie is bedoeld als ondersteunend hulpmiddel voor professionals.
+        De auteur aanvaardt geen aansprakelijkheid voor de uitkomsten.
+        Verifieer berekeningen altijd voor klinisch gebruik.
+      </p>
+
+      <p style="font-size: 0.9em; margin-top: 25px;">
+        Voor meer info mail naar:<br>
+        <a href="mailto:info.webapp@icloud.com" style="color: #69f0ae; text-decoration: none; font-weight: bold; font-size: 1.1em;">
+          info.webapp@icloud.com
+        </a>
+      </p>
+    </ion-text>
+
+  </div>
+
 </ion-content>

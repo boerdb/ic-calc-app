@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common'; // Nodig voor algemene dingen
 import {
   IonApp, IonRouterOutlet, IonIcon, IonSplitPane,
   IonMenu, IonHeader, IonToolbar, IonTitle,
-  IonContent, IonList, IonItem, IonLabel, IonMenuToggle, IonListHeader
-} from '@ionic/angular/standalone';
+  IonContent, IonList, IonItem, IonLabel, IonMenuToggle, IonListHeader, IonFooter } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 
 interface MenuPage {
@@ -23,7 +22,7 @@ interface MenuGroup {
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonFooter,
     IonApp, IonRouterOutlet, IonIcon, IonSplitPane,
     IonMenu, IonHeader, IonToolbar, IonTitle,
     IonContent, IonList, IonItem, IonLabel,
