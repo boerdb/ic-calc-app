@@ -17,6 +17,15 @@
     align-items: center;
     padding: 40px;
   }
+
+  /* Floating menu button over the hero image */
+  .hero-menu-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 50;
+    --background: transparent;
+  }
 }
 
 .hero-text {

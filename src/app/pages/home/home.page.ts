@@ -18,7 +18,7 @@ import { PatientService } from '../../services/patient'; // Check even of dit pa
     CommonModule, // Toegevoegd voor de logica in je HTML
     IonCardContent, IonCardSubtitle, IonCardHeader, IonRow, IonGrid,
     IonCard, IonCol, IonContent,
-     IonButton, IonIcon, RouterLink
+      IonButton, IonIcon, IonMenuButton, RouterLink
   ]
 })
 export class HomePage {

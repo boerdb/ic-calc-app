@@ -1,0 +1,58 @@
+/* Styling copied from tab2.page.scss to preserve look & feel for ROX/CO2 */
+.custom-green-input {
+  --background: transparent;
+  --color: white;
+  --placeholder-color: #888;
+  color: white;
+  border-radius: 4px;
+  --border-color: #555;
+  box-shadow: 0 0 0 1px #555 !important;
+
+  .label-text-wrapper { color: #888; }
+
+  &.ion-focused, &.item-has-focus {
+    --border-color: #28a745 !important;
+    --label-color: #28a745 !important;
+    box-shadow: 0 0 0 2px #28a745;
+  }
+
+  &.ion-focused::part(label) { color: #28a745 !important; }
+  &.ion-readonly { --background: rgba(255,255,255,0.05); opacity: 0.9; box-shadow: 0 0 0 1px #555; }
+}
+
+.co2-container, .rox-container {
+  background-color: #1e1e1e !important;
+  border-radius: 15px;
+  border: 1px solid #333;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  .co2-header, .rox-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 15px 5px 15px;
+    margin-bottom: 5px;
+
+    ion-icon { color: var(--ion-color-primary); font-size: 1.5em; }
+    h3 { margin: 0; font-size: 1.1em; font-weight: bold; color: white; }
+  }
+
+  .co2-result-box, .rox-result-box {
+    margin-top: 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px dashed #555;
+    text-align: center;
+
+    .result-row { display:flex; justify-content:space-between; margin-bottom:8px; font-size:1em; color:#ccc;
+      .value { font-weight:bold; font-size:1.1em; }
+    }
+
+    .score-label { font-size:0.8em; color:#888; text-transform:uppercase; letter-spacing:1px; }
+    .score-value { font-size:2.2em; font-weight:900; margin:5px 0; text-shadow:0 2px 4px rgba(0,0,0,0.5); }
+    .score-advies { font-size:0.9em; color:white; font-style:italic; border-top:1px solid #444; padding-top:10px; margin-top:10px; text-align:center; }
+  }
+}

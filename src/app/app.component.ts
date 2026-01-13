@@ -38,7 +38,7 @@ export class AppComponent {
     {
       header: 'Ventilation Practitioner',
       items: [
-        { title: 'ROX-index', url: '/oxygen-gas', icon: 'flask-outline' },
+        { title: 'ROX-index', url: '/rox', icon: 'flask-outline' },
         { title: 'Co2 gap', url: '/oxygen-gas', icon: 'analytics-outline' },
         { title: 'Ventilatie', url: '/ventilatie', icon: 'cloud-outline' }
       ]
@@ -58,6 +58,18 @@ export class AppComponent {
       ]
     }
   ];
+
+  // Voeg extra menu groep toe: Overige
+  // 'Patiëntbeheer' linkt naar /tab1 (placeholder)
+  // We append programmatically to keep the static menuGroups decl concise
+  constructor() {
+    this.menuGroups.push({
+      header: 'Overige',
+      items: [
+        { title: 'Patiëntbeheer', url: '/tab1', icon: 'people-outline' }
+      ]
+    });
+  }
 
   infoItem: MenuPage = { title: 'INFO', url: '/info', icon: 'information-circle-outline' };
 
