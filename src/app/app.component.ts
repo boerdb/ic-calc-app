@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'; // Nodig voor algemene dingen
 import {
   IonApp, IonRouterOutlet, IonIcon, IonSplitPane,
   IonMenu, IonHeader, IonToolbar, IonTitle,
-  IonContent, IonList, IonItem, IonLabel,IonMenuToggle
+  IonContent, IonList, IonItem, IonLabel, IonMenuToggle, IonListHeader
 } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 
@@ -11,6 +11,11 @@ interface MenuPage {
   title: string;
   url: string;
   icon: string;
+}
+
+interface MenuGroup {
+  header: string;
+  items: MenuPage[];
 }
 
 @Component({
@@ -22,20 +27,39 @@ interface MenuPage {
     IonApp, IonRouterOutlet, IonIcon, IonSplitPane,
     IonMenu, IonHeader, IonToolbar, IonTitle,
     IonContent, IonList, IonItem, IonLabel,
-    CommonModule, RouterLink, IonMenuToggle
+    CommonModule, RouterLink, IonMenuToggle, IonListHeader
   ],
 })
 export class AppComponent {
 
-  pages: MenuPage[] = [
-    { title: 'Home', url: '/home', icon: 'home-outline' },
-    { title: 'Patiënt', url: '/patient', icon: 'flash' },
-    { title: 'O2/Gas & ROX', url: '/oxygen-gas', icon: 'flask' },
-    { title: 'Ventilatie', url: '/ventilatie', icon: 'cloud' },
-    { title: 'PiCCO & Hemodynamiek', url: '/hemodynamiek', icon: 'heart' },
-    { title: 'Medicatie & Advies', url: '/medicatie', icon: 'medkit' },
-    { title: 'Hamilton iASV', url: '/hamilton', icon: 'settings' },
+  homeItem: MenuPage = { title: 'HOME', url: '/home', icon: 'home-outline' };
+
+  menuGroups: MenuGroup[] = [
+    {
+      header: 'Ventilation Practitioner',
+      items: [
+        { title: 'ROX-index', url: '/oxygen-gas', icon: 'flask-outline' },
+        { title: 'Co2 gap', url: '/oxygen-gas', icon: 'analytics-outline' },
+        { title: 'Ventilatie', url: '/ventilatie', icon: 'cloud-outline' }
+      ]
+    },
+    {
+      header: 'Circulation Practitioner',
+      items: [
+        { title: 'Hemodynamiek', url: '/hemodynamiek', icon: 'heart-outline' },
+        { title: 'Medicatie', url: '/medicatie', icon: 'medkit-outline' }
+      ]
+    },
+    {
+      header: 'Renal Practitioner',
+      items: [
+        { title: 'Nierfunctie', url: '/patient', icon: 'water-outline' },
+        { title: 'CVVHD balans', url: '/patient', icon: 'fitness-outline' }
+      ]
+    }
   ];
+
+  infoItem: MenuPage = { title: 'INFO', url: '/info', icon: 'information-circle-outline' };
 
   deferredPrompt: any = null;
   showInstallBanner = false; // Hernoemd van 'Button' naar 'Banner'

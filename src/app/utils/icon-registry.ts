@@ -10,6 +10,10 @@ import {
   close,
   peopleOutline,
   homeOutline,
+  flaskOutline,
+  heartOutline,
+  waterOutline,
+  fitnessOutline,
 
   // Tab 1
   maleOutline,
@@ -74,6 +78,10 @@ export function registerAppIcons(): void {
     close,
     peopleOutline,
     homeOutline,
+    flaskOutline,
+    heartOutline,
+    waterOutline,
+    fitnessOutline,
 
     // Tab 1
     maleOutline,

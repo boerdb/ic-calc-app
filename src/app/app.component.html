@@ -22,19 +22,51 @@
 
       <ion-content>
         <ion-list lines="none" style="background: transparent;">
-          @for (page of pages; track page.url) {
-            <ion-menu-toggle auto-hide="false">
-              <ion-item
-                [routerLink]="page.url"
-                routerDirection="root"
-                detail="false"
-                routerLinkActive="selected-item"
-                style="--background: transparent; margin: 4px 8px; border-radius: 8px;">
-                <ion-icon slot="start" [name]="page.icon" style="color: var(--med-teal);"></ion-icon>
-                <ion-label style="color: white; font-weight: 500;">{{ page.title }}</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
+          <!-- HOME Header (Clickable) -->
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              [routerLink]="homeItem.url"
+              routerDirection="root"
+              detail="false"
+              routerLinkActive="selected-item"
+              style="--background: transparent; margin: 4px 8px; border-radius: 8px;">
+              <ion-icon slot="start" [name]="homeItem.icon" style="color: var(--med-teal);"></ion-icon>
+              <ion-label style="color: white; font-weight: bold; text-transform: uppercase;">{{ homeItem.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <!-- Menu Groups -->
+          @for (group of menuGroups; track group.header) {
+            <ion-list-header style="color: var(--med-teal); font-weight: bold; margin-top: 16px; padding-left: 16px;">
+              {{ group.header }}
+            </ion-list-header>
+            @for (item of group.items; track item.url) {
+              <ion-menu-toggle auto-hide="false">
+                <ion-item
+                  [routerLink]="item.url"
+                  routerDirection="root"
+                  detail="false"
+                  routerLinkActive="selected-item"
+                  style="--background: transparent; margin: 4px 8px; border-radius: 8px; padding-left: 8px;">
+                  <ion-icon slot="start" [name]="item.icon" style="color: var(--med-teal);"></ion-icon>
+                  <ion-label style="color: white; font-weight: 500;">{{ item.title }}</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            }
           }
+
+          <!-- INFO Header (Clickable, at the bottom) -->
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              [routerLink]="infoItem.url"
+              routerDirection="root"
+              detail="false"
+              routerLinkActive="selected-item"
+              style="--background: transparent; margin: 4px 8px; margin-top: 24px; border-radius: 8px;">
+              <ion-icon slot="start" [name]="infoItem.icon" style="color: var(--med-teal);"></ion-icon>
+              <ion-label style="color: white; font-weight: bold; text-transform: uppercase;">{{ infoItem.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
         </ion-list>
       </ion-content>
     </ion-menu>
