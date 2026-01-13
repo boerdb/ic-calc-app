@@ -10,6 +10,7 @@ import { calculatorOutline, cloudOutline, chevronForwardOutline, closeOutline } 
 
 // Importeer de component die Tab 2 ook gebruikt
 import { InfoModalComponent } from '../info-modal.component';
+import { PatientService } from '../services/patient';
 
 @Component({
   selector: 'app-rox',
@@ -28,8 +29,8 @@ export class RoxPage {
   // Injecteer de ModalController (net als in Tab 2)
   private modalCtrl = inject(ModalController);
 
-  // Placeholder patient data
-  public patient: any = { selectedBedId: '?', current: { naam: '' } };
+  // Use shared patient service so header shows actual bed selection
+  public patient = inject(PatientService);
 
   // Variabelen
   paco2: number | null = null;

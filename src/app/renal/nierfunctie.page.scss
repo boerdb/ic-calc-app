@@ -35,3 +35,10 @@ ion-card {
 .egfr-margin { margin-top: 12px; }
 
 .quick-ref { margin-top: 12px; }
+
+/* Teal button matching app accent */
+.teal-btn {
+  --background: var(--med-teal);
+  --color: #fff;
+  --box-shadow: none;
+}

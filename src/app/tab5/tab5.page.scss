@@ -60,3 +60,10 @@
     color: #aaa;
   }
 }
+
+/* Teal button used across app */
+.teal-btn {
+  --background: var(--med-teal);
+  --color: #fff;
+  --box-shadow: none;
+}

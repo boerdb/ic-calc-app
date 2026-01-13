@@ -109,6 +109,11 @@ export class PatientService {
 
   }
 
+  // Force a new reference for `current` so Angular bindings update across components
+  forceRefreshCurrent() {
+    this.current = { ...this.current };
+  }
+
   get selectedBedId(): string {
     return this.current.bedId;
   }

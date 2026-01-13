@@ -29,19 +29,23 @@
             <ion-input class="custom-green-input" label="Creatinine (µmol/L)" label-placement="floating" type="number" [(ngModel)]="creatinine" (ionInput)="calculateEGFR()"></ion-input>
           </ion-col>
           <ion-col size="6">
-            <ion-input class="custom-green-input" label="Leeftijd (jaren)" label-placement="floating" type="number" [(ngModel)]="age" (ionInput)="calculateEGFR()"></ion-input>
+            <ion-input class="custom-green-input" label="Leeftijd (jaren)" label-placement="floating" type="number" fill="outline"
+              [(ngModel)]="patient.current.leeftijd" (ionInput)="patient.opslaan(); calculateEGFR()"></ion-input>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-button expand="block" fill="outline" (click)="reset()">Reset</ion-button>
+            <ion-button expand="block" class="teal-btn" (click)="patient.opslaan(); calculateEGFR()">Bereken</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
 
-      <div *ngIf="egfr !== null" class="egfr-margin">
+      <div *ngIf="computedEgfr !== null" class="egfr-margin">
         <h3>Geschatte eGFR</h3>
-        <p><strong>{{ egfr }} mL/min/1.73m²</strong> <ion-note> (bij benadering, demo)</ion-note></p>
+        <p><strong>{{ computedEgfr }} mL/min/1.73m²</strong> <ion-note> (bij benadering, demo)</ion-note></p>
       </div>
 
       <h3 class="quick-ref">Quick reference</h3>
