@@ -54,8 +54,8 @@ export class AppComponent {
     {
       header: 'Renal Practitioner',
       items: [
-        { title: 'Nierfunctie', url: '/patient', icon: 'water-outline' },
-        { title: 'CVVHD balans', url: '/patient', icon: 'fitness-outline' }
+        { title: 'Nierfunctie', url: '/nierfunctie', icon: 'water-outline' },
+        { title: 'CVVHD balans', url: '/cvvhd', icon: 'fitness-outline' }
       ]
     }
   ,

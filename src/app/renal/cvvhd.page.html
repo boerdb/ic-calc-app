@@ -1,0 +1,69 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button class="page-menu-button"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>CVVHD Balans</ion-title>
+
+    <ion-buttons slot="end" class="page-header-bed">
+      <div class="bed-info">
+        <div class="bed-number">Bed {{ patient.selectedBedId || '?' }}</div>
+        <div *ngIf="patient.current?.naam" class="bed-name">{{ patient.current.naam }}</div>
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>CVVHD balans — snelle berekening</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Gebruik deze eenvoudige tool om actuele en gewenste ultrafiltratie (UFR) om te rekenen.</p>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item>
+              <ion-label position="floating">Huidige UFR (mL/u)</ion-label>
+              <ion-input type="number" [(ngModel)]="currentUFR"></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <ion-item>
+              <ion-label position="floating">Doel verwijdering (mL / 24u)</ion-label>
+              <ion-input type="number" [(ngModel)]="target24h"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-margin-top">
+          <ion-col>
+            <ion-button expand="block" color="primary" (click)="calculate()">Bereken</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-margin-top">
+          <ion-col>
+            <div *ngIf="current24h !== null">
+              <strong>Huidige verwijdering /24u:</strong> {{ current24h }} mL
+            </div>
+            <div *ngIf="requiredUFR !== null">
+              <strong>Benodigde UFR:</strong> {{ requiredUFR }} mL/u (om doel /24u te bereiken)
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <h3 class="ion-margin-top">Opmerkingen</h3>
+      <p>Deze berekening is een eenvoudige omrekening en vervangt geen klinisch oordeel. Controleer
+      instellingen en bloeddruk bij aanpassing van UFR.</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

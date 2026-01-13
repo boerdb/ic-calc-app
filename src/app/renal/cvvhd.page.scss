@@ -1,0 +1,28 @@
+/* Minimal styling; global background applied from global.scss */
+:host { display:block; }
+ion-card { margin: 20px; }
+
+/* Header-specific styles moved from inline */
+.page-menu-button {
+	color: var(--med-teal);
+}
+
+.page-header-bed {
+	margin-right: 10px;
+}
+
+.bed-info {
+	text-align: right;
+	color: white;
+}
+
+.bed-number {
+	font-weight: bold;
+	font-size: 1em;
+}
+
+.bed-name {
+	font-size: 0.7em;
+	opacity: 0.8;
+	margin-top: -2px;
+}

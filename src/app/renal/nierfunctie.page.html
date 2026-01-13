@@ -1,0 +1,59 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button class="page-menu-button"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Nierfunctie</ion-title>
+
+    <ion-buttons slot="end" class="page-header-bed">
+      <div class="bed-info">
+        <div class="bed-number">Bed {{ patient.selectedBedId || '?' }}</div>
+        <div *ngIf="patient.current?.naam" class="bed-name">{{ patient.current.naam }}</div>
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Placeholder — Nierfunctie</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Deze pagina is een tijdelijke placeholder voor Nierfunctie.
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="Creatinine (µmol/L)" label-placement="floating" type="number" [(ngModel)]="creatinine" (ionInput)="calculateEGFR()"></ion-input>
+          </ion-col>
+          <ion-col size="6">
+            <ion-input class="custom-green-input" label="Leeftijd (jaren)" label-placement="floating" type="number" [(ngModel)]="age" (ionInput)="calculateEGFR()"></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" fill="outline" (click)="reset()">Reset</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <div *ngIf="egfr !== null" class="egfr-margin">
+        <h3>Geschatte eGFR</h3>
+        <p><strong>{{ egfr }} mL/min/1.73m²</strong> <ion-note> (bij benadering, demo)</ion-note></p>
+      </div>
+
+      <h3 class="quick-ref">Quick reference</h3>
+      <ul>
+        <li><strong>Creatinine:</strong> controleer in µmol/L</li>
+        <li><strong>eGFR:</strong> schatting van nierfunctie (mL/min/1.73m²)</li>
+        <li><strong>ACR / PCR:</strong> eiwitverlies beoordeling</li>
+      </ul>
+
+      <h3>Opmerkingen</h3>
+      <p>Dit is een placeholder. In de definitieve module voegen we invoervelden, nauwkeurige formules
+      en adviezen toe.</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

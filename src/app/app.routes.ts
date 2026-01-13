@@ -27,6 +27,14 @@ export const routes: Routes = [
     loadComponent: () => import('./tab3/tab3.page').then(m => m.Tab3Page)
   },
   {
+    path: 'nierfunctie',
+    loadComponent: () => import('./renal/nierfunctie.page').then(m => m.NierfunctiePage)
+  },
+  {
+    path: 'cvvhd',
+    loadComponent: () => import('./renal/cvvhd.page').then(m => m.CVVHDPage)
+  },
+  {
     path: 'hemodynamiek',
     loadComponent: () => import('./tab4/tab4.page').then(m => m.Tab4Page)
   },
