@@ -57,19 +57,14 @@ export class AppComponent {
         { title: 'CVVHD balans', url: '/patient', icon: 'fitness-outline' }
       ]
     }
-  ];
-
-  // Voeg extra menu groep toe: Overige
-  // 'Patiëntbeheer' linkt naar /tab1 (placeholder)
-  // We append programmatically to keep the static menuGroups decl concise
-  constructor() {
-    this.menuGroups.push({
+  ,
+    {
       header: 'Overige',
       items: [
         { title: 'Patiëntbeheer', url: '/tab1', icon: 'people-outline' }
       ]
-    });
-  }
+    }
+  ];
 
   infoItem: MenuPage = { title: 'INFO', url: '/info', icon: 'information-circle-outline' };
 
