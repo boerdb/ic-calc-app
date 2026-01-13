@@ -115,3 +115,53 @@
   font-size: 0.85em;
   opacity: 0.95;
 }
+
+/* Centralized menu styles to replace inline attributes */
+.leather-bg {
+  .menu-title {
+    color: var(--med-teal);
+    font-weight: bold;
+  }
+
+  .menu-list {
+    background: transparent;
+    padding: 0 0 6px 0;
+  }
+
+  ion-item.menu-item {
+    --background: transparent;
+    margin: 1px 4px;
+    border-radius: 8px;
+    padding-left: 6px;
+  }
+
+  ion-item.menu-item.group-item {
+    padding-left: 6px;
+  }
+
+  ion-item.menu-item.info-item {
+    margin-top: 8px;
+  }
+
+  ion-icon.menu-icon {
+    color: var(--med-teal);
+    margin-right: 8px;
+  }
+
+  .menu-label {
+    color: white;
+    font-weight: 500;
+  }
+
+  .menu-label-uppercase {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  ion-list-header.menu-group-header {
+    color: var(--med-teal);
+    font-weight: bold;
+    margin-top: 6px;
+    padding-left: 14px;
+  }
+}
