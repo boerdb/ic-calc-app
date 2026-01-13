@@ -63,7 +63,6 @@
 
 /* --- LEATHER BACKGROUND FOR MENU --- */
 .leather-bg {
-  position: relative; /* ensure absolute footer positions relative to menu */
   --background: linear-gradient(
     135deg,
     #2a2522 0%,
@@ -106,70 +105,13 @@
 
 /* Footer in side menu */
 .side-menu-footer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 10px 12px;
+  padding: 16px 12px;
   text-align: center;
   border-top: 1px solid rgba(224,213,199,0.06);
-  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 100%);
-  pointer-events: none; /* allow clicks to pass through to menu items */
 }
 
 .side-menu-footer .footer-text {
   color: #9e9e9e; /* gray tone */
-  font-size: 0.82em;
+  font-size: 0.85em;
   opacity: 0.95;
-  pointer-events: auto; /* allow selecting the text if needed */
-}
-
-/* Centralized menu styles to replace inline attributes */
-.leather-bg {
-  .menu-title {
-    color: var(--med-teal);
-    font-weight: bold;
-  }
-
-  .menu-list {
-    background: transparent;
-    padding: 0 0 64px 0; /* leave room for fixed footer */
-  }
-
-  ion-item.menu-item {
-    --background: transparent;
-    margin: 1px 4px;
-    border-radius: 8px;
-    padding-left: 6px;
-  }
-
-  ion-item.menu-item.group-item {
-    padding-left: 6px;
-  }
-
-  ion-item.menu-item.info-item {
-    margin-top: 8px;
-  }
-
-  ion-icon.menu-icon {
-    color: var(--med-teal);
-    margin-right: 8px;
-  }
-
-  .menu-label {
-    color: white;
-    font-weight: 500;
-  }
-
-  .menu-label-uppercase {
-    text-transform: uppercase;
-    font-weight: bold;
-  }
-
-  ion-list-header.menu-group-header {
-    color: var(--med-teal);
-    font-weight: bold;
-    margin-top: 6px;
-    padding-left: 14px;
-  }
 }
