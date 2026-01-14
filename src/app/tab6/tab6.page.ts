@@ -73,22 +73,7 @@ export class Tab6Page implements OnInit {
     return await modal.present();
   }
 
-  // --- DATA UPDATE LOGICA ---
-  ionViewWillEnter() {
-    // Check of er een RC-waarde is berekend in Tab 3 (en of die geldig is)
-    if (this.patient.current.rcExp && this.patient.current.rcExp > 0) {
 
-      // We nemen de waarde over
-      this.currentRC = this.patient.current.rcExp;
-
-      // We zorgen dat de slider niet buiten beeld raakt (max 2.0 op de slider)
-      if (this.currentRC > 2.0) this.currentRC = 2.0;
-      if (this.currentRC < 0.1) this.currentRC = 0.1;
-
-      // Update direct de analyse (kleurtjes, Otis frequentie etc.)
-      this.updateAnalysis();
-    }
-  }
   // ---------------------------------------------
 
   setOpen(isOpen: boolean) {

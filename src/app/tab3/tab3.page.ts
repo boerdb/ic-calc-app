@@ -189,8 +189,12 @@ export class Tab3Page {
     const compliance = this.resCstat || this.resCdyn;
     if (compliance && this.inputResistance) {
       this.resTimeConstant = this.calc.calcTimeConstant(compliance, this.inputResistance);
-    this.patient.current.rcExp = this.resTimeConstant;
-      this.patient.opslaan();
+    // Check eerst of het mapje bestaat (voor de zekerheid), en sla het dan op
+if (this.patient.current.ademhaling) {
+  this.patient.current.ademhaling.rcExp = this.resTimeConstant;
+}
+
+    this.patient.opslaan();
 
     }
 

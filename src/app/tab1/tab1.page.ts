@@ -23,7 +23,7 @@ import { PatientService } from '../services/patient';
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonSegment, IonSegmentButton, IonIcon, IonLabel,
     IonGrid, IonRow, IonCol, IonInput, IonItem, IonNote,
-    IonSelect, IonSelectOption, IonButton, IonButtons, IonText,
+    IonSelect, IonSelectOption, IonButton, IonButtons,
     IonFooter, IonModal,IonMenuButton // <--- Toegevoegd aan imports array
   ]
 })

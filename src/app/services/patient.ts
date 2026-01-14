@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
+// Hier definiëren we ALLES wat we willen onthouden per patiënt
 export interface BedData {
+  // --- 1. Basis Gegevens (Tab 1) ---
   bedId: string;
   naam: string;
   leeftijd: number | null;
@@ -8,15 +10,29 @@ export interface BedData {
   gewicht: number | null;
   lengte: number | null;
 
-  // Berekende waarden
+  // Berekende basis waarden
   ibw?: number;
   bmi?: number;
   bsa?: number;
 
-  rcExp?: number | null;
+  // --- 2. Gaswisseling & Bloedgas (Tab 2) ---
+  gas?: {
+    fio2: number | null;
+    pao2: number | null;
+    paco2: number | null;
+    sao2: number | null;
+    hb: number | null;
+    svo2: number | null;
+  };
 
+  // --- 3. Ademhaling & Capno (ROX / CO2) ---
+  ademhaling?: {
+    rr: number | null;    // Ademhalingsfrequentie
+    etco2: number | null; // End-tidal CO2
+    rcExp: number | null; // Expiratoire weerstand
+  };
 
-  // PiCCO data
+  // --- 4. PiCCO / Circulatie ---
   picco?: {
     ci: number | null;
     svr: number | null;
@@ -25,6 +41,13 @@ export interface BedData {
     map?: number | null;
     gef?: number | null;
   };
+
+  // --- 5. Overige (Nierfunctie etc.) ---
+  nier?: {
+    creat: number | null;
+    ureum: number | null;
+    urine24u: number | null;
+  };
 }
 
 @Injectable({
@@ -32,36 +55,88 @@ export interface BedData {
 })
 export class PatientService {
 
-  // DEZE LIJST BEPAALT DE BEDNUMMERS:
+  // LIJST MET BEDDEN
   private bedNames = ['1-1', '1-2', '1-3', '1-4', '2-1', '2-2', '3-1', '3-2', '4-1', '4-2', '5', '6', '7', '8'];
 
-  // Hier maken we de bedden aan op basis van bovenstaande lijst
-  beds: BedData[] = this.bedNames.map(id => ({
-    bedId: id,
-    naam: '',
-    leeftijd: null,
-    geslacht: 'M',
-    gewicht: null,
-    lengte: null,
-    ibw: 0,
-    bmi: 0,
-    bsa: 0,
-    picco: { ci: null, svr: null, gedi: null, elwi: null, map: null }
-  }));
+  beds: BedData[] = [];
+  current!: BedData;
 
-  // Huidige selectie (standaard het eerste bed: 1-1)
-  current: BedData = this.beds[0];
+  constructor() {
+    this.loadFromStorage();
+  }
+
+  // --- OPSLAAN & LADEN ---
+
+  private loadFromStorage() {
+    const savedBeds = localStorage.getItem('icu_beds_data');
+    const savedSelectedId = localStorage.getItem('icu_selected_bed');
+
+    if (savedBeds) {
+      this.beds = JSON.parse(savedBeds);
+
+      // CRUCIAAL: Als je nieuwe velden toevoegt aan de interface hierboven,
+      // moet je hier checken of ze bestaan in de oude data, anders crasht de app.
+      this.beds.forEach(bed => {
+        if (!bed.gas) bed.gas = { fio2: null, pao2: null, paco2: null, sao2: null, hb: null, svo2: null };
+        if (!bed.ademhaling) bed.ademhaling = { rr: null, etco2: null, rcExp: null };
+        if (!bed.picco) bed.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null };
+        if (!bed.nier) bed.nier = { creat: null, ureum: null, urine24u: null };
+      });
+
+    } else {
+      this.resetAllBeds();
+    }
+
+    // Zet het juiste bed actief
+    if (savedSelectedId) {
+      const found = this.beds.find(b => b.bedId === savedSelectedId);
+      this.current = found ? found : this.beds[0];
+    } else {
+      this.current = this.beds[0];
+    }
+  }
+
+  private saveToStorage() {
+    localStorage.setItem('icu_beds_data', JSON.stringify(this.beds));
+    localStorage.setItem('icu_selected_bed', this.current.bedId);
+  }
+
+  // --- INTERACTIE ---
 
   selectBed(id: string) {
     const found = this.beds.find(b => b.bedId === id);
     if (found) {
       this.current = found;
-      // Safety check voor picco object
-      if (!this.current.picco) {
-        this.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
-      }
+      this.saveToStorage();
     }
   }
+
+  opslaan() {
+    this.calculateDerivedValues();
+    this.saveToStorage();
+  }
+
+  bedLeegmaken() {
+    // Reset alles naar leeg/null
+    this.current.naam = '';
+    this.current.leeftijd = null;
+    this.current.geslacht = 'M';
+    this.current.gewicht = null;
+    this.current.lengte = null;
+    this.current.ibw = 0;
+    this.current.bmi = 0;
+    this.current.bsa = 0;
+
+    // Reset de sub-groepen
+    this.current.gas = { fio2: null, pao2: null, paco2: null, sao2: null, hb: null, svo2: null };
+    this.current.ademhaling = { rr: null, etco2: null, rcExp: null };
+    this.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null };
+    this.current.nier = { creat: null, ureum: null, urine24u: null };
+
+    this.saveToStorage();
+  }
+
+  // --- BEREKENINGEN ---
 
   calculateDerivedValues() {
     if (!this.current.lengte || !this.current.geslacht) return;
@@ -90,31 +165,26 @@ export class PatientService {
     }
   }
 
-  opslaan() {
-    this.calculateDerivedValues();
-    // Hier zou je eventueel data naar een echte database sturen later
-  }
-
-  bedLeegmaken() {
-    this.current.naam = '';
-    this.current.leeftijd = null;
-    this.current.geslacht = 'M';
-    this.current.gewicht = null;
-    this.current.lengte = null;
-    this.current.ibw = 0;
-    this.current.bmi = 0;
-    this.current.bsa = 0;
-    this.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
-    this.current.rcExp = null;
-
-  }
-
-  // Force a new reference for `current` so Angular bindings update across components
-  forceRefreshCurrent() {
-    this.current = { ...this.current };
+  // Maak alle bedden leeg aan (alleen bij eerste installatie of hard reset)
+  resetAllBeds() {
+    this.beds = this.bedNames.map(id => ({
+      bedId: id,
+      naam: '',
+      leeftijd: null,
+      geslacht: 'M',
+      gewicht: null,
+      lengte: null,
+      ibw: 0,
+      bmi: 0,
+      bsa: 0,
+      gas: { fio2: null, pao2: null, paco2: null, sao2: null, hb: null, svo2: null },
+      ademhaling: { rr: null, etco2: null, rcExp: null },
+      picco: { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null },
+      nier: { creat: null, ureum: null, urine24u: null }
+    }));
   }
 
   get selectedBedId(): string {
-    return this.current.bedId;
+    return this.current ? this.current.bedId : this.bedNames[0];
   }
 }
