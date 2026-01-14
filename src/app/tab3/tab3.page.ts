@@ -138,7 +138,7 @@ export class Tab3Page {
   public berekenControlled(): void {
     if (!this.patient.current.ventilation) return;
     const v = this.patient.current.ventilation;
-    
+
     if (!v.controlled.vt || !v.controlled.peep) return;
 
     if (this.patient.current.ibw) {
@@ -181,7 +181,7 @@ export class Tab3Page {
   public berekenSpontaneous(): void {
     if (!this.patient.current.ventilation) return;
     const v = this.patient.current.ventilation;
-    
+
     if (v.spontaneous.sponPpeak !== null && v.spontaneous.sponPeepTot !== null && v.spontaneous.sponPnadir !== null) {
       v.spontaneous.pocc = v.spontaneous.sponPnadir - v.spontaneous.sponPeepTot;
       v.spontaneous.pmus = this.calc.calcPmus(v.spontaneous.sponPnadir, v.spontaneous.sponPeepTot);
@@ -199,23 +199,23 @@ export class Tab3Page {
   public resetVelden(): void {
     if (!this.patient.current.ventilation) return;
     const v = this.patient.current.ventilation;
-    
+
     // Reset controlled
     v.controlled.vt = null; v.controlled.rr = null; v.controlled.peep = null;
     v.controlled.pplat = null; v.controlled.ppiek = null;
     v.controlled.resistance = null; v.controlled.paco2 = null; v.controlled.peco2 = null;
-    
+
     // Reset spontaneous
     v.spontaneous.sponPpeak = null; v.spontaneous.sponPeepTot = null; v.spontaneous.sponPnadir = null;
     v.spontaneous.pocc = null; v.spontaneous.pmus = null; v.spontaneous.ptp = null;
-    
+
     // Reset calculated
     v.calculated.drivingPressure = null; v.calculated.cstat = null; v.calculated.cdyn = null;
     v.calculated.vtPerKg = null; v.calculated.mechPower = null; v.calculated.timeConstant = null;
     v.calculated.vdVt = null;
-    
+
     this.dpKleur = 'medium'; this.mpKleur = 'medium'; this.pmusKleur = 'medium'; this.ptpKleur = 'medium';
-    
+
     this.patient.opslaan();
   }
 }

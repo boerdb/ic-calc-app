@@ -10,13 +10,14 @@ export interface BedData {
   gewicht: number | null;
   lengte: number | null;
 
-  // Berekende basis waarden
-  ibw?: number;
-  bmi?: number;
-  bsa?: number;
+  // Berekende basis waarden (Vraagtekens weggehaald, ze zijn er altijd, ook als ze 0 of null zijn)
+  ibw: number | null;
+  bmi: number | null;
+  bsa: number | null;
 
   // --- 2. Gaswisseling & Bloedgas (Tab 2) ---
-  gas?: {
+  // Vraagteken weggehaald -> gas bestaat altijd
+  gas: {
     fio2: number | null;
     pao2: number | null;
     paco2: number | null;
@@ -26,14 +27,14 @@ export interface BedData {
   };
 
   // --- 3. Ademhaling & Capno (ROX / CO2) ---
-  ademhaling?: {
+  ademhaling: {
     rr: number | null;    // Ademhalingsfrequentie
     etco2: number | null; // End-tidal CO2
     rcExp: number | null; // Expiratoire weerstand
   };
 
   // --- 3B. Ventilatie Data (Tab 3) ---
-  ventilation?: {
+  ventilation: {
     // Controlled ventilation inputs
     controlled: {
       vt: number | null;
@@ -67,17 +68,17 @@ export interface BedData {
   };
 
   // --- 4. PiCCO / Circulatie ---
-  picco?: {
+  picco: {
     ci: number | null;
     svr: number | null;
-    gedi?: number | null;
-    elwi?: number | null;
-    map?: number | null;
-    gef?: number | null;
+    gedi: number | null; // Vraagtekens intern ook weggehaald voor consistentie
+    elwi: number | null;
+    map: number | null;
+    gef: number | null;
   };
 
   // --- 5. Overige (Nierfunctie etc.) ---
-  nier?: {
+  nier: {
     creat: number | null;
     ureum: number | null;
     urine24u: number | null;
@@ -108,13 +109,21 @@ export class PatientService {
     if (savedBeds) {
       this.beds = JSON.parse(savedBeds);
 
-      // CRUCIAAL: Als je nieuwe velden toevoegt aan de interface hierboven,
-      // moet je hier checken of ze bestaan in de oude data, anders crasht de app.
+      // CRUCIAAL: Checken of oude data de nieuwe velden heeft.
+      // Zo niet, voegen we de lege objecten toe.
       this.beds.forEach(bed => {
+        if (!bed.ibw) bed.ibw = null;
+        if (!bed.bmi) bed.bmi = null;
+        if (!bed.bsa) bed.bsa = null;
+
         if (!bed.gas) bed.gas = { fio2: null, pao2: null, paco2: null, sao2: null, hb: null, svo2: null };
         if (!bed.ademhaling) bed.ademhaling = { rr: null, etco2: null, rcExp: null };
+
+        // Let op: picco object volledig initialiseren
         if (!bed.picco) bed.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null };
+
         if (!bed.nier) bed.nier = { creat: null, ureum: null, urine24u: null };
+
         if (!bed.ventilation) bed.ventilation = {
           controlled: { vt: null, rr: null, peep: null, pplat: null, ppiek: null, resistance: null, paco2: null, peco2: null },
           calculated: { drivingPressure: null, cstat: null, cdyn: null, mechPower: null, vtPerKg: null, timeConstant: null, vdVt: null },
@@ -162,9 +171,9 @@ export class PatientService {
     this.current.geslacht = 'M';
     this.current.gewicht = null;
     this.current.lengte = null;
-    this.current.ibw = 0;
-    this.current.bmi = 0;
-    this.current.bsa = 0;
+    this.current.ibw = null;
+    this.current.bmi = null;
+    this.current.bsa = null;
 
     // Reset de sub-groepen
     this.current.gas = { fio2: null, pao2: null, paco2: null, sao2: null, hb: null, svo2: null };
@@ -218,9 +227,9 @@ export class PatientService {
       geslacht: 'M',
       gewicht: null,
       lengte: null,
-      ibw: 0,
-      bmi: 0,
-      bsa: 0,
+      ibw: null,
+      bmi: null,
+      bsa: null,
       gas: { fio2: null, pao2: null, paco2: null, sao2: null, hb: null, svo2: null },
       ademhaling: { rr: null, etco2: null, rcExp: null },
       picco: { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null },

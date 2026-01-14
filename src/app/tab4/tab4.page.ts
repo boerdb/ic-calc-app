@@ -48,7 +48,7 @@ export class Tab4Page {
 
   constructor() {
     if (!this.patient.current.picco) {
-      this.patient.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
+      this.patient.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null };
     }
   }
 
@@ -181,7 +181,7 @@ export class Tab4Page {
 
   public reset() {
     if (this.patient.current.picco) {
-       this.patient.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null };
+       this.patient.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null };
     }
     this.diagnose = ''; this.advies = ''; this.elwiWarning = '';
   }

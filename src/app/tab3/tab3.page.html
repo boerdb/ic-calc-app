@@ -9,10 +9,10 @@
     <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
-          Bed {{ patient.selectedBedId || '?' }}
+          Bed {{ patient.current?.bedId || '?' }}
         </div>
         <div *ngIf="patient.current?.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
-          {{ patient.current.naam }}
+          {{ patient.current?.naam }}
         </div>
       </div>
     </ion-buttons>
@@ -36,82 +36,84 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
 
-  <ion-card class="data-card" *ngIf="patient.current.ibw" style="margin-bottom: 20px;">
+  <ion-card class="data-card" *ngIf="patient.current?.ibw" style="margin-bottom: 20px;">
     <ion-card-header>
       <ion-card-title style="font-size: 1.1em;">
-        Lung Protective Targets ({{ patient.current.ibw | number:'1.0-0' }} kg)
+        Lung Protective Targets ({{ patient.current?.ibw | number:'1.0-0' }} kg)
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-grid>
+      <ion-grid class="ion-no-padding">
         <ion-row>
-          <ion-col size="6" style="text-align: center; border-right: 1px solid #444;">
+          <ion-col size="6" style="text-align: center; border-right: 1px solid rgba(255,255,255,0.1);">
             <div style="font-size: 0.8em; color: #888; margin-bottom: 5px;">6 ml/kg</div>
-            <div style="font-size: 1.4em; font-weight: bold; color: #28a745;">{{ 6 * patient.current.ibw | number:'1.0-0' }} ml</div>
+            <div style="font-size: 1.4em; font-weight: bold; color: #28a745;">
+              {{ 6 * (patient.current?.ibw || 0) | number:'1.0-0' }} ml
+            </div>
           </ion-col>
           <ion-col size="6" style="text-align: center;">
             <div style="font-size: 0.8em; color: #888; margin-bottom: 5px;">8 ml/kg</div>
-            <div style="font-size: 1.4em; font-weight: bold; color: #ffc107;">{{ 8 * patient.current.ibw | number:'1.0-0' }} ml</div>
+            <div style="font-size: 1.4em; font-weight: bold; color: #ffc107;">
+              {{ 8 * (patient.current?.ibw || 0) | number:'1.0-0' }} ml
+            </div>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
   </ion-card>
 
-  <div *ngIf="mode === 'controlled'">
+  <div *ngIf="mode === 'controlled' && patient.current?.ventilation">
     <ion-card>
-
-     <ion-card-header>
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <ion-card-title>Mechanica</ion-card-title>
-
-    <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
+      <ion-card-header>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <ion-card-title>Mechanica</ion-card-title>
+          <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
       Uitleg
       <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
     </ion-button>
-  </div>
-</ion-card-header>
+        </div>
+      </ion-card-header>
 
       <ion-card-content>
         <ion-grid>
           <ion-row>
             <ion-col>
               <ion-input class="custom-green-input" label="Vt (ml)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                [(ngModel)]="patient.current.ventilation.controlled.vt" (ionChange)="patient.opslaan()"></ion-input>
+                [(ngModel)]="patient.current!.ventilation.controlled.vt" (ionChange)="patient.opslaan()"></ion-input>
             </ion-col>
             <ion-col>
               <ion-input class="custom-green-input" label="RR (/min)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                [(ngModel)]="patient.current.ventilation.controlled.rr" (ionChange)="patient.opslaan()"></ion-input>
+                [(ngModel)]="patient.current!.ventilation.controlled.rr" (ionChange)="patient.opslaan()"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
               <ion-input class="custom-green-input" label="PEEP" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                [(ngModel)]="patient.current.ventilation.controlled.peep" (ionChange)="patient.opslaan()"></ion-input>
+                [(ngModel)]="patient.current!.ventilation.controlled.peep" (ionChange)="patient.opslaan()"></ion-input>
             </ion-col>
             <ion-col>
               <ion-input class="custom-green-input" label="P-Plat" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                [(ngModel)]="patient.current.ventilation.controlled.pplat" (ionChange)="patient.opslaan()"></ion-input>
+                [(ngModel)]="patient.current!.ventilation.controlled.pplat" (ionChange)="patient.opslaan()"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
               <ion-input class="custom-green-input" label="P-Piek" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                [(ngModel)]="patient.current.ventilation.controlled.ppiek" (ionChange)="patient.opslaan()"></ion-input>
+                [(ngModel)]="patient.current!.ventilation.controlled.ppiek" (ionChange)="patient.opslaan()"></ion-input>
             </ion-col>
             <ion-col>
               <ion-input class="custom-green-input" label="Resistance (R)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                [(ngModel)]="patient.current.ventilation.controlled.resistance" (ionChange)="patient.opslaan()" placeholder="Optioneel"></ion-input>
+                [(ngModel)]="patient.current!.ventilation.controlled.resistance" (ionChange)="patient.opslaan()" placeholder="Optioneel"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row>
              <ion-col size="6">
                <ion-input class="custom-green-input" label="PaCO₂" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                 [(ngModel)]="patient.current.ventilation.controlled.paco2" (ionChange)="patient.opslaan()" placeholder="kPa"></ion-input>
+                 [(ngModel)]="patient.current!.ventilation.controlled.paco2" (ionChange)="patient.opslaan()" placeholder="kPa"></ion-input>
              </ion-col>
              <ion-col size="6">
-               <ion-input class="custom-green-input" label="EtCO₂ " label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                 [(ngModel)]="patient.current.ventilation.controlled.peco2" (ionChange)="patient.opslaan()" placeholder="kPa"></ion-input>
+               <ion-input class="custom-green-input" label="EtCO₂" label-placement="floating" fill="outline" type="number" inputmode="decimal"
+                 [(ngModel)]="patient.current!.ventilation.controlled.peco2" (ionChange)="patient.opslaan()" placeholder="kPa"></ion-input>
              </ion-col>
           </ion-row>
         </ion-grid>
@@ -129,80 +131,80 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card *ngIf="patient.current.ventilation?.calculated.drivingPressure || patient.current.ventilation?.calculated.cdyn || patient.current.ventilation?.calculated.vdVt" class="result-card">
+    <ion-card *ngIf="patient.current?.ventilation?.calculated?.drivingPressure || patient.current?.ventilation?.calculated?.cdyn || patient.current?.ventilation?.calculated?.vdVt" class="result-card">
        <ion-card-header>
          <ion-card-title>Resultaten</ion-card-title>
        </ion-card-header>
        <ion-list lines="full">
 
-         <ion-item *ngIf="patient.current.ventilation?.calculated.vtPerKg">
+         <ion-item *ngIf="patient.current!.ventilation.calculated.vtPerKg">
            <ion-label>Huidig Volume / kg</ion-label>
-           <ion-badge slot="end" [color]="patient.current.ventilation.calculated.vtPerKg > 8 ? 'warning' : 'success'">
-             {{ patient.current.ventilation.calculated.vtPerKg | number:'1.1-1' }} ml/kg
+           <ion-badge slot="end" [color]="patient.current!.ventilation.calculated.vtPerKg > 8 ? 'warning' : 'success'">
+             {{ patient.current!.ventilation.calculated.vtPerKg | number:'1.1-1' }} ml/kg
            </ion-badge>
          </ion-item>
 
-         <ion-item *ngIf="patient.current.ventilation?.calculated.drivingPressure">
+         <ion-item *ngIf="patient.current!.ventilation.calculated.drivingPressure">
             <ion-label>
               <h2>Driving Pressure</h2>
               <p>Pplat - PEEP (< 15)</p>
             </ion-label>
             <ion-badge slot="end" [color]="dpKleur">
-              {{ patient.current.ventilation.calculated.drivingPressure | number:'1.0-0' }}
+              {{ patient.current!.ventilation.calculated.drivingPressure | number:'1.0-0' }}
             </ion-badge>
          </ion-item>
 
-         <ion-item *ngIf="patient.current.ventilation?.calculated.cstat">
+         <ion-item *ngIf="patient.current!.ventilation.calculated.cstat">
            <ion-label>
              <h2>C-Statisch</h2>
              <p>ml / cmH₂O</p>
            </ion-label>
            <ion-note slot="end" style="font-weight:bold;">
-             {{ patient.current.ventilation.calculated.cstat | number:'1.0-0' }}
+             {{ patient.current!.ventilation.calculated.cstat | number:'1.0-0' }}
            </ion-note>
          </ion-item>
 
-         <ion-item *ngIf="patient.current.ventilation?.calculated.cdyn">
+         <ion-item *ngIf="patient.current!.ventilation.calculated.cdyn">
            <ion-label>
              <h2>C-Dynamisch</h2>
              <p>ml / cmH₂O</p>
            </ion-label>
            <ion-note slot="end" style="font-weight:bold;">
-             {{ patient.current.ventilation.calculated.cdyn | number:'1.0-0' }}
+             {{ patient.current!.ventilation.calculated.cdyn | number:'1.0-0' }}
            </ion-note>
          </ion-item>
 
-         <ion-item *ngIf="patient.current.ventilation?.calculated.timeConstant">
+         <ion-item *ngIf="patient.current!.ventilation.calculated.timeConstant">
             <ion-label>
               <h2>Tijdconstante (RC)</h2>
               <p>Min. Exp. Tijd (3x)</p>
               <p style="font-size: 0.75em; color: #888; font-style: italic; margin-top: 4px;">
-  Tip! Ga naar tab Hamilton voor betekenis RCexp
+                 Tip! Ga naar tab Hamilton voor betekenis RCexp
               </p>
             </ion-label>
             <ion-note slot="end" color="secondary" style="text-align:right;">
-               <strong>{{ patient.current.ventilation.calculated.timeConstant | number:'1.2-2' }} s</strong><br>
-               <span style="font-size:0.8em;">3x = {{ patient.current.ventilation.calculated.timeConstant * 3 | number:'1.1-1' }} s</span>
+               <strong>{{ patient.current!.ventilation.calculated.timeConstant | number:'1.2-2' }} s</strong><br>
+               <span style="font-size:0.8em;">3x = {{ patient.current!.ventilation.calculated.timeConstant * 3 | number:'1.1-1' }} s</span>
             </ion-note>
          </ion-item>
 
-         <ion-item *ngIf="patient.current.ventilation?.calculated.vdVt">
+         <ion-item *ngIf="patient.current!.ventilation.calculated.vdVt">
             <ion-label>
               <h2>Dode Ruimte (Vd/Vt)</h2>
               <p>Target < 40%</p>
             </ion-label>
-            <ion-badge slot="end" [color]="patient.current.ventilation.calculated.vdVt > 0.4 ? 'warning' : 'success'">
-               {{ patient.current.ventilation.calculated.vdVt | percent:'1.0-0' }}
+            <ion-badge slot="end" [color]="patient.current!.ventilation.calculated.vdVt > 0.4 ? 'warning' : 'success'">
+               {{ patient.current!.ventilation.calculated.vdVt | percent:'1.0-0' }}
             </ion-badge>
          </ion-item>
 
-         <ion-item *ngIf="patient.current.ventilation?.calculated.mechPower">
+         <ion-item *ngIf="patient.current!.ventilation.calculated.mechPower">
             <ion-label>
               <h2>Mechanical Power</h2>
               <p>Target < 17 J</p>
             </ion-label>
             <ion-badge slot="end" [color]="mpKleur">
-              {{ patient.current.ventilation.calculated.mechPower | number:'1.1-1' }} J
+              {{ patient.current!.ventilation.calculated.mechPower | number:'1.1-1' }} J
             </ion-badge>
          </ion-item>
        </ion-list>
@@ -210,46 +212,46 @@
   </div>
 
 
-  <div *ngIf="mode === 'spontaneous'">
+  <div *ngIf="mode === 'spontaneous' && patient.current?.ventilation">
     <ion-card>
-
       <ion-card-header>
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <ion-card-title>Pressure Support / Weaning</ion-card-title>
-
-    <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <ion-card-title>Pressure Support / Weaning</ion-card-title>
+          <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
       Uitleg
       <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
     </ion-button>
-  </div>
-</ion-card-header>
+        </div>
+      </ion-card-header>
 
       <ion-card-content>
         <ion-grid>
           <ion-row>
             <ion-col>
               <ion-input class="custom-green-input" label="P-Peak" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                [(ngModel)]="patient.current.ventilation.spontaneous.sponPpeak" (ionChange)="patient.opslaan()"></ion-input>
+                [(ngModel)]="patient.current!.ventilation.spontaneous.sponPpeak" (ionChange)="patient.opslaan()"></ion-input>
             </ion-col>
             <ion-col>
               <ion-input class="custom-green-input" label="PEEP-tot" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                [(ngModel)]="patient.current.ventilation.spontaneous.sponPeepTot" (ionChange)="patient.opslaan()"></ion-input>
+                [(ngModel)]="patient.current!.ventilation.spontaneous.sponPeepTot" (ionChange)="patient.opslaan()"></ion-input>
             </ion-col>
           </ion-row>
+
           <ion-row>
-            <ion-col>
-              <ion-input class="custom-green-input" label="P-nadir (negatief!)" label-placement="floating" fill="outline" type="number" inputmode="numeric"
-                [(ngModel)]="patient.current.ventilation.spontaneous.sponPnadir" (ionChange)="patient.opslaan()" placeholder="-4.0"></ion-input>
+            <ion-col size="12">
+              <ion-input class="custom-green-input" label="P-nadir (negatief!)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
+                [(ngModel)]="patient.current!.ventilation.spontaneous.sponPnadir" (ionChange)="patient.opslaan()" placeholder="-4.0"></ion-input>
             </ion-col>
           </ion-row>
+
           <ion-row>
              <ion-col size="6">
                <ion-input class="custom-green-input" label="PaCO₂" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                 [(ngModel)]="patient.current.ventilation.controlled.paco2" (ionChange)="patient.opslaan()" placeholder="kPa"></ion-input>
+                 [(ngModel)]="patient.current!.ventilation.controlled.paco2" (ionChange)="patient.opslaan()" placeholder="kPa"></ion-input>
              </ion-col>
              <ion-col size="6">
                <ion-input class="custom-green-input" label="EtCO₂" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-                 [(ngModel)]="patient.current.ventilation.controlled.peco2" (ionChange)="patient.opslaan()" placeholder="kPa"></ion-input>
+                 [(ngModel)]="patient.current!.ventilation.controlled.peco2" (ionChange)="patient.opslaan()" placeholder="kPa"></ion-input>
              </ion-col>
           </ion-row>
         </ion-grid>
@@ -257,7 +259,7 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <ion-button expand="block" class="teal-btn"  (click)="berekenSpontaneous()">Bereken Effort</ion-button>
+              <ion-button expand="block" class="teal-btn" (click)="berekenSpontaneous()">Bereken Effort</ion-button>
             </ion-col>
             <ion-col size="4">
               <ion-button expand="block" color="medium" fill="outline" (click)="resetVelden()">Reset</ion-button>
@@ -267,17 +269,19 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card *ngIf="patient.current.ventilation?.spontaneous.pmus || patient.current.ventilation?.calculated.vdVt" style="border-left: 5px solid #3880ff;">
+    <ion-card *ngIf="patient.current?.ventilation?.spontaneous?.pmus || patient.current?.ventilation?.calculated?.vdVt" style="border-left: 5px solid #3880ff;">
       <ion-card-header>
         <ion-card-title>Resultaten (VentICalc)</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-list lines="none">
 
-          <div *ngIf="patient.current.ventilation?.spontaneous.pmus">
+          <div *ngIf="patient.current!.ventilation.spontaneous.pmus">
             <ion-item>
               <ion-label>Occlusion Pressure (&Delta;Pocc)</ion-label>
-              <ion-text slot="end">{{ patient.current.ventilation.spontaneous.pocc | number:'1.1-1' }}</ion-text>
+              <ion-text slot="end" style="font-weight: bold;">
+                  {{ patient.current!.ventilation.spontaneous.pocc | number:'1.1-1' }}
+              </ion-text>
             </ion-item>
 
             <ion-item>
@@ -286,7 +290,7 @@
                 <p>Spierkracht (Doel: < 10)</p>
               </ion-label>
               <ion-badge slot="end" [color]="pmusKleur" style="font-size:1em;">
-                {{ patient.current.ventilation.spontaneous.pmus | number:'1.1-1' }}
+                {{ patient.current!.ventilation.spontaneous.pmus | number:'1.1-1' }}
               </ion-badge>
             </ion-item>
 
@@ -296,18 +300,18 @@
                 <p>Doel: < 25</p>
               </ion-label>
               <ion-badge slot="end" [color]="ptpKleur" style="font-size:1em;">
-                {{ patient.current.ventilation.spontaneous.ptp | number:'1.1-1' }}
+                {{ patient.current!.ventilation.spontaneous.ptp | number:'1.1-1' }}
               </ion-badge>
             </ion-item>
           </div>
 
-          <ion-item *ngIf="patient.current.ventilation?.calculated.vdVt">
+          <ion-item *ngIf="patient.current!.ventilation.calculated.vdVt">
             <ion-label>
               <h2>Dode Ruimte (Vd/Vt)</h2>
               <p>Target < 40%</p>
             </ion-label>
-            <ion-badge slot="end" [color]="patient.current.ventilation.calculated.vdVt > 0.4 ? 'warning' : 'success'">
-               {{ patient.current.ventilation.calculated.vdVt | percent:'1.0-0' }}
+            <ion-badge slot="end" [color]="patient.current!.ventilation.calculated.vdVt > 0.4 ? 'warning' : 'success'">
+               {{ patient.current!.ventilation.calculated.vdVt | percent:'1.0-0' }}
             </ion-badge>
          </ion-item>
 
