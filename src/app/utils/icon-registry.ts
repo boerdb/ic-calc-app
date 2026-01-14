@@ -73,6 +73,11 @@ import {
  */
 export function registerAppIcons(): void {
   addIcons({
+   // svg icons
+   'ventilation': 'assets/icons/ventilation.svg',
+    'circulation': 'assets/icons/circulation.svg',
+    'renal': 'assets/icons/renal.svg',
+
     // App Component
     downloadOutline,
     close,

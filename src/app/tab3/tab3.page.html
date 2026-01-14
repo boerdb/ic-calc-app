@@ -9,10 +9,10 @@
     <ion-buttons slot="end" style="margin-right: 10px;">
       <div style="text-align: right; color: white;">
         <div style="font-weight: bold; font-size: 1em;">
-          Bed {{ patient.current?.bedId || '?' }}
+          Bed {{ patient.current.bedId || '?' }}
         </div>
-        <div *ngIf="patient.current?.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
-          {{ patient.current?.naam }}
+        <div *ngIf="patient.current.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
+          {{ patient.current.naam }}
         </div>
       </div>
     </ion-buttons>
@@ -36,10 +36,10 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
 
-  <ion-card class="data-card" *ngIf="patient.current?.ibw" style="margin-bottom: 20px;">
+  <ion-card class="data-card" *ngIf="patient.current.ibw" style="margin-bottom: 20px;">
     <ion-card-header>
       <ion-card-title style="font-size: 1.1em;">
-        Lung Protective Targets ({{ patient.current?.ibw | number:'1.0-0' }} kg)
+        Lung Protective Targets ({{ patient.current.ibw | number:'1.0-0' }} kg)
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
@@ -48,13 +48,13 @@
           <ion-col size="6" style="text-align: center; border-right: 1px solid rgba(255,255,255,0.1);">
             <div style="font-size: 0.8em; color: #888; margin-bottom: 5px;">6 ml/kg</div>
             <div style="font-size: 1.4em; font-weight: bold; color: #28a745;">
-              {{ 6 * (patient.current?.ibw || 0) | number:'1.0-0' }} ml
+              {{ 6 * (patient.current.ibw || 0) | number:'1.0-0' }} ml
             </div>
           </ion-col>
           <ion-col size="6" style="text-align: center;">
             <div style="font-size: 0.8em; color: #888; margin-bottom: 5px;">8 ml/kg</div>
             <div style="font-size: 1.4em; font-weight: bold; color: #ffc107;">
-              {{ 8 * (patient.current?.ibw || 0) | number:'1.0-0' }} ml
+              {{ 8 * (patient.current.ibw || 0) | number:'1.0-0' }} ml
             </div>
           </ion-col>
         </ion-row>
@@ -62,7 +62,7 @@
     </ion-card-content>
   </ion-card>
 
-  <div *ngIf="mode === 'controlled' && patient.current?.ventilation">
+  <div *ngIf="mode === 'controlled' && patient.current.ventilation">
     <ion-card>
       <ion-card-header>
         <div style="display: flex; justify-content: space-between; align-items: center;">
