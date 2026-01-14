@@ -32,6 +32,40 @@ export interface BedData {
     rcExp: number | null; // Expiratoire weerstand
   };
 
+  // --- 3B. Ventilatie Data (Tab 3) ---
+  ventilation?: {
+    // Controlled ventilation inputs
+    controlled: {
+      vt: number | null;
+      rr: number | null;
+      peep: number | null;
+      pplat: number | null;
+      ppiek: number | null;
+      resistance: number | null;
+      paco2: number | null;
+      peco2: number | null;
+    };
+    // Calculated results
+    calculated: {
+      drivingPressure: number | null;
+      cstat: number | null;
+      cdyn: number | null;
+      mechPower: number | null;
+      vtPerKg: number | null;
+      timeConstant: number | null;
+      vdVt: number | null;
+    };
+    // Spontaneous/weaning inputs and results
+    spontaneous: {
+      sponPpeak: number | null;
+      sponPeepTot: number | null;
+      sponPnadir: number | null;
+      pocc: number | null;
+      pmus: number | null;
+      ptp: number | null;
+    };
+  };
+
   // --- 4. PiCCO / Circulatie ---
   picco?: {
     ci: number | null;
@@ -81,6 +115,11 @@ export class PatientService {
         if (!bed.ademhaling) bed.ademhaling = { rr: null, etco2: null, rcExp: null };
         if (!bed.picco) bed.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null };
         if (!bed.nier) bed.nier = { creat: null, ureum: null, urine24u: null };
+        if (!bed.ventilation) bed.ventilation = {
+          controlled: { vt: null, rr: null, peep: null, pplat: null, ppiek: null, resistance: null, paco2: null, peco2: null },
+          calculated: { drivingPressure: null, cstat: null, cdyn: null, mechPower: null, vtPerKg: null, timeConstant: null, vdVt: null },
+          spontaneous: { sponPpeak: null, sponPeepTot: null, sponPnadir: null, pocc: null, pmus: null, ptp: null }
+        };
       });
 
     } else {
@@ -132,6 +171,11 @@ export class PatientService {
     this.current.ademhaling = { rr: null, etco2: null, rcExp: null };
     this.current.picco = { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null };
     this.current.nier = { creat: null, ureum: null, urine24u: null };
+    this.current.ventilation = {
+      controlled: { vt: null, rr: null, peep: null, pplat: null, ppiek: null, resistance: null, paco2: null, peco2: null },
+      calculated: { drivingPressure: null, cstat: null, cdyn: null, mechPower: null, vtPerKg: null, timeConstant: null, vdVt: null },
+      spontaneous: { sponPpeak: null, sponPeepTot: null, sponPnadir: null, pocc: null, pmus: null, ptp: null }
+    };
 
     this.saveToStorage();
   }
@@ -180,7 +224,12 @@ export class PatientService {
       gas: { fio2: null, pao2: null, paco2: null, sao2: null, hb: null, svo2: null },
       ademhaling: { rr: null, etco2: null, rcExp: null },
       picco: { ci: null, svr: null, gedi: null, elwi: null, map: null, gef: null },
-      nier: { creat: null, ureum: null, urine24u: null }
+      nier: { creat: null, ureum: null, urine24u: null },
+      ventilation: {
+        controlled: { vt: null, rr: null, peep: null, pplat: null, ppiek: null, resistance: null, paco2: null, peco2: null },
+        calculated: { drivingPressure: null, cstat: null, cdyn: null, mechPower: null, vtPerKg: null, timeConstant: null, vdVt: null },
+        spontaneous: { sponPpeak: null, sponPeepTot: null, sponPnadir: null, pocc: null, pmus: null, ptp: null }
+      }
     }));
   }
 

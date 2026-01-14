@@ -40,33 +40,6 @@ export class Tab3Page {
 
   public mode: string = 'controlled';
 
-  // --- CONTROLLED INPUTS ---
-  public inputVt: number | null = null;
-  public inputRR: number | null = null;
-  public inputPeep: number | null = null;
-  public inputPplat: number | null = null;
-  public inputPpiek: number | null = null;
-  public inputResistance: number | null = null;
-  public inputPaCO2: number | null = null;
-  public inputPeCO2: number | null = null;
-
-  // --- RESULTATEN ---
-  public resDrivingPressure: number | null = null;
-  public resCstat: number | null = null;
-  public resCdyn: number | null = null;
-  public resMechPower: number | null = null;
-  public resVtPerKg: number | null = null;
-  public resTimeConstant: number | null = null;
-  public resVdVt: number | null = null;
-
-  // --- SPONTANEOUS INPUTS ---
-  public inputSponPpeak: number | null = null;
-  public inputSponPeepTot: number | null = null;
-  public inputSponPnadir: number | null = null;
-  public resPocc: number | null = null;
-  public resPmus: number | null = null;
-  public resPtp: number | null = null;
-
   // Kleuren
   public dpKleur: string = 'medium';
   public mpKleur: string = 'medium';
@@ -163,68 +136,86 @@ export class Tab3Page {
   }
 
   public berekenControlled(): void {
-    if (!this.inputVt || !this.inputPeep) return;
+    if (!this.patient.current.ventilation) return;
+    const v = this.patient.current.ventilation;
+    
+    if (!v.controlled.vt || !v.controlled.peep) return;
 
     if (this.patient.current.ibw) {
-      this.resVtPerKg = this.inputVt / this.patient.current.ibw;
+      v.calculated.vtPerKg = v.controlled.vt / this.patient.current.ibw;
     }
 
-    if (this.inputPplat) {
-      this.resDrivingPressure = this.inputPplat - this.inputPeep;
-      this.dpKleur = this.resDrivingPressure > 15 ? 'danger' : 'success';
-      if (this.resDrivingPressure > 0) {
-        this.resCstat = this.calc.calcStaticCompliance(this.inputVt, this.inputPplat, this.inputPeep);
+    if (v.controlled.pplat) {
+      v.calculated.drivingPressure = v.controlled.pplat - v.controlled.peep;
+      this.dpKleur = v.calculated.drivingPressure > 15 ? 'danger' : 'success';
+      if (v.calculated.drivingPressure > 0) {
+        v.calculated.cstat = this.calc.calcStaticCompliance(v.controlled.vt, v.controlled.pplat, v.controlled.peep);
       }
     }
 
-    if (this.inputPpiek) {
-      this.resCdyn = this.calc.calcDynamicCompliance(this.inputVt, this.inputPpiek, this.inputPeep);
+    if (v.controlled.ppiek) {
+      v.calculated.cdyn = this.calc.calcDynamicCompliance(v.controlled.vt, v.controlled.ppiek, v.controlled.peep);
     }
 
-    if (this.inputRR && this.inputPpiek && this.inputPplat) {
-      this.resMechPower = this.calc.calcMechanicalPower(this.inputVt, this.inputRR, this.inputPpiek, this.inputPplat, this.inputPeep);
-      this.mpKleur = this.resMechPower > 17 ? 'warning' : 'success';
+    if (v.controlled.rr && v.controlled.ppiek && v.controlled.pplat) {
+      v.calculated.mechPower = this.calc.calcMechanicalPower(v.controlled.vt, v.controlled.rr, v.controlled.ppiek, v.controlled.pplat, v.controlled.peep);
+      this.mpKleur = v.calculated.mechPower > 17 ? 'warning' : 'success';
     }
 
-    const compliance = this.resCstat || this.resCdyn;
-    if (compliance && this.inputResistance) {
-      this.resTimeConstant = this.calc.calcTimeConstant(compliance, this.inputResistance);
-    // Check eerst of het mapje bestaat (voor de zekerheid), en sla het dan op
-if (this.patient.current.ademhaling) {
-  this.patient.current.ademhaling.rcExp = this.resTimeConstant;
-}
+    const compliance = v.calculated.cstat || v.calculated.cdyn;
+    if (compliance && v.controlled.resistance) {
+      v.calculated.timeConstant = this.calc.calcTimeConstant(compliance, v.controlled.resistance);
+      // Check eerst of het mapje bestaat (voor de zekerheid), en sla het dan op
+      if (this.patient.current.ademhaling) {
+        this.patient.current.ademhaling.rcExp = v.calculated.timeConstant;
+      }
+    }
+
+    if (v.controlled.paco2 && v.controlled.peco2) {
+      v.calculated.vdVt = this.calc.calcVdVt(v.controlled.paco2, v.controlled.peco2);
+    }
 
     this.patient.opslaan();
-
-    }
-
-    if (this.inputPaCO2 && this.inputPeCO2) {
-      this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
-    }
   }
 
   public berekenSpontaneous(): void {
-    if (this.inputSponPpeak !== null && this.inputSponPeepTot !== null && this.inputSponPnadir !== null) {
-      this.resPocc = this.inputSponPnadir - this.inputSponPeepTot;
-      this.resPmus = this.calc.calcPmus(this.inputSponPnadir, this.inputSponPeepTot);
-      this.resPtp = this.calc.calcPtp(this.inputSponPpeak, this.inputSponPeepTot, this.inputSponPnadir);
-      this.pmusKleur = (this.resPmus > 15) ? 'danger' : (this.resPmus > 10) ? 'warning' : 'success';
-      this.ptpKleur = (this.resPtp > 25) ? 'danger' : 'success';
+    if (!this.patient.current.ventilation) return;
+    const v = this.patient.current.ventilation;
+    
+    if (v.spontaneous.sponPpeak !== null && v.spontaneous.sponPeepTot !== null && v.spontaneous.sponPnadir !== null) {
+      v.spontaneous.pocc = v.spontaneous.sponPnadir - v.spontaneous.sponPeepTot;
+      v.spontaneous.pmus = this.calc.calcPmus(v.spontaneous.sponPnadir, v.spontaneous.sponPeepTot);
+      v.spontaneous.ptp = this.calc.calcPtp(v.spontaneous.sponPpeak, v.spontaneous.sponPeepTot, v.spontaneous.sponPnadir);
+      this.pmusKleur = (v.spontaneous.pmus > 15) ? 'danger' : (v.spontaneous.pmus > 10) ? 'warning' : 'success';
+      this.ptpKleur = (v.spontaneous.ptp > 25) ? 'danger' : 'success';
     }
-    if (this.inputPaCO2 && this.inputPeCO2) {
-      this.resVdVt = this.calc.calcVdVt(this.inputPaCO2, this.inputPeCO2);
+    if (v.controlled.paco2 && v.controlled.peco2) {
+      v.calculated.vdVt = this.calc.calcVdVt(v.controlled.paco2, v.controlled.peco2);
     }
+
+    this.patient.opslaan();
   }
 
   public resetVelden(): void {
-    this.inputVt = null; this.inputRR = null; this.inputPeep = null;
-    this.inputPplat = null; this.inputPpiek = null;
-    this.inputResistance = null; this.inputPaCO2 = null; this.inputPeCO2 = null;
-    this.inputSponPpeak = null; this.inputSponPeepTot = null; this.inputSponPnadir = null;
-
-    this.resDrivingPressure = null; this.resCstat = null; this.resCdyn = null;
-    this.resVtPerKg = null; this.resMechPower = null; this.resTimeConstant = null;
-    this.resVdVt = null; this.resPocc = null; this.resPmus = null; this.resPtp = null;
+    if (!this.patient.current.ventilation) return;
+    const v = this.patient.current.ventilation;
+    
+    // Reset controlled
+    v.controlled.vt = null; v.controlled.rr = null; v.controlled.peep = null;
+    v.controlled.pplat = null; v.controlled.ppiek = null;
+    v.controlled.resistance = null; v.controlled.paco2 = null; v.controlled.peco2 = null;
+    
+    // Reset spontaneous
+    v.spontaneous.sponPpeak = null; v.spontaneous.sponPeepTot = null; v.spontaneous.sponPnadir = null;
+    v.spontaneous.pocc = null; v.spontaneous.pmus = null; v.spontaneous.ptp = null;
+    
+    // Reset calculated
+    v.calculated.drivingPressure = null; v.calculated.cstat = null; v.calculated.cdyn = null;
+    v.calculated.vtPerKg = null; v.calculated.mechPower = null; v.calculated.timeConstant = null;
+    v.calculated.vdVt = null;
+    
     this.dpKleur = 'medium'; this.mpKleur = 'medium'; this.pmusKleur = 'medium'; this.ptpKleur = 'medium';
+    
+    this.patient.opslaan();
   }
 }
