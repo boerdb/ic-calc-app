@@ -94,13 +94,13 @@ export class RoxPage {
 
       if (this.roxScore >= 4.88) {
         this.roxColor = 'var(--ion-color-success)';
-        this.roxAdvies = 'Laag risico op falen HFNO.';
-      } else if (this.roxScore < 2.85) {
+        this.roxAdvies = 'HFNO voortzetten, FiO₂ afbouwen indien mogelijk, regelmatige evaluatie.';
+      } else if (this.roxScore < 3.85) {
         this.roxColor = 'var(--ion-color-danger)';
-        this.roxAdvies = 'Hoog risico falen: overweeg intubatie.';
+        this.roxAdvies = 'Voorbereiden op vroege intubatie of escalatie volgens lokaal protocol.';
       } else {
         this.roxColor = 'var(--ion-color-warning)';
-        this.roxAdvies = 'Monitor nauwgezet (grijs gebied).';
+        this.roxAdvies = 'HFNO optimaliseren, oorzaken behandelen, binnen 1–2 uur opnieuw beoordelen.';
       }
     } else {
       this.roxScore = null;
