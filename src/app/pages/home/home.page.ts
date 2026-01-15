@@ -1,5 +1,5 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core'; // inject toegevoegd
-import { CommonModule } from '@angular/common'; // Nodig voor @for en *ngIf
+ // Nodig voor @for en *ngIf
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons,
   IonMenuButton, IonButton, IonIcon, IonCol, IonCard,
@@ -15,11 +15,14 @@ import { PatientService } from '../../services/patient'; // Check even of dit pa
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule, // Toegevoegd voor de logica in je HTML
-     IonRow, IonGrid,
-     IonCol, IonContent,
-     IonIcon, IonMenuButton, RouterLink
-  ]
+    IonRow,
+    IonGrid,
+    IonCol,
+    IonContent,
+    IonIcon,
+    IonMenuButton,
+    RouterLink
+]
 })
 export class HomePage {
   // Gebruik de moderne inject methode zoals je gevraagd hebt

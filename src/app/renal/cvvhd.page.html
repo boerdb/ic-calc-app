@@ -9,7 +9,9 @@
     <ion-buttons slot="end" class="page-header-bed">
       <div class="bed-info">
         <div class="bed-number">Bed {{ patient.selectedBedId || '?' }}</div>
-        <div *ngIf="patient.current?.naam" class="bed-name">{{ patient.current.naam }}</div>
+        @if (patient.current.naam) {
+          <div class="bed-name">{{ patient.current.naam }}</div>
+        }
       </div>
     </ion-buttons>
   </ion-toolbar>
@@ -51,12 +53,16 @@
 
         <ion-row class="ion-margin-top">
           <ion-col>
-            <div *ngIf="current24h !== null">
-              <strong>Huidige verwijdering /24u:</strong> {{ current24h }} mL
-            </div>
-            <div *ngIf="requiredUFR !== null">
-              <strong>Benodigde UFR:</strong> {{ requiredUFR }} mL/u (om doel /24u te bereiken)
-            </div>
+            @if (current24h !== null) {
+              <div>
+                <strong>Huidige verwijdering /24u:</strong> {{ current24h }} mL
+              </div>
+            }
+            @if (requiredUFR !== null) {
+              <div>
+                <strong>Benodigde UFR:</strong> {{ requiredUFR }} mL/u (om doel /24u te bereiken)
+              </div>
+            }
           </ion-col>
         </ion-row>
       </ion-grid>

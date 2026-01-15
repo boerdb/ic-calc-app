@@ -13,9 +13,11 @@
         <div style="font-weight: bold; font-size: 1em;">
           Bed {{ patient.selectedBedId || '?' }}
         </div>
-        <div *ngIf="patient.current?.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
-          {{ patient.current.naam }}
-        </div>
+        @if (patient.current.naam) {
+          <div style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
+            {{ patient.current.naam }}
+          </div>
+        }
       </div>
     </ion-buttons>
   </ion-toolbar>
@@ -30,9 +32,9 @@
         <ion-card-title>Meetwaarden</ion-card-title>
 
         <ion-button fill="clear" size="small" (click)="toonInfo()" style="--color: #00796B; font-weight: bold;">
-      Uitleg
-      <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-    </ion-button>
+          Uitleg
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
       </div>
     </ion-card-header>
 
@@ -104,9 +106,9 @@
             </ion-button>
           </ion-col>
           <ion-col size="4">
-             <ion-button expand="block" color="medium" fill="outline" (click)="reset()">
-               Wis
-             </ion-button>
+            <ion-button expand="block" color="medium" fill="outline" (click)="reset()">
+              Wis
+            </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -114,22 +116,25 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="diagnose" [color]="resultColor" style="margin-top: 20px;">
-    <ion-card-header>
-      <ion-card-title style="color: white; font-size: 1.2em;">
-        <ion-icon name="pulse-outline" style="vertical-align: bottom; margin-right: 5px;"></ion-icon>
-        {{ diagnose }}
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content style="color: white;">
-      <p style="font-size: 1.1em; font-weight: bold; line-height: 1.4;">{{ advies }}</p>
-
-      <div *ngIf="elwiWarning" style="margin-top: 15px; background: rgba(0,0,0,0.25); padding: 8px; border-radius: 4px; display: flex; align-items: center;">
-        <ion-icon name="alert-circle-outline" style="font-size: 1.5em; margin-right: 10px;"></ion-icon>
-        <span>{{ elwiWarning }}</span>
-      </div>
-    </ion-card-content>
-  </ion-card>
+  @if (diagnose) {
+    <ion-card [color]="resultColor" style="margin-top: 20px;">
+      <ion-card-header>
+        <ion-card-title style="color: white; font-size: 1.2em;">
+          <ion-icon name="pulse-outline" style="vertical-align: bottom; margin-right: 5px;"></ion-icon>
+          {{ diagnose }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content style="color: white;">
+        <p style="font-size: 1.1em; font-weight: bold; line-height: 1.4;">{{ advies }}</p>
+        @if (elwiWarning) {
+          <div style="margin-top: 15px; background: rgba(0,0,0,0.25); padding: 8px; border-radius: 4px; display: flex; align-items: center;">
+            <ion-icon name="alert-circle-outline" style="font-size: 1.5em; margin-right: 10px;"></ion-icon>
+            <span>{{ elwiWarning }}</span>
+          </div>
+        }
+      </ion-card-content>
+    </ion-card>
+  }
 
   <div class="ion-padding ion-text-center">
     <p style="color: #666; font-size: 0.85em; font-style: italic;">

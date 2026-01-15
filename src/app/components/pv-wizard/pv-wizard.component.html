@@ -10,12 +10,16 @@
 <ion-content class="ion-padding" style="--background: url('assets/image_2.jpg') no-repeat center center / cover;">
 
   <div slot="fixed" class="ghost-arrow-container">
-    <div class="ghost-arrow left" *ngIf="!isBeginning" (click)="slidePrev()">
-      <ion-icon name="chevron-back"></ion-icon>
-    </div>
-    <div class="ghost-arrow right" *ngIf="!isEnd" (click)="slideNext()">
-      <ion-icon name="chevron-forward"></ion-icon>
-    </div>
+    @if (!isBeginning) {
+      <div class="ghost-arrow left" (click)="slidePrev()">
+        <ion-icon name="chevron-back"></ion-icon>
+      </div>
+    }
+    @if (!isEnd) {
+      <div class="ghost-arrow right" (click)="slideNext()">
+        <ion-icon name="chevron-forward"></ion-icon>
+      </div>
+    }
   </div>
 
   <swiper-container #swiper pagination="true" style="height: 100%;" (swiperslidechange)="onSlideChange($event)">
@@ -24,7 +28,7 @@
       <div class="slide-content">
         <h2>Voorbereiding</h2>
         <div class="image-container">
-           <img src="assets/pv-safety.jpg" alt="Safety">
+          <img src="assets/pv-safety.jpg" alt="Safety">
         </div>
         <div class="instruction-box">
           <ul>
@@ -45,7 +49,7 @@
         <h2>Stap 1: Meting</h2>
 
         <div class="graph-view">
-           <img src="assets/pv-step1-settings.png" alt="Settings Stap 1">
+          <img src="assets/pv-step1-settings.png" alt="Settings Stap 1">
         </div>
 
         <div class="instruction-box">
@@ -137,7 +141,7 @@
         <h2>Stap 2: Recruteren</h2>
 
         <div class="graph-view">
-           <img src="assets/pv-step2-recruit.png" alt="Settings Stap 2">
+          <img src="assets/pv-step2-recruit.png" alt="Settings Stap 2">
         </div>
 
         <div class="instruction-box">
@@ -160,23 +164,23 @@
       <div class="slide-content">
         <h2>Resultaat</h2>
         <div class="graph-view">
-            <img src="assets/pv-step2-result.png" alt="Resultaat">
+          <img src="assets/pv-step2-result.png" alt="Resultaat">
         </div>
         <div class="instruction-box">
-            <p><strong>Succesvol als:</strong></p>
-            <ul>
-                <li>Volume winst > 2 ml/kg</li>
-                <li>SpO2 > 97% binnen 5 min</li>
-                <li>Bij goed resultaat eventueel procedure herhalen</li>
-            </ul>
-            <ion-button expand="block" color="success" (click)="sluit()" style="margin-top: 20px;">
-                <ion-icon name="checkmark-circle" slot="start"></ion-icon>
-                Afronden
-            </ion-button>
+          <p><strong>Succesvol als:</strong></p>
+          <ul>
+            <li>Volume winst > 2 ml/kg</li>
+            <li>SpO2 > 97% binnen 5 min</li>
+            <li>Bij goed resultaat eventueel procedure herhalen</li>
+          </ul>
+          <ion-button expand="block" color="success" (click)="sluit()" style="margin-top: 20px;">
+            <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+            Afronden
+          </ion-button>
 
-        <p class="subtext" style="margin-top: 20px;">
-  Voor meer informatie <a href="https://youtu.be/VXI-umXLybY?si=r5zj4Wi-z_6CG7_C" target="_blank" style="color: #69f0ae; text-decoration: underline;">bekijk</a> deze YouTube film
-</p>
+          <p class="subtext" style="margin-top: 20px;">
+            Voor meer informatie <a href="https://youtu.be/VXI-umXLybY?si=r5zj4Wi-z_6CG7_C" target="_blank" style="color: #69f0ae; text-decoration: underline;">bekijk</a> deze YouTube film
+          </p>
         </div>
       </div>
     </swiper-slide>

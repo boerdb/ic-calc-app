@@ -11,9 +11,11 @@
         <div style="font-weight: bold; font-size: 1em;">
           Bed {{ patient.selectedBedId || '?' }}
         </div>
-        <div *ngIf="patient.current?.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
-          {{ patient.current.naam }}
-        </div>
+        @if (patient.current.naam) {
+          <div style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
+            {{ patient.current.naam }}
+          </div>
+        }
       </div>
     </ion-buttons>
   </ion-toolbar>
@@ -37,37 +39,37 @@
         <ion-row>
           <ion-col size="6">
             <ion-input class="custom-green-input" label="FiO₂ (%)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-              [(ngModel)]="fio2"></ion-input>
+            [(ngModel)]="fio2"></ion-input>
           </ion-col>
           <ion-col size="6">
             <ion-input class="custom-green-input" label="PaCO₂ (kPa)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-              [(ngModel)]="paco2"></ion-input>
+            [(ngModel)]="paco2"></ion-input>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="6">
             <ion-input class="custom-green-input" label="PaO₂ (kPa)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-              [(ngModel)]="pao2"></ion-input>
+            [(ngModel)]="pao2"></ion-input>
           </ion-col>
           <ion-col size="6">
             <ion-input class="custom-green-input" label="Leeftijd (jaren)" label-placement="floating" fill="outline"  type="number" inputmode="decimal"
-              [(ngModel)]="patient.current.leeftijd" (ionInput)="patient.opslaan()"></ion-input>
+            [(ngModel)]="patient.current.leeftijd" (ionInput)="patient.opslaan()"></ion-input>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="4">
             <ion-input class="custom-green-input" label="Hb" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-              [(ngModel)]="hb"></ion-input>
+            [(ngModel)]="hb"></ion-input>
           </ion-col>
           <ion-col size="4">
             <ion-input class="custom-green-input" label="SaO₂ (%)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-              [(ngModel)]="sao2"></ion-input>
+            [(ngModel)]="sao2"></ion-input>
           </ion-col>
-           <ion-col size="4">
+          <ion-col size="4">
             <ion-input class="custom-green-input" label="ScvO₂ (%)" label-placement="floating" fill="outline" type="number" inputmode="decimal"
-              [(ngModel)]="svo2" placeholder="Optioneel"></ion-input>
+            [(ngModel)]="svo2" placeholder="Optioneel"></ion-input>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -78,69 +80,77 @@
             <ion-button expand="block" class="teal-btn" (click)="bereken()">Bereken Analyse</ion-button>
           </ion-col>
           <ion-col size="4">
-             <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
+            <ion-button expand="block" color="medium" fill="outline" (click)="reset()">Reset</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="toonResultaten" class="result-card">
-    <ion-card-header>
-      <ion-card-title>Resultaten</ion-card-title>
-    </ion-card-header>
-    <ion-list lines="full">
-
-      <ion-item *ngIf="resPAO2 !== null">
-        <ion-label>
-          <h2>Alveolaire O₂ (PAO₂)</h2>
-          <p>Beschikbare zuurstof in longblaasjes</p>
-        </ion-label>
-        <ion-note slot="end"><strong>{{ resPAO2 | number:'1.1-1' }} kPa</strong></ion-note>
-      </ion-item>
-
-      <ion-item *ngIf="resAaGrad !== null">
-        <ion-label>
-          <h2>A-a Gradiënt</h2>
-          <p>Verschil longblaasje vs bloed</p>
-          <p *ngIf="aaStatusTekst" style="font-size: 0.8em; opacity: 0.8;">
-             Verwacht max: {{ aaVerwacht | number:'1.1-1' }}
-          </p>
-        </ion-label>
-        <ion-badge slot="end" [color]="aaStatusKleur">
-           {{ resAaGrad | number:'1.1-1' }} ({{ aaStatusTekst }})
-        </ion-badge>
-      </ion-item>
-
-      <ion-item *ngIf="resPFRatio !== null">
-        <ion-label>
-          <h2>P/F Ratio (Horowitz)</h2>
-          <p>Oxygenatie index</p>
-        </ion-label>
-        <ion-badge slot="end" [color]="pfStatusKleur">
-          {{ resPFRatio | number:'1.0-0' }} ({{ pfStatusTekst }})
-        </ion-badge>
-      </ion-item>
-
-      <ion-item *ngIf="resCaO2 !== null">
-        <ion-label>
-          <h2>O₂ Content (CaO₂)</h2>
-          <p>Totale O₂ inhoud arterieel</p>
-        </ion-label>
-        <ion-note slot="end"><strong>{{ resCaO2 | number:'1.1-1' }} ml/dL</strong></ion-note>
-      </ion-item>
-
-      <ion-item *ngIf="resSvO2Message">
-        <ion-label class="ion-text-wrap">
-          <h2>ScvO₂ Interpretatie</h2>
-          <p style="font-size: 0.9em;">{{ resSvO2Message }}</p>
-        </ion-label>
-        <ion-badge slot="end" [color]="resSvO2Color" style="margin-left: 10px;">
-          {{ svo2 }}%
-        </ion-badge>
-      </ion-item>
-
-    </ion-list>
-  </ion-card>
+  @if (toonResultaten) {
+    <ion-card class="result-card">
+      <ion-card-header>
+        <ion-card-title>Resultaten</ion-card-title>
+      </ion-card-header>
+      <ion-list lines="full">
+        @if (resPAO2 !== null) {
+          <ion-item>
+            <ion-label>
+              <h2>Alveolaire O₂ (PAO₂)</h2>
+              <p>Beschikbare zuurstof in longblaasjes</p>
+            </ion-label>
+            <ion-note slot="end"><strong>{{ resPAO2 | number:'1.1-1' }} kPa</strong></ion-note>
+          </ion-item>
+        }
+        @if (resAaGrad !== null) {
+          <ion-item>
+            <ion-label>
+              <h2>A-a Gradiënt</h2>
+              <p>Verschil longblaasje vs bloed</p>
+              @if (aaStatusTekst) {
+                <p style="font-size: 0.8em; opacity: 0.8;">
+                  Verwacht max: {{ aaVerwacht | number:'1.1-1' }}
+                </p>
+              }
+            </ion-label>
+            <ion-badge slot="end" [color]="aaStatusKleur">
+              {{ resAaGrad | number:'1.1-1' }} ({{ aaStatusTekst }})
+            </ion-badge>
+          </ion-item>
+        }
+        @if (resPFRatio !== null) {
+          <ion-item>
+            <ion-label>
+              <h2>P/F Ratio (Horowitz)</h2>
+              <p>Oxygenatie index</p>
+            </ion-label>
+            <ion-badge slot="end" [color]="pfStatusKleur">
+              {{ resPFRatio | number:'1.0-0' }} ({{ pfStatusTekst }})
+            </ion-badge>
+          </ion-item>
+        }
+        @if (resCaO2 !== null) {
+          <ion-item>
+            <ion-label>
+              <h2>O₂ Content (CaO₂)</h2>
+              <p>Totale O₂ inhoud arterieel</p>
+            </ion-label>
+            <ion-note slot="end"><strong>{{ resCaO2 | number:'1.1-1' }} ml/dL</strong></ion-note>
+          </ion-item>
+        }
+        @if (resSvO2Message) {
+          <ion-item>
+            <ion-label class="ion-text-wrap">
+              <h2>ScvO₂ Interpretatie</h2>
+              <p style="font-size: 0.9em;">{{ resSvO2Message }}</p>
+            </ion-label>
+            <ion-badge slot="end" [color]="resSvO2Color" style="margin-left: 10px;">
+              {{ svo2 }}%
+            </ion-badge>
+          </ion-item>
+        }
+      </ion-list>
+    </ion-card>
+  }
 
 </ion-content>

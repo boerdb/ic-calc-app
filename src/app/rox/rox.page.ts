@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton,
@@ -18,12 +18,22 @@ import { PatientService } from '../services/patient';
   styleUrls: ['./rox.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton,
-    IonCard, IonCardContent, IonGrid, IonRow, IonCol,
-    IonInput, IonButton, IonIcon
-  ]
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonButtons,
+    IonMenuButton,
+    IonCard,
+    IonCardContent,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonInput,
+    IonButton,
+    IonIcon
+]
 })
 export class RoxPage {
   // Injecteer de ModalController (net als in Tab 2)

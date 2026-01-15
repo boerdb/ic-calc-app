@@ -11,9 +11,11 @@
         <div style="font-weight: bold; font-size: 1em;">
           Bed {{ patient.selectedBedId || '?' }}
         </div>
-        <div *ngIf="patient.current?.naam" style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
-          {{ patient.current.naam }}
-        </div>
+        @if (patient.current.naam) {
+          <div style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
+            {{ patient.current.naam }}
+          </div>
+        }
       </div>
     </ion-buttons>
   </ion-toolbar>
@@ -65,17 +67,19 @@
         </ion-row>
       </ion-grid>
 
-      <div class="co2-result-box" *ngIf="co2Gradient !== null">
-        <div class="result-row">
-          <span>P(a-et)CO₂ Gap:</span>
-          <span class="value" [style.color]="gapColor">{{ co2Gradient }} kPa</span>
+      @if (co2Gradient !== null) {
+        <div class="co2-result-box">
+          <div class="result-row">
+            <span>P(a-et)CO₂ Gap:</span>
+            <span class="value" [style.color]="gapColor">{{ co2Gradient }} kPa</span>
+          </div>
+          <div class="result-row">
+            <span>Est. Vd/Vt (Dode Ruimte):</span>
+            <span class="value" [style.color]="vdColor">{{ deadSpacePerc }}%</span>
+          </div>
+          <div class="score-advies">{{ co2Advies }}</div>
         </div>
-        <div class="result-row">
-          <span>Est. Vd/Vt (Dode Ruimte):</span>
-          <span class="value" [style.color]="vdColor">{{ deadSpacePerc }}%</span>
-        </div>
-        <div class="score-advies">{{ co2Advies }}</div>
-      </div>
+      }
     </ion-card-content>
   </ion-card>
 
@@ -115,11 +119,13 @@
         </ion-row>
       </ion-grid>
 
-      <div class="rox-result-box" *ngIf="roxScore !== null">
-        <div class="score-label">ROX Score</div>
-        <div class="score-value" [style.color]="roxColor">{{ roxScore }}</div>
-        <div class="score-advies">{{ roxAdvies }}</div>
-      </div>
+      @if (roxScore !== null) {
+        <div class="rox-result-box">
+          <div class="score-label">ROX Score</div>
+          <div class="score-value" [style.color]="roxColor">{{ roxScore }}</div>
+          <div class="score-advies">{{ roxAdvies }}</div>
+        </div>
+      }
     </ion-card-content>
   </ion-card>
 

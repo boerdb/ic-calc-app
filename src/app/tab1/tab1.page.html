@@ -6,9 +6,11 @@
 
     <ion-title>
       Bed {{ patient.selectedBedId }}
-      <span *ngIf="patient.current?.naam" style="font-size: 0.8em; opacity: 0.9;">
+      @if (patient.current.naam) {
+        <span style="font-size: 0.8em; opacity: 0.9;">
           - {{ patient.current.naam }}
-      </span>
+        </span>
+      }
     </ion-title>
 
     <ion-buttons slot="end">
@@ -21,9 +23,11 @@
           [interfaceOptions]="{'cssClass': 'mijn-bed-popover'}"
           placeholder="Kies"
           toggleIcon="chevron-down-outline">
-          <ion-select-option *ngFor="let bed of patient.beds" [value]="bed.bedId">
-            Bed {{ bed.bedId }}
-          </ion-select-option>
+          @for (bed of patient.beds; track bed) {
+            <ion-select-option [value]="bed.bedId">
+              Bed {{ bed.bedId }}
+            </ion-select-option>
+          }
         </ion-select>
       </div>
     </ion-buttons>
@@ -109,21 +113,22 @@
         </ion-row>
       </ion-grid>
 
-      <div *ngIf="patient.current.ibw || patient.current.bsa" style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
-        <ion-item lines="none" class="result-item" style="--background: transparent; --min-height: 30px;">
-          <ion-label style="color: #aaa;">Ideaal Gewicht (IBW)</ion-label>
-          <ion-note slot="end" style="font-size: 1.2em; font-weight: bold; color: #28a745;">
-            {{ patient.current.ibw | number:'1.0-0' }} kg
-          </ion-note>
-        </ion-item>
-
-        <ion-item lines="none" class="result-item" style="--background: transparent; --min-height: 30px;">
-          <ion-label style="color: #aaa;">Lichaamsoppervlak (BSA)</ion-label>
-          <ion-note slot="end" style="font-size: 1.2em; font-weight: bold; color: #28a745;">
-            {{ patient.current.bsa | number:'1.2-2' }} m²
-          </ion-note>
-        </ion-item>
-      </div>
+      @if (patient.current.ibw || patient.current.bsa) {
+        <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+          <ion-item lines="none" class="result-item" style="--background: transparent; --min-height: 30px;">
+            <ion-label style="color: #aaa;">Ideaal Gewicht (IBW)</ion-label>
+            <ion-note slot="end" style="font-size: 1.2em; font-weight: bold; color: #28a745;">
+              {{ patient.current.ibw | number:'1.0-0' }} kg
+            </ion-note>
+          </ion-item>
+          <ion-item lines="none" class="result-item" style="--background: transparent; --min-height: 30px;">
+            <ion-label style="color: #aaa;">Lichaamsoppervlak (BSA)</ion-label>
+            <ion-note slot="end" style="font-size: 1.2em; font-weight: bold; color: #28a745;">
+              {{ patient.current.bsa | number:'1.2-2' }} m²
+            </ion-note>
+          </ion-item>
+        </div>
+      }
 
       <div style="margin-top: 30px; text-align: center;">
         <ion-button color="danger" fill="outline" (click)="wisPatient()">
@@ -199,10 +204,10 @@
         </ion-card>
 
         <br>
-       <ion-button expand="block" class="teal-btn" (click)="setOpen(false)">
-  OK!
-</ion-button>
-      </div>
-    </ion-content>
-  </ng-template>
-</ion-modal>
+          <ion-button expand="block" class="teal-btn" (click)="setOpen(false)">
+            OK!
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>

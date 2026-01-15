@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule, ModalController } from '@ionic/angular';
 import { register } from 'swiper/element/bundle';
 
@@ -10,7 +10,7 @@ register();
   templateUrl: './pv-wizard.component.html',
   styleUrls: ['./pv-wizard.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PvWizardComponent {

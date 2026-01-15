@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -28,12 +28,24 @@ import { PatientService } from '../services/patient';
   styleUrls: ['./tab4.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, FormsModule,
-    IonContent, IonHeader, IonToolbar, IonTitle,
-    IonCard, IonCardHeader, IonCardTitle, IonCardContent,
-     IonInput, IonGrid, IonRow, IonCol,
-    IonButton, IonButtons, IonIcon, IonMenuButton
-  ]
+    FormsModule,
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonInput,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonButton,
+    IonButtons,
+    IonIcon,
+    IonMenuButton
+]
 })
 export class Tab4Page {
 

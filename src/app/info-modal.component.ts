@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
   IonIcon, ModalController
@@ -11,7 +11,7 @@ import { closeOutline } from 'ionicons/icons';
 @Component({
   selector: 'app-info-modal',
   standalone: true,
-  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonIcon],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonIcon],
   template: `
     <ion-header class="ion-no-border">
       <ion-toolbar>

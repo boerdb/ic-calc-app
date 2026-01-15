@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { PatientService } from '../services/patient';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonToolbar, IonTitle,
@@ -13,7 +13,7 @@ import {
   templateUrl: './nierfunctie.page.html',
   styleUrls: ['./nierfunctie.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonHeader, IonToolbar, IonTitle, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonInput, IonButton, IonNote, IonButtons, IonMenuButton]
+  imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonTitle, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonInput, IonButton, IonNote, IonButtons, IonMenuButton]
 })
 export class NierfunctiePage {
   public patient = inject(PatientService);

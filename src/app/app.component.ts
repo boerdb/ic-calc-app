@@ -1,5 +1,5 @@
 import { Component, HostListener, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   IonApp, IonRouterOutlet, IonIcon, IonSplitPane,
   IonMenu, IonHeader, IonToolbar, IonTitle,
@@ -34,12 +34,7 @@ interface MenuGroup {
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [IonFooter,
-    IonApp, IonRouterOutlet, IonIcon, IonSplitPane,
-    IonMenu, IonHeader, IonToolbar, IonTitle,
-    IonContent, IonList, IonItem, IonLabel,
-    CommonModule, RouterLink, IonMenuToggle, IonListHeader
-  ],
+  imports: [IonFooter, IonApp, IonRouterOutlet, IonIcon, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, RouterLink, IonMenuToggle, IonListHeader],
 })
 export class AppComponent {
 

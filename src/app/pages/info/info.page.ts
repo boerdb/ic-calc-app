@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons,
   IonMenuButton, IonText } from '@ionic/angular/standalone';
@@ -9,11 +9,7 @@ import {
   templateUrl: 'info.page.html',
   styleUrls: ['info.page.scss'],
   standalone: true,
-  imports: [IonText,
-    CommonModule,
-    IonHeader, IonToolbar, IonTitle, IonContent, IonButtons,
-    IonMenuButton
-  ]
+  imports: [IonText, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonMenuButton]
 })
 export class InfoPage {
   constructor() {}

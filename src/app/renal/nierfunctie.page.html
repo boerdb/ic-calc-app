@@ -9,7 +9,9 @@
     <ion-buttons slot="end" class="page-header-bed">
       <div class="bed-info">
         <div class="bed-number">Bed {{ patient.selectedBedId || '?' }}</div>
-        <div *ngIf="patient.current?.naam" class="bed-name">{{ patient.current.naam }}</div>
+        @if (patient.current.naam) {
+          <div class="bed-name">{{ patient.current.naam }}</div>
+        }
       </div>
     </ion-buttons>
   </ion-toolbar>
@@ -30,7 +32,7 @@
           </ion-col>
           <ion-col size="6">
             <ion-input class="custom-green-input" label="Leeftijd (jaren)" label-placement="floating" type="number" fill="outline"
-              [(ngModel)]="patient.current.leeftijd" (ionInput)="patient.opslaan(); calculateEGFR()"></ion-input>
+            [(ngModel)]="patient.current.leeftijd" (ionInput)="patient.opslaan(); calculateEGFR()"></ion-input>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -43,10 +45,12 @@
         </ion-row>
       </ion-grid>
 
-      <div *ngIf="computedEgfr !== null" class="egfr-margin">
-        <h3>Geschatte eGFR</h3>
-        <p><strong>{{ computedEgfr }} mL/min/1.73m²</strong> <ion-note> (bij benadering, demo)</ion-note></p>
-      </div>
+      @if (computedEgfr !== null) {
+        <div class="egfr-margin">
+          <h3>Geschatte eGFR</h3>
+          <p><strong>{{ computedEgfr }} mL/min/1.73m²</strong> <ion-note> (bij benadering, demo)</ion-note></p>
+        </div>
+      }
 
       <h3 class="quick-ref">Quick reference</h3>
       <ul>
