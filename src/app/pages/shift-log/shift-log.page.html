@@ -1,0 +1,79 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button style="color: var(--med-teal);"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Smart Notes</ion-title>
+
+    <ion-buttons slot="end" style="margin-right: 10px;">
+      @if (patientService.current) {
+        <div style="text-align: right; color: white;">
+          <div style="font-weight: bold; font-size: 1em;">
+            Bed {{ patientService.current.bedId || '?' }}
+          </div>
+          @if (patientService.current.naam) {
+            <div style="font-size: 0.7em; opacity: 0.8; margin-top: -2px;">
+              {{ patientService.current.naam }}
+            </div>
+          }
+        </div>
+      }
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding modal-leather-dark">
+
+  @if (logService.notes().length === 0) {
+    <div style="text-align: center; margin-top: 50px; color: gray;">
+      <ion-icon name="document-text-outline" size="large"></ion-icon>
+      <p>Nog geen notities.</p>
+    </div>
+  }
+
+  <ion-list>
+    @for (note of logService.notes(); track note.id) {
+      <ion-item-sliding>
+
+        <ion-item button lines="full">
+          <ion-icon
+            [name]="note.priority === 'high' ? 'alert-circle' : 'information-circle'"
+            [color]="note.priority === 'high' ? 'danger' : 'medium'"
+            slot="start">
+          </ion-icon>
+          <ion-label class="ion-text-wrap">
+            <h2>{{ note.bedNumber }}</h2>
+            <p>{{ note.content }}</p>
+            @if (note.reminderTime) {
+              <p style="font-size: 0.8em; color: var(--ion-color-primary);">
+                ⏰ {{ note.reminderTime | date:'HH:mm' }}
+              </p>
+            }
+          </ion-label>
+
+          <ion-checkbox
+            slot="end"
+            [checked]="note.isCompleted"
+            (ionChange)="toggleStatus(note)"
+            aria-label="Markeer als gedaan">
+          </ion-checkbox>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="deleteNote(note.id)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+
+      </ion-item-sliding>
+    }
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openAddModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

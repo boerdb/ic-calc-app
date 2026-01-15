@@ -76,7 +76,8 @@ export class AppComponent {
       icon: 'layers-outline',  // Het nieuwe icoon
       color: 'success',         // Grijs (neutraal) of 'success' (groen)
       items: [
-        { title: 'Patiëntbeheer', url: '/patient', icon: 'people-outline' }
+        { title: 'Patiëntbeheer', url: '/patient', icon: 'people-outline' },
+        { title: 'Smart Notes', url: '/shift-log', icon: 'clipboard' }
       ]
     }
   ];

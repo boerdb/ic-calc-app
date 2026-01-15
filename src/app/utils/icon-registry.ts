@@ -14,6 +14,8 @@ import {
   heartOutline,
   waterOutline,
   fitnessOutline,
+  clipboardOutline,
+  clipboardSharp,
 
   // Tab 1
   maleOutline,
@@ -77,6 +79,9 @@ export function registerAppIcons(): void {
    'ventilation': 'assets/icons/ventilation.svg',
     'circulation': 'assets/icons/circulation.svg',
     'renal': 'assets/icons/renal.svg',
+    'clipboard': clipboardOutline,       // Of hoe je ze ook noemt in je systeem
+    'clipboard-outline': clipboardOutline,
+    'clipboard-sharp': clipboardSharp,
 
     // App Component
     downloadOutline,

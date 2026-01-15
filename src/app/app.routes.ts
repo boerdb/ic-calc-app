@@ -49,5 +49,9 @@ export const routes: Routes = [
   {
     path: 'info',
     loadComponent: () => import('./pages/info/info.page').then(m => m.InfoPage)
+  },  {
+    path: 'shift-log',
+    loadComponent: () => import('./pages/shift-log/shift-log.page').then( m => m.ShiftLogPage)
   }
+
 ];
