@@ -67,43 +67,7 @@ ion-label {
   font-weight: 500;
 }
 
-// Datum/tijd knop
-ion-datetime-button {
-  --background: rgba(123, 94, 255, 0.25); // Increased opacity for better visibility
-  --border-radius: 12px;
-  margin-left: auto;
-  padding: 10px 16px;
-  font-weight: 500;
-  transition: all 0.25s ease;
-  
-  // Explicitly set text color - ion-datetime-button inherits color from parent
-  color: #e0e0ff !important; // Brighter color for better visibility
-  
-  // Add a subtle border for definition
-  border: 1px solid rgba(160, 160, 255, 0.3);
-  
-  // Ensure button is visible and interactive
-  display: inline-block;
-  opacity: 1;
-  visibility: visible;
-
-  &:hover {
-    --background: rgba(123, 94, 255, 0.4);
-    transform: scale(1.03);
-  }
-}
-
-// Target the shadow DOM parts of ion-datetime-button for text visibility
-ion-datetime-button::part(native) {
-  color: #e0e0ff !important;
-}
-
-ion-datetime-button::part(time-button),
-ion-datetime-button::part(date-button) {
-  color: #e0e0ff !important;
-}
-
-// Pop-up datetime zelf ook dark + modern
+// Inline datetime picker styling for dark mode
 ion-datetime {
   --background: #141419;
   --background-rgb: 20, 20, 25;
@@ -114,16 +78,5 @@ ion-datetime {
   border-radius: 20px;
   padding: 16px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-}
-
-// Ensure the modal containing the datetime is properly styled
-ion-modal {
-  --background: rgba(20, 20, 25, 0.95);
-  
-  ion-datetime {
-    --background: #141419;
-    --background-rgb: 20, 20, 25;
-    --color: #f0f0ff;
-    color: #f0f0ff !important; // Force text color for all datetime elements
-  }
+  margin-top: 16px;
 }
