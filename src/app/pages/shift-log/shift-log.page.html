@@ -47,8 +47,8 @@
             <p>{{ note.content }}</p>
             @if (note.reminderTime) {
               <p style="font-size: 0.8em; color: var(--ion-color-primary);">
-                ⏰ {{ note.reminderTime | date:'HH:mm' }}
-              </p>
+  ⏰ {{ note.reminderTime | date:'d MMM HH:mm' }}
+</p>
             }
           </ion-label>
 

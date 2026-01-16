@@ -6,8 +6,8 @@ import { ShiftNote } from '../models/shift-note.model';
   providedIn: 'root'
 })
 export class ShiftLogService {
-  // De signal die de lijst met notities bevat
-  private _notes = signal<ShiftNote[]>([]);
+  // 1. We laden direct bij het opstarten de data uit het geheugen
+  private _notes = signal<ShiftNote[]>(this.loadFromStorage());
   readonly notes = this._notes.asReadonly();
 
   constructor() {
@@ -15,11 +15,10 @@ export class ShiftLogService {
   }
 
   async requestPermissions() {
-    // Vraag toestemming voor notificaties (werkt vooral op mobiel)
     try {
       await LocalNotifications.requestPermissions();
     } catch (e) {
-      console.log('Geen notificatie support (bijv. in browser)', e);
+      console.log('Geen notificatie support', e);
     }
   }
 
@@ -37,9 +36,13 @@ export class ShiftLogService {
     };
 
     // Update de lijst
-    this._notes.update(notes => [...notes, newNote]);
+    this._notes.update(notes => {
+      const updatedList = [...notes, newNote];
+      this.saveToStorage(updatedList); // <--- OPSLAAN
+      return updatedList;
+    });
 
-    // Plan notificatie in (als er een tijd is)
+    // Plan notificatie in
     if (reminderTime) {
       try {
         await LocalNotifications.schedule({
@@ -61,19 +64,50 @@ export class ShiftLogService {
 
   // --- UPDATE ---
   updateNote(updatedNote: ShiftNote) {
-    this._notes.update(notes =>
-      notes.map(note => note.id === updatedNote.id ? updatedNote : note)
-    );
+    this._notes.update(notes => {
+      const updatedList = notes.map(note => note.id === updatedNote.id ? updatedNote : note);
+      this.saveToStorage(updatedList); // <--- OPSLAAN
+      return updatedList;
+    });
   }
 
   // --- DELETE ---
   async deleteNote(id: number) {
-    this._notes.update(notes => notes.filter(n => n.id !== id));
+    this._notes.update(notes => {
+      const updatedList = notes.filter(n => n.id !== id);
+      this.saveToStorage(updatedList); // <--- OPSLAAN
+      return updatedList;
+    });
 
     try {
       await LocalNotifications.cancel({ notifications: [{ id: id }] });
     } catch (e) {
-      // negeer fouten als notificatie al weg was
+      // negeer foutjes
     }
+  }
+
+  // ==========================================================
+  //  OPSLAG LOGICA (LocalStorage)
+  // ==========================================================
+
+  private saveToStorage(notes: ShiftNote[]) {
+    // We zetten de array om naar tekst (JSON) en slaan het op
+    localStorage.setItem('smart_notes_data', JSON.stringify(notes));
+  }
+
+  private loadFromStorage(): ShiftNote[] {
+    const data = localStorage.getItem('smart_notes_data');
+    if (data) {
+      // We toveren de tekst weer om naar een array
+      const parsedNotes = JSON.parse(data);
+
+      // Klein trucje: Datums komen als tekst uit opslag ('2023-11-20...'),
+      // dus we maken er weer echte Date objecten van voor de zekerheid.
+      return parsedNotes.map((n: any) => ({
+        ...n,
+        reminderTime: n.reminderTime ? new Date(n.reminderTime) : undefined
+      }));
+    }
+    return []; // Als er niks is, begin met lege lijst
   }
 }
