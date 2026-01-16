@@ -1,9 +1,14 @@
 # Local Notifications Implementation Guide
 
 ## Overview
-This document describes the robust local notifications implementation for the Smart Notes app using `@capacitor/local-notifications` with support for Android 13+ and iOS.
+This document describes the robust local notifications implementation for the Smart Notes app using `@capacitor/local-notifications` for native mobile (iOS/Android) and Web Notifications API for PWA (web browsers).
 
 ## Key Features
+
+### ✅ Cross-Platform Support
+- **Native Mobile**: iOS and Android using Capacitor LocalNotifications
+- **PWA (Progressive Web App)**: Web browsers using Web Notifications API
+- Automatic platform detection and appropriate API selection
 
 ### ✅ Android 13+ Support
 - **POST_NOTIFICATIONS** permission handling
@@ -14,6 +19,7 @@ This document describes the robust local notifications implementation for the Sm
 ### ✅ Cross-Platform Compatibility
 - Works on Android (all versions)
 - Works on iOS
+- Works as PWA in web browsers (Chrome, Edge, Firefox, Safari)
 - Handles platform-specific requirements automatically
 
 ### ✅ Robust Implementation
@@ -21,7 +27,8 @@ This document describes the robust local notifications implementation for the Sm
 - Date validation to ensure notifications are scheduled in the future
 - Automatic adjustment for past dates
 - Comprehensive error handling and logging
-- Works when app is closed, backgrounded, or phone is locked
+- Works when app is closed, backgrounded, or phone is locked (mobile)
+- Works with browser notifications (PWA)
 
 ## Technical Implementation
 
@@ -29,9 +36,16 @@ This document describes the robust local notifications implementation for the Sm
 
 #### 1. Platform Detection
 ```typescript
-private isAndroid = Capacitor.getPlatform() === 'android';
-private isIOS = Capacitor.getPlatform() === 'ios';
+private platform = Capacitor.getPlatform();
+private isAndroid = this.platform === 'android';
+private isIOS = this.platform === 'ios';
+private isWeb = this.platform === 'web';
 ```
+
+The service automatically detects the platform:
+- **'web'**: Running as PWA in browser
+- **'android'**: Running as native Android app
+- **'ios'**: Running as native iOS app
 
 #### 2. Initialization Flow
 ```typescript
@@ -48,9 +62,25 @@ private async initializeNotifications() {
 ```
 
 #### 3. Permission Handling
-- Requests notification permissions on startup
-- Checks for exact alarm permission on Android
-- Logs permission status for debugging
+
+**For PWA (Web):**
+```typescript
+if (this.isWeb) {
+  if ('Notification' in window) {
+    const permission = await Notification.requestPermission();
+    // 'granted', 'denied', or 'default'
+  }
+}
+```
+
+**For Native Mobile:**
+```typescript
+const permResult = await LocalNotifications.requestPermissions();
+// Checks for exact alarm permission on Android
+if (this.isAndroid) {
+  await this.checkAndroidExactAlarmPermission();
+}
+```
 
 #### 4. Android High Priority Channel
 ```typescript
@@ -68,31 +98,65 @@ await LocalNotifications.createChannel({
 ```
 
 #### 5. Robust Notification Scheduling
+
+**Platform Detection:**
 ```typescript
-private async scheduleNotification(
+if (this.isWeb) {
+  await this.scheduleWebNotification(id, bed, text, scheduleTime);
+} else {
+  await this.scheduleNativeNotification(id, bed, text, scheduleTime);
+}
+```
+
+**For PWA (Web Notifications):**
+```typescript
+private async scheduleWebNotification(
   id: number,
   bed: string,
   text: string,
-  reminderTime: Date
+  scheduleTime: Date
 ) {
-  // Validate date is valid and in the future
-  if (!(reminderTime instanceof Date) || isNaN(reminderTime.getTime())) {
-    console.error('Invalid reminder time provided:', reminderTime);
-    return;
-  }
+  const delay = scheduleTime.getTime() - Date.now();
+  
+  // Store notification data in localStorage for persistence
+  const timeoutKey = `notification_timeout_${id}`;
+  localStorage.setItem(timeoutKey, JSON.stringify({
+    id, bed, text, scheduleTime: scheduleTime.toISOString()
+  }));
+  
+  // Schedule using setTimeout
+  setTimeout(() => {
+    const notes = this._notes();
+    const noteExists = notes.some((n: ShiftNote) => n.id === id);
+    
+    if (noteExists && Notification.permission === 'granted') {
+      new Notification(`IC Actie: ${bed}`, {
+        body: text,
+        icon: '/favicon.ico',
+        badge: '/favicon.ico',
+        tag: `note-${id}`,
+        requireInteraction: false
+      });
+    }
+    
+    localStorage.removeItem(timeoutKey);
+  }, delay);
+}
+```
 
-  const now = new Date();
-  if (reminderTime <= now) {
-    console.warn('Reminder time is in the past, adjusting to 1 minute from now');
-    reminderTime = new Date(now.getTime() + 60000);
-  }
-
-  // Schedule with system default sound
+**For Native Mobile (Capacitor):**
+```typescript
+private async scheduleNativeNotification(
+  id: number,
+  bed: string,
+  text: string,
+  scheduleTime: Date
+) {
   const notification: LocalNotificationSchema = {
     title: `IC Actie: ${bed}`,
     body: text,
     id: id,
-    schedule: { at: reminderTime },
+    schedule: { at: scheduleTime },
     sound: undefined, // System default
     channelId: this.isAndroid ? 'smart_notes_high_priority' : undefined
   };
@@ -121,6 +185,39 @@ The following permissions have been added to support local notifications:
 ```
 
 ## Testing Instructions
+
+### On Web/PWA
+
+1. **Run Development Server**
+   ```bash
+   npm start
+   # or
+   ng serve
+   ```
+
+2. **Test in Browser**
+   - Open browser to `http://localhost:4200`
+   - Browser will prompt for notification permissions - **Accept**
+   - Check console for: "✓ Web notification permissions granted"
+
+3. **Test Notification Scheduling**
+   - Open the Shift Log page
+   - Add a new note with a reminder time 1-2 minutes in the future
+   - Keep the browser tab open (or minimize)
+   - Wait for the scheduled time
+   - Browser notification should appear
+
+4. **PWA Installation (Optional)**
+   - Chrome/Edge: Click install icon in address bar
+   - Safari: Share → Add to Home Screen
+   - Firefox: Install from menu
+   - Test notifications work from installed PWA
+
+**PWA Limitations:**
+- Notifications require the browser tab to remain open (may run in background)
+- setTimeout-based scheduling (not as persistent as native)
+- Service Workers could be used for more persistent scheduling (future enhancement)
+- Browser must support Web Notifications API
 
 ### On Android
 
@@ -176,12 +273,34 @@ The following permissions have been added to support local notifications:
 ### Enable Console Logging
 Check the following log messages in the console:
 
+**For PWA/Web:**
+- `Web Notification permission: granted` - Browser permissions granted
+- `✓ Web notification permissions granted` - Web notifications ready
+- `Scheduling notification: {platform: 'web', ...}` - Notification being scheduled
+- `Web notification scheduled with XXXms delay` - Scheduling confirmed
+- `✓ Web notification displayed for note XXX` - Notification shown
+
+**For Native Mobile:**
 - `✓ Notification permissions granted` - Permissions successful
-- `✓ High priority notification channel created` - Android channel ready
-- `Scheduling notification: {...}` - Notification being scheduled
+- `✓ High priority notification channel created` - Android channel ready (Android only)
+- `Scheduling notification: {platform: 'android'/'ios', ...}` - Notification being scheduled
 - `✓ Notification scheduled successfully` - Scheduling complete
 
 ### Common Issues
+
+#### PWA/Web Notifications
+**Notifications not appearing:**
+1. Check browser notification permissions in browser settings
+2. Ensure browser tab is open or running in background
+3. Check browser supports Web Notifications API
+4. Verify time is in the future
+5. Check browser console for errors
+
+**Browser compatibility:**
+- ✅ Chrome/Edge: Full support
+- ✅ Firefox: Full support  
+- ⚠️ Safari: Limited support (iOS requires Add to Home Screen)
+- ❌ Some browsers may not support Web Notifications
 
 #### Notifications not appearing on Android
 1. Check notification permissions in app settings

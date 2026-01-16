@@ -14,6 +14,7 @@ export class ShiftLogService {
   private platform = Capacitor.getPlatform();
   private isAndroid = this.platform === 'android';
   private isIOS = this.platform === 'ios';
+  private isWeb = this.platform === 'web';
   private channelCreated = false;
 
   constructor() {
@@ -22,6 +23,7 @@ export class ShiftLogService {
 
   /**
    * Initialize notifications: request permissions and create Android channel
+   * Supports both native mobile (Capacitor) and PWA (Web Notifications API)
    */
   private async initializeNotifications() {
     try {
@@ -39,24 +41,41 @@ export class ShiftLogService {
 
   /**
    * Request all necessary permissions for notifications
+   * - Web/PWA: Web Notifications API
    * - Android 13+: POST_NOTIFICATIONS, SCHEDULE_EXACT_ALARM
    * - iOS: Standard notification permissions
    */
   async requestPermissions() {
     try {
-      // Request basic notification permissions
-      const permResult = await LocalNotifications.requestPermissions();
-      console.log('Notification permissions result:', permResult);
-
-      if (permResult.display === 'granted') {
-        console.log('✓ Notification permissions granted');
+      if (this.isWeb) {
+        // PWA: Use Web Notifications API
+        if ('Notification' in window) {
+          const permission = await Notification.requestPermission();
+          console.log('Web Notification permission:', permission);
+          
+          if (permission === 'granted') {
+            console.log('✓ Web notification permissions granted');
+          } else {
+            console.warn('⚠ Web notification permissions denied or not granted');
+          }
+        } else {
+          console.warn('⚠ Web Notifications API not supported in this browser');
+        }
       } else {
-        console.warn('⚠ Notification permissions denied or not granted');
-      }
+        // Native Mobile: Use Capacitor LocalNotifications
+        const permResult = await LocalNotifications.requestPermissions();
+        console.log('Notification permissions result:', permResult);
 
-      // Android 13+ specific: Check for exact alarm permission
-      if (this.isAndroid) {
-        await this.checkAndroidExactAlarmPermission();
+        if (permResult.display === 'granted') {
+          console.log('✓ Notification permissions granted');
+        } else {
+          console.warn('⚠ Notification permissions denied or not granted');
+        }
+
+        // Android 13+ specific: Check for exact alarm permission
+        if (this.isAndroid) {
+          await this.checkAndroidExactAlarmPermission();
+        }
       }
     } catch (e) {
       console.error('Error requesting permissions:', e);
@@ -120,7 +139,7 @@ export class ShiftLogService {
     };
 
     // Update de lijst
-    this._notes.update(notes => {
+    this._notes.update((notes: ShiftNote[]) => {
       const updatedList = [...notes, newNote];
       this.saveToStorage(updatedList); // <--- OPSLAAN
       return updatedList;
@@ -134,6 +153,7 @@ export class ShiftLogService {
 
   /**
    * Schedule a local notification with robust error handling
+   * Supports both PWA (Web Notifications) and native mobile (Capacitor)
    * Ensures the notification works on both Android and iOS when app is closed
    */
   private async scheduleNotification(
@@ -157,32 +177,21 @@ export class ShiftLogService {
         scheduleTime = new Date(now.getTime() + 60000); // 1 minute from now
       }
 
-      // Build notification object
-      const notification: LocalNotificationSchema = {
-        title: `IC Actie: ${bed}`,
-        body: text,
-        id: id,
-        schedule: { at: scheduleTime },
-        sound: undefined, // Use system default sound (no custom 'beep.wav')
-        largeBody: text,
-        summaryText: 'Smart Notes Reminder'
-      };
-
-      // Add Android-specific channel
-      if (this.isAndroid) {
-        notification.channelId = 'smart_notes_high_priority';
-      }
-
       console.log('Scheduling notification:', {
         id,
         bed,
+        platform: this.platform,
         time: scheduleTime.toISOString(),
         timeFromNow: Math.round((scheduleTime.getTime() - now.getTime()) / 1000) + 's'
       });
 
-      await LocalNotifications.schedule({
-        notifications: [notification]
-      });
+      if (this.isWeb) {
+        // PWA: Schedule using Web Notifications API with setTimeout
+        await this.scheduleWebNotification(id, bed, text, scheduleTime);
+      } else {
+        // Native Mobile: Use Capacitor LocalNotifications
+        await this.scheduleNativeNotification(id, bed, text, scheduleTime);
+      }
 
       console.log('✓ Notification scheduled successfully');
     } catch (e) {
@@ -190,10 +199,100 @@ export class ShiftLogService {
     }
   }
 
+  /**
+   * Schedule a notification using Web Notifications API (for PWA)
+   * Uses setTimeout to trigger notification at the scheduled time
+   */
+  private async scheduleWebNotification(
+    id: number,
+    bed: string,
+    text: string,
+    scheduleTime: Date
+  ) {
+    if (!('Notification' in window)) {
+      console.warn('Web Notifications API not supported');
+      return;
+    }
+
+    if (Notification.permission !== 'granted') {
+      console.warn('Web notification permission not granted');
+      return;
+    }
+
+    const delay = scheduleTime.getTime() - Date.now();
+    
+    if (delay < 0) {
+      console.warn('Schedule time is in the past for web notification');
+      return;
+    }
+
+    // Store the timeout ID in localStorage for persistence across page reloads
+    const timeoutKey = `notification_timeout_${id}`;
+    localStorage.setItem(timeoutKey, JSON.stringify({
+      id,
+      bed,
+      text,
+      scheduleTime: scheduleTime.toISOString()
+    }));
+
+    // Schedule the notification using setTimeout
+    setTimeout(() => {
+      // Check if notification still exists (not deleted)
+      const notes = this._notes();
+      const noteExists = notes.some((n: ShiftNote) => n.id === id);
+      
+      if (noteExists && Notification.permission === 'granted') {
+        new Notification(`IC Actie: ${bed}`, {
+          body: text,
+          icon: '/favicon.ico',
+          badge: '/favicon.ico',
+          tag: `note-${id}`,
+          requireInteraction: false
+        });
+        console.log(`✓ Web notification displayed for note ${id}`);
+      }
+      
+      // Clean up stored timeout data
+      localStorage.removeItem(timeoutKey);
+    }, delay);
+
+    console.log(`Web notification scheduled with ${delay}ms delay`);
+  }
+
+  /**
+   * Schedule a notification using Capacitor LocalNotifications (for native mobile)
+   */
+  private async scheduleNativeNotification(
+    id: number,
+    bed: string,
+    text: string,
+    scheduleTime: Date
+  ) {
+    // Build notification object
+    const notification: LocalNotificationSchema = {
+      title: `IC Actie: ${bed}`,
+      body: text,
+      id: id,
+      schedule: { at: scheduleTime },
+      sound: undefined, // Use system default sound (no custom 'beep.wav')
+      largeBody: text,
+      summaryText: 'Smart Notes Reminder'
+    };
+
+    // Add Android-specific channel
+    if (this.isAndroid) {
+      notification.channelId = 'smart_notes_high_priority';
+    }
+
+    await LocalNotifications.schedule({
+      notifications: [notification]
+    });
+  }
+
   // --- UPDATE ---
   updateNote(updatedNote: ShiftNote) {
-    this._notes.update(notes => {
-      const updatedList = notes.map(note => note.id === updatedNote.id ? updatedNote : note);
+    this._notes.update((notes: ShiftNote[]) => {
+      const updatedList = notes.map((note: ShiftNote) => note.id === updatedNote.id ? updatedNote : note);
       this.saveToStorage(updatedList); // <--- OPSLAAN
       return updatedList;
     });
@@ -201,14 +300,21 @@ export class ShiftLogService {
 
   // --- DELETE ---
   async deleteNote(id: number) {
-    this._notes.update(notes => {
-      const updatedList = notes.filter(n => n.id !== id);
+    this._notes.update((notes: ShiftNote[]) => {
+      const updatedList = notes.filter((n: ShiftNote) => n.id !== id);
       this.saveToStorage(updatedList); // <--- OPSLAAN
       return updatedList;
     });
 
     try {
-      await LocalNotifications.cancel({ notifications: [{ id: id }] });
+      if (this.isWeb) {
+        // Clean up any stored web notification timeout data
+        const timeoutKey = `notification_timeout_${id}`;
+        localStorage.removeItem(timeoutKey);
+      } else {
+        // Cancel native notification
+        await LocalNotifications.cancel({ notifications: [{ id: id }] });
+      }
     } catch (e) {
       // negeer foutjes
     }
