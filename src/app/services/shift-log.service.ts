@@ -149,9 +149,11 @@ export class ShiftLogService {
       }
 
       const now = new Date();
+      let scheduleTime = reminderTime;
+      
       if (reminderTime <= now) {
         console.warn('Reminder time is in the past, adjusting to 1 minute from now');
-        reminderTime = new Date(now.getTime() + 60000); // 1 minute from now
+        scheduleTime = new Date(now.getTime() + 60000); // 1 minute from now
       }
 
       // Build notification object
@@ -159,9 +161,8 @@ export class ShiftLogService {
         title: `IC Actie: ${bed}`,
         body: text,
         id: id,
-        schedule: { at: reminderTime },
+        schedule: { at: scheduleTime },
         sound: undefined, // Use system default sound (no custom 'beep.wav')
-        smallIcon: 'ic_stat_icon_config_sample', // Android small icon
         largeBody: text,
         summaryText: 'Smart Notes Reminder'
       };
@@ -174,8 +175,8 @@ export class ShiftLogService {
       console.log('Scheduling notification:', {
         id,
         bed,
-        time: reminderTime.toISOString(),
-        timeFromNow: Math.round((reminderTime.getTime() - now.getTime()) / 1000) + 's'
+        time: scheduleTime.toISOString(),
+        timeFromNow: Math.round((scheduleTime.getTime() - now.getTime()) / 1000) + 's'
       });
 
       await LocalNotifications.schedule({
