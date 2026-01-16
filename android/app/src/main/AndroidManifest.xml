@@ -11,5 +11,18 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
     </application>
+    
+    <!-- Basic permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    
+    <!-- Local Notifications: Android 13+ (API 33+) requires POST_NOTIFICATIONS -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
+    <!-- Local Notifications: Required for exact alarm scheduling -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    
+    <!-- Local Notifications: Fallback for older Android versions -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>

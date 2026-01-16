@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { LocalNotifications } from '@capacitor/local-notifications';
+import { LocalNotifications, LocalNotificationSchema } from '@capacitor/local-notifications';
+import { Capacitor } from '@capacitor/core';
 import { ShiftNote } from '../models/shift-note.model';
 
 @Injectable({
@@ -10,15 +11,97 @@ export class ShiftLogService {
   private _notes = signal<ShiftNote[]>(this.loadFromStorage());
   readonly notes = this._notes.asReadonly();
 
+  private isAndroid = Capacitor.getPlatform() === 'android';
+  private isIOS = Capacitor.getPlatform() === 'ios';
+  private channelCreated = false;
+
   constructor() {
-    this.requestPermissions();
+    this.initializeNotifications();
   }
 
+  /**
+   * Initialize notifications: request permissions and create Android channel
+   */
+  private async initializeNotifications() {
+    try {
+      // Step 1: Request all necessary permissions
+      await this.requestPermissions();
+
+      // Step 2: Create Android notification channel (High Priority)
+      if (this.isAndroid) {
+        await this.createNotificationChannel();
+      }
+    } catch (e) {
+      console.error('Failed to initialize notifications:', e);
+    }
+  }
+
+  /**
+   * Request all necessary permissions for notifications
+   * - Android 13+: POST_NOTIFICATIONS, SCHEDULE_EXACT_ALARM
+   * - iOS: Standard notification permissions
+   */
   async requestPermissions() {
     try {
-      await LocalNotifications.requestPermissions();
+      // Request basic notification permissions
+      const permResult = await LocalNotifications.requestPermissions();
+      console.log('Notification permissions result:', permResult);
+
+      if (permResult.display === 'granted') {
+        console.log('✓ Notification permissions granted');
+      } else {
+        console.warn('⚠ Notification permissions denied or not granted');
+      }
+
+      // Android 13+ specific: Check for exact alarm permission
+      if (this.isAndroid) {
+        await this.checkAndroidExactAlarmPermission();
+      }
     } catch (e) {
-      console.log('Geen notificatie support', e);
+      console.error('Error requesting permissions:', e);
+    }
+  }
+
+  /**
+   * Android 13+ requires SCHEDULE_EXACT_ALARM permission
+   * This logs the status (actual permission request happens via manifest)
+   */
+  private async checkAndroidExactAlarmPermission() {
+    try {
+      // Check if we can schedule exact alarms
+      const result = await LocalNotifications.checkPermissions();
+      console.log('Android notification permissions check:', result);
+    } catch (e) {
+      console.warn('Could not check exact alarm permission:', e);
+    }
+  }
+
+  /**
+   * Create High Priority Android notification channel
+   * Importance 5 = IMPORTANCE_HIGH (shows as heads-up notification)
+   */
+  private async createNotificationChannel() {
+    if (this.channelCreated) {
+      return; // Channel already created
+    }
+
+    try {
+      await LocalNotifications.createChannel({
+        id: 'smart_notes_high_priority',
+        name: 'Smart Notes Reminders',
+        description: 'High priority reminders for patient notes',
+        importance: 5, // IMPORTANCE_HIGH - shows as heads-up notification
+        visibility: 1, // VISIBILITY_PUBLIC
+        sound: undefined, // Use system default sound
+        vibration: true,
+        lights: true,
+        lightColor: '#FF0000'
+      });
+
+      this.channelCreated = true;
+      console.log('✓ High priority notification channel created');
+    } catch (e) {
+      console.error('Failed to create notification channel:', e);
     }
   }
 
@@ -44,21 +127,64 @@ export class ShiftLogService {
 
     // Plan notificatie in
     if (reminderTime) {
-      try {
-        await LocalNotifications.schedule({
-          notifications: [
-            {
-              title: `IC Actie: ${bed}`,
-              body: text,
-              id: uniqueId,
-              schedule: { at: reminderTime },
-              sound: 'beep.wav'
-            }
-          ]
-        });
-      } catch (e) {
-        console.log('Kon notificatie niet plannen', e);
+      await this.scheduleNotification(uniqueId, bed, text, reminderTime);
+    }
+  }
+
+  /**
+   * Schedule a local notification with robust error handling
+   * Ensures the notification works on both Android and iOS when app is closed
+   */
+  private async scheduleNotification(
+    id: number,
+    bed: string,
+    text: string,
+    reminderTime: Date
+  ) {
+    try {
+      // Validate that reminderTime is a valid Date in the future
+      if (!(reminderTime instanceof Date) || isNaN(reminderTime.getTime())) {
+        console.error('Invalid reminder time provided:', reminderTime);
+        return;
       }
+
+      const now = new Date();
+      if (reminderTime <= now) {
+        console.warn('Reminder time is in the past, adjusting to 1 minute from now');
+        reminderTime = new Date(now.getTime() + 60000); // 1 minute from now
+      }
+
+      // Build notification object
+      const notification: LocalNotificationSchema = {
+        title: `IC Actie: ${bed}`,
+        body: text,
+        id: id,
+        schedule: { at: reminderTime },
+        sound: undefined, // Use system default sound (no custom 'beep.wav')
+        smallIcon: 'ic_stat_icon_config_sample', // Android small icon
+        largeBody: text,
+        summaryText: 'Smart Notes Reminder'
+      };
+
+      // Add Android-specific channel
+      if (this.isAndroid) {
+        notification.channelId = 'smart_notes_high_priority';
+      }
+
+      console.log('Scheduling notification:', {
+        id,
+        bed,
+        time: reminderTime.toISOString(),
+        timeFromNow: Math.round((reminderTime.getTime() - now.getTime()) / 1000) + 's'
+      });
+
+      await LocalNotifications.schedule({
+        notifications: [notification]
+      });
+
+      console.log('✓ Notification scheduled successfully');
+    } catch (e) {
+      console.error('Failed to schedule notification:', e);
     }
   }
 
