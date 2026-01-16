@@ -11,8 +11,9 @@ export class ShiftLogService {
   private _notes = signal<ShiftNote[]>(this.loadFromStorage());
   readonly notes = this._notes.asReadonly();
 
-  private isAndroid = Capacitor.getPlatform() === 'android';
-  private isIOS = Capacitor.getPlatform() === 'ios';
+  private platform = Capacitor.getPlatform();
+  private isAndroid = this.platform === 'android';
+  private isIOS = this.platform === 'ios';
   private channelCreated = false;
 
   constructor() {
