@@ -11,8 +11,6 @@ import {
   IonTitle,
   IonToolbar,
   IonLabel,
-  IonDatetimeButton,
-  IonModal,
   IonDatetime,
   IonInput,
   IonTextarea
@@ -36,8 +34,6 @@ import {
     IonLabel,
     IonInput,
     IonTextarea,
-    IonDatetimeButton,
-    IonModal,
     IonDatetime
   ]
 })

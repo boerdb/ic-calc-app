@@ -37,18 +37,13 @@
 
   <ion-item lines="none" class="ion-margin-top">
     <ion-label>Tijdstip instellen</ion-label>
-    <ion-datetime-button datetime="shift-datetime"></ion-datetime-button>
   </ion-item>
 
-  <ion-modal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime
-        id="shift-datetime"
-        name="reminderTime"
-        presentation="time-date"
-        [(ngModel)]="reminderTime">
-      </ion-datetime>
-    </ng-template>
-  </ion-modal>
+  <ion-datetime
+    id="shift-datetime"
+    name="reminderTime"
+    presentation="time-date"
+    [(ngModel)]="reminderTime">
+  </ion-datetime>
 
 </ion-content>
