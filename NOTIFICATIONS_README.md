@@ -54,15 +54,16 @@ Since the Web Notifications API doesn't support native scheduling like Capacitor
 - On iOS, background refresh must be enabled
 - Notifications may be delayed by up to 30 seconds
 
-### 2. Service Worker (`src/custom-sw.js` + Angular Service Worker)
+### 2. Angular Service Worker (`ngsw-worker.js`)
 
-The Service Worker handles:
+Angular's built-in Service Worker handles:
 
-- **Notification Display**: Shows notifications even when the app is in the background
-- **Notification Click**: Opens/focuses the app when a notification is clicked
-- **Offline Support**: Via Angular Service Worker (ngsw)
+- **Notification Display**: Shows notifications via `registration.showNotification()`
+- **Notification Click**: Automatically opens/focuses the app when a notification is clicked
+- **Offline Support**: Caches app assets for offline use
+- **Background Sync**: Keeps the service worker active for notification delivery
 
-The custom service worker extends Angular's built-in Service Worker with notification handling.
+The NotificationService uses Angular's Service Worker API to display notifications, ensuring they work even when the app is in the background.
 
 ### 3. ShiftLogService (`src/app/services/shift-log.service.ts`)
 

@@ -21,6 +21,21 @@ export class NotificationService implements OnDestroy {
   constructor() {
     this.initializePermissionStatus();
     this.startScheduledNotificationChecker();
+    this.registerNotificationClickHandler();
+  }
+
+  /**
+   * Register notification click handler via Service Worker
+   */
+  private registerNotificationClickHandler(): void {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data?.type === 'NOTIFICATION_CLICK') {
+          // Handle notification click - could navigate to specific page
+          console.log('Notification clicked:', event.data);
+        }
+      });
+    }
   }
 
   /**
