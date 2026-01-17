@@ -37,6 +37,15 @@ export class ShiftLogPage {
   private modalCtrl = inject(ModalController);
   public patientService = inject(PatientService);
 
+  // Cached notification status for template performance
+  get isNotificationSupported(): boolean {
+    return this.logService.isNotificationSupported();
+  }
+
+  get notificationPermissionStatus(): NotificationPermission {
+    return this.logService.getNotificationPermissionStatus();
+  }
+
   constructor() {
     addIcons({ trash, add, alertCircle, informationCircle, documentTextOutline });
   }
