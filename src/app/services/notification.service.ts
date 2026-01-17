@@ -152,9 +152,9 @@ export class NotificationService implements OnDestroy {
     try {
       const data = localStorage.getItem(this.STORAGE_KEY);
       if (data) {
-        const parsed = JSON.parse(data);
+        const parsed: ScheduledNotification[] = JSON.parse(data);
         // Convert date strings back to Date objects
-        return parsed.map((n: any) => ({
+        return parsed.map((n: ScheduledNotification) => ({
           ...n,
           scheduledTime: new Date(n.scheduledTime)
         }));
@@ -203,7 +203,7 @@ export class NotificationService implements OnDestroy {
     const now = new Date();
     const notifications = this.getScheduledNotifications();
     const toTrigger = notifications.filter(n => 
-      !n.triggered && new Date(n.scheduledTime) <= now
+      !n.triggered && n.scheduledTime <= now
     );
 
     toTrigger.forEach(notification => {
@@ -229,7 +229,7 @@ export class NotificationService implements OnDestroy {
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
     
     const cleaned = notifications.filter(n => 
-      !n.triggered || new Date(n.scheduledTime) > oneHourAgo
+      !n.triggered || n.scheduledTime > oneHourAgo
     );
 
     if (cleaned.length !== notifications.length) {
