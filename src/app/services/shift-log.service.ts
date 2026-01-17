@@ -1,25 +1,31 @@
-import { Injectable, signal } from '@angular/core';
-import { LocalNotifications } from '@capacitor/local-notifications';
+import { Injectable, signal, inject } from '@angular/core';
 import { ShiftNote } from '../models/shift-note.model';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShiftLogService {
+  private notificationService = inject(NotificationService);
+  
   // 1. We laden direct bij het opstarten de data uit het geheugen
   private _notes = signal<ShiftNote[]>(this.loadFromStorage());
   readonly notes = this._notes.asReadonly();
 
   constructor() {
-    this.requestPermissions();
+    // Permission will be requested by user action, not automatically
   }
 
-  async requestPermissions() {
-    try {
-      await LocalNotifications.requestPermissions();
-    } catch (e) {
-      console.log('Geen notificatie support', e);
-    }
+  async requestNotificationPermission(): Promise<boolean> {
+    return await this.notificationService.requestPermission();
+  }
+
+  getNotificationPermissionStatus(): NotificationPermission {
+    return this.notificationService.getPermissionStatus();
+  }
+
+  isNotificationSupported(): boolean {
+    return this.notificationService.isSupported();
   }
 
   // --- CREATE ---
@@ -45,17 +51,12 @@ export class ShiftLogService {
     // Plan notificatie in
     if (reminderTime) {
       try {
-        await LocalNotifications.schedule({
-          notifications: [
-            {
-              title: `IC Actie: ${bed}`,
-              body: text,
-              id: uniqueId,
-              schedule: { at: reminderTime },
-              sound: 'beep.wav'
-            }
-          ]
-        });
+        this.notificationService.scheduleNotification(
+          uniqueId,
+          `IC Actie: ${bed}`,
+          text,
+          reminderTime
+        );
       } catch (e) {
         console.log('Kon notificatie niet plannen', e);
       }
@@ -80,7 +81,7 @@ export class ShiftLogService {
     });
 
     try {
-      await LocalNotifications.cancel({ notifications: [{ id: id }] });
+      this.notificationService.cancelScheduledNotification(id);
     } catch (e) {
       // negeer foutjes
     }

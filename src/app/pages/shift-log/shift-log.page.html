@@ -25,6 +25,27 @@
 
 <ion-content [fullscreen]="true" class="ion-padding modal-leather-dark">
 
+  <!-- Notification Permission Banner -->
+  @if (logService.isNotificationSupported() && logService.getNotificationPermissionStatus() === 'default') {
+    <ion-card style="margin-bottom: 16px; background: var(--ion-color-warning-tint);">
+      <ion-card-content>
+        <p style="margin: 0 0 8px 0; font-weight: 500;">
+          🔔 Notificaties zijn beschikbaar
+        </p>
+        <p style="margin: 0 0 12px 0; font-size: 0.9em;">
+          Sta notificaties toe om herinneringen te ontvangen voor je actiepunten.
+        </p>
+        <ion-button 
+          size="small" 
+          fill="solid" 
+          color="primary"
+          (click)="requestNotificationPermission()">
+          Sta notificaties toe
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  }
+
   @if (logService.notes().length === 0) {
     <div style="text-align: center; margin-top: 50px; color: gray;">
       <ion-icon name="document-text-outline" size="large"></ion-icon>
