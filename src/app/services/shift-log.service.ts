@@ -13,7 +13,7 @@ export class ShiftLogService {
   readonly notes = this._notes.asReadonly();
 
   constructor() {
-    // Permission will be requested by user action, not automatically
+    // Permission will be requested by user action through the notification banner UI
   }
 
   async requestNotificationPermission(): Promise<boolean> {

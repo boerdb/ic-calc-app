@@ -114,7 +114,7 @@ export class NotificationService implements OnDestroy {
           data: data,
           tag: data?.id ? `notification-${data.id}` : undefined,
           requireInteraction: false
-        } as NotificationOptions);
+        });
       } else {
         // Fallback to regular Notification API
         new Notification(title, {
@@ -122,7 +122,7 @@ export class NotificationService implements OnDestroy {
           icon: this.NOTIFICATION_ICON,
           data: data,
           tag: data?.id ? `notification-${data.id}` : undefined
-        } as NotificationOptions);
+        });
       }
     } catch (error) {
       console.error('Error showing notification:', error);
