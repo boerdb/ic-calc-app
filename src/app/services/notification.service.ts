@@ -13,7 +13,9 @@ export interface ScheduledNotification {
 })
 export class NotificationService implements OnDestroy {
   private readonly STORAGE_KEY = 'scheduled_notifications';
-  private checkInterval: any;
+  private readonly NOTIFICATION_ICON = '/assets/icons/icon-192-V2.png';
+  private readonly CHECK_INTERVAL_MS = 30000; // 30 seconds
+  private checkInterval: number | undefined;
   private permissionGranted = false;
 
   constructor() {
@@ -92,8 +94,8 @@ export class NotificationService implements OnDestroy {
       if (registration) {
         await registration.showNotification(title, {
           body: body,
-          icon: '/assets/icons/icon-192-V2.png',
-          badge: '/assets/icons/icon-192-V2.png',
+          icon: this.NOTIFICATION_ICON,
+          badge: this.NOTIFICATION_ICON,
           data: data,
           tag: data?.id ? `notification-${data.id}` : undefined,
           requireInteraction: false
@@ -102,7 +104,7 @@ export class NotificationService implements OnDestroy {
         // Fallback to regular Notification API
         new Notification(title, {
           body: body,
-          icon: '/assets/icons/icon-192-V2.png',
+          icon: this.NOTIFICATION_ICON,
           data: data,
           tag: data?.id ? `notification-${data.id}` : undefined
         } as NotificationOptions);
@@ -177,15 +179,17 @@ export class NotificationService implements OnDestroy {
   /**
    * Start background checker for scheduled notifications
    * Checks every 30 seconds if any notifications need to be triggered
+   * Note: For clinical use cases requiring precise timing (< 30s accuracy),
+   * consider alternative solutions like server-side push or reducing the interval
    */
   private startScheduledNotificationChecker(): void {
     // Check immediately
     this.checkScheduledNotifications();
 
     // Then check every 30 seconds
-    this.checkInterval = setInterval(() => {
+    this.checkInterval = window.setInterval(() => {
       this.checkScheduledNotifications();
-    }, 30000); // 30 seconds
+    }, this.CHECK_INTERVAL_MS);
   }
 
   /**
@@ -237,8 +241,8 @@ export class NotificationService implements OnDestroy {
    * Clean up when service is destroyed
    */
   ngOnDestroy(): void {
-    if (this.checkInterval) {
-      clearInterval(this.checkInterval);
+    if (this.checkInterval !== undefined) {
+      window.clearInterval(this.checkInterval);
     }
   }
 }
