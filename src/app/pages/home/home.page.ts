@@ -34,8 +34,9 @@ export class HomePage {
   { title: 'O₂ balans & diffusie', url: '/oxygen-gas', icon: 'calculator-outline' },
   { title: 'Ventilatie', url: '/ventilatie', icon: 'cloud-outline' },
   { title: 'Hemodynamiek', url: '/hemodynamiek', icon: 'pulse-outline' },
-  { title: 'Smart Notes', url: '/shift-log', icon: 'clipboard' },
-  { title: 'Hamilton Wizard', url: '/hamilton', icon: 'analytics-outline' }
+  //{ title: 'Smart Notes', url: '/shift-log', icon: 'clipboard' },
+  { title: 'Hamilton Wizard', url: '/hamilton', icon: 'analytics-outline' },
+  { title: 'Vaso-activa', url: '/medicatie', icon: 'medkit-outline' }
 ];
 
   constructor() {}
