@@ -15,6 +15,7 @@
 * **Modern Dependency Injection**: Volledige overstap van constructor-injectie naar de modernere `inject()` functie voor betere testbaarheid en leesbaarheid [cite: 2026-01-08].
 * **Centralized Icon Management**: Alle Ionicon-registraties zijn gecentraliseerd in een gedeelde utility om onnodige overhead te voorkomen en de prestaties te verbeteren [cite: 2026-01-09].
 * **PWA Ready**: Geoptimaliseerd voor installatie op mobiele apparaten met een aangepast manifest en thema-kleuren.
+* **Web Push Notifications**: Native web notifications via Service Worker voor cross-platform ondersteuning (iOS Safari 16.4+, Android Chrome, Desktop browsers). Zie [NOTIFICATIONS_README.md](NOTIFICATIONS_README.md) voor details.
 
 ## 📂 Projectstructuur
 
