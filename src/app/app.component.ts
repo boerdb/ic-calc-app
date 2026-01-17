@@ -57,7 +57,7 @@ export class AppComponent {
       color: 'danger',     // Rood
       items: [
         { title: 'Hemodynamiek', url: '/hemodynamiek', icon: 'heart-outline' },
-        { title: 'Medicatie', url: '/medicatie', icon: 'medkit-outline' },
+        { title: 'Vaso-activa', url: '/medicatie', icon: 'medkit-outline' },
         { title: 'O₂ balans & diffusie', url: '/oxygen-gas', icon: 'calculator-outline' }
       ]
     },
@@ -76,8 +76,8 @@ export class AppComponent {
       icon: 'layers-outline',  // Het nieuwe icoon
       color: 'success',         // Grijs (neutraal) of 'success' (groen)
       items: [
-        { title: 'Patiëntbeheer', url: '/patient', icon: 'people-outline' },
-        { title: 'Smart Notes', url: '/shift-log', icon: 'clipboard' }
+        { title: 'Patiëntbeheer', url: '/patient', icon: 'people-outline' }
+        //{ title: 'Smart Notes', url: '/shift-log', icon: 'clipboard' }
       ]
     }
   ];
