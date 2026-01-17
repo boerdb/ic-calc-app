@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -38,6 +38,7 @@ import {
   ]
 })
 export class AddShiftNoteComponent implements OnInit {
+  private modalCtrl = inject(ModalController);
 
   // Hier komt de tekst "Bed 04 - Mevr..." binnen vanuit de hoofdpagina
   @Input() prefilledBed: string = '';
@@ -45,8 +46,6 @@ export class AddShiftNoteComponent implements OnInit {
   bedNumber = '';
   content = '';
   reminderTime: string | undefined;
-
-  constructor(private modalCtrl: ModalController) {}
 
   ngOnInit() {
     // Zodra het scherm opent: vul het bednummer automatisch in

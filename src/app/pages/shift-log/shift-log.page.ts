@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton,
   IonList, IonItemSliding, IonItem, IonIcon, IonLabel, IonCheckbox,
-  IonItemOptions, IonItemOption, IonFab, IonFabButton, ModalController
+  IonItemOptions, IonItemOption, IonFab, IonFabButton, IonCard, IonCardContent, IonButton, ModalController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { trash, add, alertCircle, informationCircle, documentTextOutline } from 'ionicons/icons';
@@ -28,13 +28,22 @@ import { PatientService } from '../../services/patient';
     FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonMenuButton,
     IonList, IonItemSliding, IonItem, IonIcon, IonLabel, IonCheckbox,
-    IonItemOptions, IonItemOption, IonFab, IonFabButton
+    IonItemOptions, IonItemOption, IonFab, IonFabButton, IonCard, IonCardContent, IonButton
   ]
 })
 export class ShiftLogPage {
   public logService = inject(ShiftLogService);
   private modalCtrl = inject(ModalController);
   public patientService = inject(PatientService);
+
+  // Cached notification status for template performance
+  get isNotificationSupported(): boolean {
+    return this.logService.isNotificationSupported();
+  }
+
+  get notificationPermissionStatus(): NotificationPermission {
+    return this.logService.getNotificationPermissionStatus();
+  }
 
   constructor() {
     addIcons({ trash, add, alertCircle, informationCircle, documentTextOutline });
@@ -128,5 +137,14 @@ export class ShiftLogPage {
   toggleStatus(note: ShiftNote) {
     const updatedNote = { ...note, isCompleted: !note.isCompleted };
     this.logService.updateNote(updatedNote);
+  }
+
+  async requestNotificationPermission() {
+    const granted = await this.logService.requestNotificationPermission();
+    if (granted) {
+      console.log('Notification permission granted');
+    } else {
+      console.log('Notification permission denied');
+    }
   }
 }
