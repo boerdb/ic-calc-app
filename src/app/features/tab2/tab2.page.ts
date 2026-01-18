@@ -10,9 +10,9 @@ import {
   IonBadge, ModalController, IonIcon, IonText, IonMenuButton
 } from '@ionic/angular/standalone';
 
-import { CalculatorService } from '../services/calculator';
-import { PatientService } from '../services/patient';
-import { InfoModalComponent } from '../info-modal.component';
+import { CalculatorService } from '@core/services/calculator';
+import { PatientService } from '@core/services/patient';
+import { InfoModalComponent } from '../../shared/info-modal.component';
 
 @Component({
   selector: 'app-tab2',

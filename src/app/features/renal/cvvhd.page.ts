@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { PatientService } from '../services/patient';
+import { PatientService } from '@core/services/patient';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -10,8 +10,8 @@ import {
 
 @Component({
   selector: 'app-cvvhd',
-  templateUrl: './cvvhd.page.html',
-  styleUrls: ['./cvvhd.page.scss'],
+  templateUrl: 'cvvhd.page.html',
+  styleUrls: ['cvvhd.page.scss'],
   standalone: true,
   imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonTitle, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonInput, IonButton, IonItem, IonLabel, IonButtons, IonMenuButton]
 })

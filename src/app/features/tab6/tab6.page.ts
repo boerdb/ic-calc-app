@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PatientService } from '../services/patient';
-import { LungProfile, VentilationService } from '../services/ventilation';
+import { PatientService } from '@core/services/patient';
+import { LungProfile, VentilationService } from '@core/services/ventilation';
 
 // 1. We hebben ModalController hier nodig
 import {
@@ -28,7 +28,7 @@ import {
 } from '@ionic/angular/standalone';
 
 // 2. We importeren je nieuwe Wizard Component
-import { PvWizardComponent } from '../components/pv-wizard/pv-wizard.component';
+import { PvWizardComponent } from '@shared/pv-wizard/pv-wizard.component';
 
 @Component({
   selector: 'app-tab6',

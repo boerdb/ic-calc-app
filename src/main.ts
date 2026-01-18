@@ -6,7 +6,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { registerAppIcons } from './app/utils/icon-registry';
+import { registerAppIcons } from './app/shared/icon-registry';
 
 // Register all icons once at app initialization
 registerAppIcons();

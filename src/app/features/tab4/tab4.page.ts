@@ -19,8 +19,8 @@ import {
   IonMenuButton,IonMenuToggle
 } from '@ionic/angular/standalone';
 
-import { InfoModalComponent } from '../info-modal.component';
-import { PatientService } from '../services/patient';
+import { InfoModalComponent } from '@shared/info-modal.component';
+import { PatientService } from '@core/services/patient';
 
 @Component({
   selector: 'app-tab4',

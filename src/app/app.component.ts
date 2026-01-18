@@ -15,6 +15,8 @@ import {
   peopleOutline, informationCircleOutline, layersOutline
 } from 'ionicons/icons';
 
+import { registerAppIcons } from './shared/icon-registry';
+
 interface MenuPage {
   title: string;
   url: string;
@@ -76,8 +78,9 @@ export class AppComponent {
       icon: 'layers-outline',  // Het nieuwe icoon
       color: 'success',         // Grijs (neutraal) of 'success' (groen)
       items: [
-        { title: 'Patiëntbeheer', url: '/patient', icon: 'people-outline' }
+        { title: 'Patiëntbeheer', url: '/patient', icon: 'people-outline' },
         //{ title: 'Smart Notes', url: '/shift-log', icon: 'clipboard' }
+        { title: 'Reanimatie', url: '/reanimatie', icon: 'heart-outline' }
       ]
     }
   ];
@@ -90,6 +93,8 @@ export class AppComponent {
   constructor() {
     // 3. REGISTREER ALLE ICONEN HIER
     // Dit koppelt de naam (string) aan het svg bestand
+
+    registerAppIcons();
     addIcons({
       // Standaard iconen
       'home-outline': homeOutline,

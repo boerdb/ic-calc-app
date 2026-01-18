@@ -10,7 +10,7 @@ import {
   IonFooter, IonModal,IonMenuButton// <--- Toegevoegd
 } from '@ionic/angular/standalone';
 
-import { PatientService } from '../services/patient';
+import { PatientService } from '@core/services/patient';
 
 @Component({
   selector: 'app-tab1',

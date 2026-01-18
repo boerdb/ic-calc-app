@@ -1,5 +1,5 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { ShiftNote } from '../models/shift-note.model';
+import { ShiftNote } from '../../models/shift-note.model';
 import { NotificationService } from './notification.service';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { NotificationService } from './notification.service';
 })
 export class ShiftLogService {
   private notificationService = inject(NotificationService);
-  
+
   // 1. We laden direct bij het opstarten de data uit het geheugen
   private _notes = signal<ShiftNote[]>(this.loadFromStorage());
   readonly notes = this._notes.asReadonly();

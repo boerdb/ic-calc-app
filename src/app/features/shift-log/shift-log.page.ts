@@ -12,10 +12,10 @@ import { addIcons } from 'ionicons';
 import { trash, add, alertCircle, informationCircle, documentTextOutline } from 'ionicons/icons';
 
 // Services en Models
-import { ShiftLogService } from '../../services/shift-log.service';
+import { ShiftLogService } from '@core/services/shift-log.service';
 import { ShiftNote } from '../../models/shift-note.model';
-import { AddShiftNoteComponent } from '../../components/add-shift-note/add-shift-note.component';
-import { PatientService } from '../../services/patient';
+import { AddShiftNoteComponent } from '../add-shift-note/add-shift-note.component';
+import { PatientService } from '@core/services/patient';
 
 @Component({
   selector: 'app-shift-log',

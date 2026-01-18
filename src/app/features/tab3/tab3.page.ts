@@ -12,10 +12,10 @@ import {
   // <--- HIER: ModalController ipv AlertController
 } from '@ionic/angular/standalone';
 
-import { PatientService } from '../services/patient';
-import { CalculatorService } from '../services/calculator';
+import { PatientService } from '@core/services/patient';
+import { CalculatorService } from '@core/services/calculator';
 // Importeer je nieuwe Info Component
-import { InfoModalComponent } from '../info-modal.component';
+import { InfoModalComponent } from '../../shared/info-modal.component';
 
 @Component({
   selector: 'app-tab3',

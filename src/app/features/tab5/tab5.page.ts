@@ -25,9 +25,9 @@ import {
   ModalController, IonMenuButton
 } from '@ionic/angular/standalone';
 
-import { InfoModalComponent } from '../info-modal.component';
-import { CalculatorService } from '../services/calculator';
-import { PatientService } from '../services/patient';
+import { InfoModalComponent } from '@shared/info-modal.component';
+import { CalculatorService } from '@core/services/calculator';
+import { PatientService } from '@core/services/patient';
 
 @Component({
   selector: 'app-tab5',

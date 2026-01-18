@@ -6,7 +6,7 @@ import {
   IonGrid, IonRow, IonCardHeader, IonCardSubtitle, IonCardContent
 } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
-import { PatientService } from '../../services/patient'; // Check even of dit pad klopt!
+import { PatientService } from '@core/services/patient'; // Check even of dit pad klopt!
 
 @Component({
   selector: 'app-home',
@@ -36,7 +36,7 @@ export class HomePage {
   { title: 'Hemodynamiek', url: '/hemodynamiek', icon: 'pulse-outline' },
   //{ title: 'Smart Notes', url: '/shift-log', icon: 'clipboard' },
   { title: 'Hamilton Wizard', url: '/hamilton', icon: 'analytics-outline' },
-  { title: 'Vaso-activa', url: '/medicatie', icon: 'medkit-outline' }
+  { title: 'Reanimatie', url: '/reanimatie', icon: 'heart-outline' }
 ];
 
   constructor() {}

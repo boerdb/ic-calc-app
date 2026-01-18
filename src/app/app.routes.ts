@@ -12,46 +12,51 @@ export const routes: Routes = [
   },
   {
     path: 'patient',
-    loadComponent: () => import('./tab1/tab1.page').then(m => m.Tab1Page)
+    loadComponent: () => import('./features/tab1/tab1.page').then(m => m.Tab1Page)
   },
   {
     path: 'oxygen-gas',
-    loadComponent: () => import('./tab2/tab2.page').then(m => m.Tab2Page)
+    loadComponent: () => import('./features/tab2/tab2.page').then(m => m.Tab2Page)
   },
   {
     path: 'rox',
-    loadComponent: () => import('./rox/rox.page').then(m => m.RoxPage)
+    loadComponent: () => import('./features/rox/rox.page').then(m => m.RoxPage)
   },
   {
     path: 'ventilatie',
-    loadComponent: () => import('./tab3/tab3.page').then(m => m.Tab3Page)
+    loadComponent: () => import('./features/tab3/tab3.page').then(m => m.Tab3Page)
   },
   {
     path: 'nierfunctie',
-    loadComponent: () => import('./renal/nierfunctie.page').then(m => m.NierfunctiePage)
+    loadComponent: () => import('./features/renal/nierfunctie.page').then(m => m.NierfunctiePage)
   },
   {
     path: 'cvvhd',
-    loadComponent: () => import('./renal/cvvhd.page').then(m => m.CVVHDPage)
+    loadComponent: () => import('./features/renal/cvvhd.page').then(m => m.CVVHDPage)
   },
   {
     path: 'hemodynamiek',
-    loadComponent: () => import('./tab4/tab4.page').then(m => m.Tab4Page)
+    loadComponent: () => import('./features/tab5/tab5.page').then(m => m.Tab5Page) // Corrected path
   },
   {
     path: 'medicatie',
-    loadComponent: () => import('./tab5/tab5.page').then(m => m.Tab5Page)
+    loadComponent: () => import('./features/tab4/tab4.page').then(m => m.Tab4Page)
   },
   {
     path: 'hamilton',
-    loadComponent: () => import('./tab6/tab6.page').then(m => m.Tab6Page)
+    loadComponent: () => import('./features/tab6/tab6.page').then(m => m.Tab6Page)
   },
   {
     path: 'info',
-    loadComponent: () => import('./pages/info/info.page').then(m => m.InfoPage)
-  },  {
+    loadComponent: () => import('./features/info/info.page').then(m => m.InfoPage)
+  },
+  {
     path: 'shift-log',
-    loadComponent: () => import('./pages/shift-log/shift-log.page').then( m => m.ShiftLogPage)
-  }
+    loadComponent: () => import('./features/shift-log/shift-log.page').then( m => m.ShiftLogPage)
+  },
+  {
+    path: 'reanimatie',
+    loadComponent: () => import('./features/resuscitation/resuscitation.component').then(m => m.ResuscitationComponent)
+  },
 
 ];

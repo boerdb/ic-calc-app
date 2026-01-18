@@ -9,8 +9,8 @@ import { addIcons } from 'ionicons';
 import { calculatorOutline, cloudOutline, chevronForwardOutline, closeOutline } from 'ionicons/icons';
 
 // Importeer de component die Tab 2 ook gebruikt
-import { InfoModalComponent } from '../info-modal.component';
-import { PatientService } from '../services/patient';
+import { InfoModalComponent } from '@shared/info-modal.component';
+import { PatientService } from '@core/services/patient';
 
 @Component({
   selector: 'app-rox',
