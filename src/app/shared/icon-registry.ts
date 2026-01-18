@@ -20,7 +20,10 @@ import {
   refreshCircle,
   volumeHigh,
   volumeMute,
-  layersOutline
+  layersOutline,
+  documentTextOutline,
+  documentText
+
 
 } from 'ionicons/icons';
 
@@ -30,6 +33,7 @@ export function registerAppIcons(): void {
     'ventilation': 'assets/icons/ventilation.svg',
     'circulation': 'assets/icons/circulation.svg',
     'renal': 'assets/icons/renal.svg',
+    'defibrillator': 'assets/icons/defibrillator.svg',
 
     // NIEUW: Reanimatie tool
     'timer': timer,
@@ -43,7 +47,8 @@ export function registerAppIcons(): void {
 
     // NIEUW: Menu
     'layers-outline': layersOutline,
-
+    'document-text-outline': documentTextOutline,
+    'document-text': documentText,
     // ... De rest van je bestaande iconen ...
     'clipboard': clipboardOutline,
     'clipboard-outline': clipboardOutline,
@@ -88,5 +93,6 @@ export function registerAppIcons(): void {
     'stop-circle': stopCircle,
     'chevron-back': chevronBack,
     'arrow-forward': arrowForward
+
   });
 }

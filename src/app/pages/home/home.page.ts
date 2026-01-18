@@ -7,6 +7,7 @@ import {
 } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { PatientService } from '@core/services/patient'; // Check even of dit pad klopt!
+import { ResuscitationService } from '@core/services/resuscitation.service';
 
 @Component({
   selector: 'app-home',
@@ -25,8 +26,11 @@ import { PatientService } from '@core/services/patient'; // Check even of dit pa
 ]
 })
 export class HomePage {
+
+
   // Gebruik de moderne inject methode zoals je gevraagd hebt
   public patient = inject(PatientService);
+  public resuscitation = inject(ResuscitationService);
 
   // De lijst met pagina's voor je dashboard-tegels
  public pages = [
@@ -36,7 +40,7 @@ export class HomePage {
   { title: 'Hemodynamiek', url: '/hemodynamiek', icon: 'pulse-outline' },
   //{ title: 'Smart Notes', url: '/shift-log', icon: 'clipboard' },
   { title: 'Hamilton Wizard', url: '/hamilton', icon: 'analytics-outline' },
-  { title: 'Reanimatie', url: '/reanimatie', icon: 'heart-outline' }
+  { title: 'Reanimatie', url: '/reanimatie', icon: 'defibrillator',color:'danger' }
 ];
 
   constructor() {}

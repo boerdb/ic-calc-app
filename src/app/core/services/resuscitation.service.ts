@@ -42,6 +42,25 @@ export class ResuscitationService {
   readonly shockCount = this._shockCount.asReadonly();
   readonly isMetronomeEnabled = this._isMetronomeEnabled.asReadonly();
 
+// Maak een nette tekststring voor export
+  getLogExportData(): string {
+    const header = `--- REANIMATIE LOGBOEK ---\nDatum: ${new Date().toLocaleDateString()}\n`;
+    const rounds = `Totaal Ronden: ${this._rounds()}\n`;
+    const shocks = `Totaal Schokken: ${this._shockCount()}\n`;
+    const adre = `Totaal Adrenaline: ${this._adrenalineCount()}mg\n`;
+    const separator = `--------------------------\n`;
+
+    // De logs zelf (van nieuw naar oud, dus we draaien ze even om voor leesbaarheid van boven naar beneden)
+    const logLines = this._logs()
+      .slice() // kopie maken
+      .reverse() // oudste eerst
+      .map(l => `[${l.time}] ${l.message}`)
+      .join('\n');
+
+    return `${header}${rounds}${shocks}${adre}${separator}${logLines}`;
+  }
+
+
   // Formatted Time (bijv. "02:05")
   readonly formattedTime = computed(() => {
     const mins = Math.floor(this._seconds() / 60);
@@ -176,21 +195,27 @@ export class ResuscitationService {
 
     if (type === 'high') {
       // Alarm (Hogere toon, iets langer)
-      oscillator.type = 'square';
+      oscillator.type = 'square'; // 'Square' is de felste toon
       oscillator.frequency.value = 880; // A5
-      gainNode.gain.setValueAtTime(0.5, this.audioCtx.currentTime);
+
+      // AANPASSING: Volume van 0.5 naar 1.0 (Maximaal)
+      gainNode.gain.setValueAtTime(1.0, this.audioCtx.currentTime);
+
       oscillator.start();
       oscillator.stop(this.audioCtx.currentTime + 0.6);
     } else {
       // Metronoom tik (Kort, duidelijk)
-      oscillator.type = 'sine';
+      // AANPASSING: Van 'sine' naar 'triangle' (klinkt scherper/harder)
+      oscillator.type = 'triangle';
       oscillator.frequency.value = 600;
-      gainNode.gain.setValueAtTime(0.3, this.audioCtx.currentTime);
+
+      // AANPASSING: Volume van 0.3 naar 0.8 (Veel harder)
+      gainNode.gain.setValueAtTime(0.8, this.audioCtx.currentTime);
+
       oscillator.start();
       oscillator.stop(this.audioCtx.currentTime + 0.1);
     }
   }
-
   // Wake Lock (Scherm aanhouden)
   private async requestWakeLock() {
     if (typeof navigator !== 'undefined' && 'wakeLock' in navigator) {

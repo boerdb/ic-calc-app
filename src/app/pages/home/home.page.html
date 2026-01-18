@@ -18,7 +18,11 @@
           <ion-col size="6" size-sm="4">
             <div class="menu-tile" [routerLink]="page.url">
               <div class="tile-icon-box">
-                <ion-icon [name]="page.icon"></ion-icon>
+                <ion-icon
+    [name]="page.icon"
+    [color]="page.color || 'primary'"
+    [class.beating-heart]="page.url === '/reanimatie' && resuscitation.isRunning()">
+  </ion-icon>
               </div>
               <div class="tile-footer">
                 <span>{{ page.title }}</span>
